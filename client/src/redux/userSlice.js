@@ -3,21 +3,21 @@ import { loginThunk, registerThunk } from "../thunks/auth-thunk";
 
 export const initialState = {
   isAutenicated: false,
-  employee: {},
+  user: {},
   status: "idle",
 };
 
-const currentEmployeeSlice = createSlice({
-  name: "currentEmployee",
+const currentUserSlice = createSlice({
+  name: "currentUser",
   initialState,
   reducers: {
-    setCurrentEmployee: (state, action) => {
+    setCurrentUser: (state, action) => {
         state.isAutenicated = !!Object.keys(action.payload).length;
-        state.employee = action.payload;
+        state.user = action.payload;
         },
     logout: (state) => {
       state.isAutenicated = false;
-      state.employee = {};
+      state.user = {};
       state.status = "idle";
       localStorage.removeItem("token");
     },
@@ -29,7 +29,7 @@ const currentEmployeeSlice = createSlice({
     builder.addCase(loginThunk.fulfilled, (state, action) => {
       state.status = "idle";
       state.isAutenicated = true;
-      state.employee = action.payload;
+      state.user = action.payload;
     });
     builder.addCase(loginThunk.rejected, (state) => {
       state.status = "failed";
@@ -46,6 +46,6 @@ const currentEmployeeSlice = createSlice({
   },
 });
 
-export const { setCurrentEmployee,logout } = currentEmployeeSlice.actions;
+export const { setCurrentUser,logout } = currentUserSlice.actions;
 
-export default currentEmployeeSlice.reducer;
+export default currentUserSlice.reducer;

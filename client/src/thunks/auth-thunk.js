@@ -4,9 +4,9 @@ import { login, register} from "../services/auth-service";
 export const loginThunk = createAsyncThunk(
     'auth/login',
     (data) => {
-        const employee = login(data);
-        localStorage.setItem('token', employee.token);
-        return employee;
+        const user = login(data);
+        localStorage.setItem('token', user.token);
+        return user;
     }
 
 );
