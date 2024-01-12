@@ -1,22 +1,32 @@
-require('dotenv').config();
-const express = require('express');
+const express = require("express");
 const app = express();
-const cors = require('cors');
-const db = require('./models');
+app.use(express.json());
+const cors = require("cors");
+app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
+const { default: mongoose } = require("mongoose");
+require("dotenv").config();
 const authRouter = require('./routes/auth');
 
-const PORT = 4000;
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URL);
+    console.log("Connected to MongoDB");
+  } catch (err) {
+    console.error(err.message);
+  }
+};
 
-app.use(cors());
-app.use(express.json());
+connectDB();
 
-app.use('/api/auth', authRouter);
+app.get("/", (req, res) => {
+  res.send("Hello World!");
+});
+
+app.use("/api/auth", authRouter);
 app.use((req, res, next) => {
-    const err = new Error('Not Found');
-    err.status = 404;
-    next(err);
+  const err = new Error("Not Found");
+  err.status = 404;
+  next(err);
 });
 
-app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-});
+app.listen(4000, () => console.log("Server running on port 4000"));
