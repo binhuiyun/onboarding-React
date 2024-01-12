@@ -21,6 +21,10 @@ const profileSchema = new Schema({
     type: String,
     required: true,
   },
+  documents :{
+    type: Schema.Types.ObjectId,
+    ref: "DocumentCollection"
+  }
 });
 
 module.exports = mongoose.model("Profile", profileSchema);

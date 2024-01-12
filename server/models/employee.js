@@ -20,6 +20,14 @@ const employeeSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "Profile",
   },
+  onboardingStatus: {
+    type: String,
+    default: "Never submitted",
+  },
+  isHR: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 module.exports = mongoose.model("Employee", employeeSchema);
