@@ -1,5 +1,24 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
+const optDocSchema = new Schema({
+  fileName: {
+    type: String,
+    required: true,
+  },
+  fileDoc: {
+    type: Buffer,
+    required: true,
+  },
+  status: {
+    type: String,
+    required: true,
+  },
+  fileType: {
+    type: String,
+    required: true,
+  },
+});
+const optDocModel = mongoose.model("optDocModel", optDocSchema);
 
 const visaSchema = new Schema({
   email: {
@@ -8,65 +27,26 @@ const visaSchema = new Schema({
     unique: true,
   },
   optReceipt: {
-    fileName: {
-      type: String,
-      required: true,
-    },
-    fileDoc: {
-      type: Buffer,
-      required: true,
-    },
-    status: {
-      type: String,
-      required: true,
-      default: false,
-    },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "optDocModel",
+    required: true,
   },
   optEAD: {
-    fileName: {
-      type: String,
-      required: true,
-    },
-    fileDoc: {
-      type: Buffer,
-      required: true,
-    },
-    status: {
-      type: String,
-      required: true,
-      default: false,
-    },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "optDocModel",
+    required: true,
   },
   i983: {
-    fileName: {
-      type: String,
-      required: true,
-    },
-    fileDoc: {
-      type: Buffer,
-      required: true,
-    },
-    status: {
-      type: String,
-      required: true,
-      default: false,
-    },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "optDocModel",
+    required: true,
   },
   i20: {
-    fileName: {
-      type: String,
-      required: true,
-    },
-    fileDoc: {
-      type: Buffer,
-      required: true,
-    },
-    status: {
-      type: String,
-      required: true,
-      default: false,
-    },
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "optDocModel",
+    required: true,
   },
 });
 
-module.exports = mongoose.model("Visa", visaSchema);
+const visaModel = mongoose.model("visaModel", visaSchema);
+module.exports = { optDocModel, visaModel };
