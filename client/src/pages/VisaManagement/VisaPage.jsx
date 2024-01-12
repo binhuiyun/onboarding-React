@@ -2,7 +2,7 @@ import React from "react";
 import FileUploader from "./Components/FileUploader";
 
 const mockInfo = {
-  title: "OPT Receipt",
+  title: "i983",
   status: "approved",
   feedback: "",
   next: "OPT EAD",

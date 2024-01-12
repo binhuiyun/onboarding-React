@@ -11,7 +11,7 @@ import {
 const FileUploader = ({ title, status, feedback, next }) => {
   return (
     <>
-      <div className="w-[60%] py-4 px-4 shadow-xl flex rounded-md hover:[animate-hoveranimation]">
+      <div className="w-[60%] py-4 px-4 shadow-xl flex rounded-lg hover:scale-[101%]">
         {status === "pending" && (
           <ClockIcon className="h-6 w-6 text-yellow-500" />
         )}
@@ -33,11 +33,11 @@ ${next}`
               : "All documents have been approved")}
           {status === "rejected" && `${feedback}`}
         </div>
-        <div className="">
-          <FolderPlusIcon className="h-6 w-6 text-blue-500" />
+        <div className="flex">
           {title === "i983" && (
-            <FolderArrowDownIcon className="h-6 w-6 text-blue-500" />
+            <FolderArrowDownIcon className="h-6 w-6 text-blue-500 mr-1" />
           )}
+          <FolderPlusIcon className="h-6 w-6 text-blue-500" />
         </div>
       </div>
     </>

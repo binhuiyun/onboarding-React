@@ -28,22 +28,18 @@ const visaSchema = new Schema({
   optReceipt: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "optDocModel",
-    required: true,
   },
   optEAD: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "optDocModel",
-    required: true,
   },
   i983: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "optDocModel",
-    required: true,
   },
   i20: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "optDocModel",
-    required: true,
   },
 });
 
