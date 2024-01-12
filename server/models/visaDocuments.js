@@ -21,10 +21,9 @@ const optDocSchema = new Schema({
 const optDocModel = mongoose.model("optDocModel", optDocSchema);
 
 const visaSchema = new Schema({
-  email: {
-    type: String,
+  employee: {
+    type: Schema.Types.ObjectId,
     required: true,
-    unique: true,
   },
   optReceipt: {
     type: mongoose.Schema.Types.ObjectId,
