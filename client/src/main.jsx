@@ -15,7 +15,7 @@ if (localStorage.getItem('token')) {
   
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <Provider store={store}>
+  <React.StrictMode>
     <App />
-  </Provider>,
+  </React.StrictMode>,
 )
