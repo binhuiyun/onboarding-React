@@ -1,10 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 
-import employeeReducer from "./userSlice";
+import userReducer from "./userSlice";
 
 export default configureStore({
   reducer: {
-    employee: employeeReducer,
+    user: userReducer,
   },
   devTools: true,
 });
