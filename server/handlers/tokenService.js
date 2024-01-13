@@ -1,18 +1,13 @@
 const nodeMailer = require("nodemailer");
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
+const TokenHistory = require("../models/tokenHistory");
 
-const tokenHistory = [];
 const generateToken = (email) => {
-  const token = Math.floor(Math.random() * 1000000);
-
-  setTimeout(() => {
-    // Remove the token from the history after 3 hours
-    const index = tokenHistory.findIndex((entry) => entry.token === token);
-    if (index !== -1) {
-      tokenHistory.splice(index, 1);
-    }
-  }, 3 * 60 * 60 * 1000);
+  const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, 
+  {expiresIn: "3h"});
   return token;
-};
+  };
 
 const sendEmail = async (email, token) => {
   try {
@@ -23,13 +18,45 @@ const sendEmail = async (email, token) => {
         pass: process.env.PASSWORD,
       },
     });
+    const mailOptions = {
+      from: process.env.EMAIL,
+      to: email,
+      subject: "Your token for Registration",
+      text: `Click the following link to register: http://localhost:5173/register/${token}`,
+    };
+    const info = await transporter.sendMail(mailOptions);
+    console.log("Email sent: " + info.response);
   } catch (err) {
-    console.log(err);
+    console.error("Error sending email:", err);
   }
 };
 
-const storeToken = (email, token) => {
-  tokenHistory.push({ email, token, status: "Not submitted" });
+
+const addTokenHistory = async (req, res) => {
+  try{
+    const {email, name, link} = req.body;
+    const tokenHistory = new TokenHistory({
+      email,
+      name,
+      link,
+     
+    });
+    await tokenHistory.save();
+    res.json(tokenHistory);
+  } catch(err){
+    res.status(500).json({message: "Server Error"});
+  }
+  
 };
 
-module.exports = { generateToken, sendEmail, storeToken };
+const getTokenHistory = async(req, res) => {
+   try{
+      const tokenHistory = await TokenHistory.find();
+      res.json(tokenHistory);     
+   }
+    catch(err){
+        res.status(500).json({message: "Server Error"});
+    }
+};
+
+module.exports = { generateToken, sendEmail, addTokenHistory, getTokenHistory };

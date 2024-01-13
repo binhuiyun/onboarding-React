@@ -7,6 +7,7 @@ import { jwtDecode } from "jwt-decode";
 import { Provider } from "react-redux";
 
 import { setCurrentUser } from "./redux/userSlice.js";
+import 'antd/dist/reset.css';
 
 // if (localStorage.getItem("token")) {
 //   store.dispatch(setCurrentUser(jwtDecode(localStorage.getItem("token"))));

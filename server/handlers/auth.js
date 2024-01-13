@@ -46,6 +46,30 @@ exports.signin = async function (req, res, next) {
 
 exports.signup = async function (req, res, next) {
   try {
+    const {email, token} = req.body;
+    jwt.verify(token, process.env.JWT_SECRET_KEY, (err, decoded) =>{
+      if (err) {
+        return next({
+          status: 400,
+          message: 'Invalid Token.'
+        });
+
+      }
+      if (decoded.email !== email) {
+        return next({
+          status: 400,
+          message: 'Token does not match email.'
+        });
+      }
+      const existingEntry = tokenHistory.find((entry) => entry.email === email);
+      if (!existingEntry) {
+        return next({
+          status: 400,
+          message: 'Email already registered.'
+        });
+      }
+     
+ 
     let user = await db.User.create(req.body);
     let { id, username } = user;
     let token = await jwt.sign(
