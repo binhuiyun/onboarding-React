@@ -10,7 +10,7 @@ export default function AuthForm({
   title,
   fields
 }) {
-  const { status } = useSelector(state => state.employee);
+  const { status } = useSelector(state => state.user);
 
   return (
     <>
