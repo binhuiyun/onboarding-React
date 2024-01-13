@@ -1,5 +1,5 @@
 import React from "react";
-import FileUploader from "./Components/FileUploader";
+import FileUploader from "../../components/FileUploader";
 
 const mockUser = {
   firstName: "Ruike",
