@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import { createPortal } from "react-dom";
 import {
   ExclamationCircleIcon,
   CheckCircleIcon,
@@ -8,20 +9,29 @@ import {
   FolderArrowDownIcon,
   FolderPlusIcon,
 } from "@heroicons/react/24/outline";
+import PopUp from "./PopUp";
 const FileUploader = ({ title, status, feedback, next }) => {
+  const [isPopUp, setIsPopUp] = useState(false);
+  const handleUpload = (e) => {
+    e.preventDefault();
+    setIsPopUp(!isPopUp);
+  };
+
   return (
     <>
-      <div className="w-[60%] py-4 px-4 shadow-xl flex rounded-lg hover:scale-[101%]">
+      {isPopUp &&
+        createPortal(<PopUp handleUpload={handleUpload} />, document.body)}
+      <div className="w-[60%] py-4 px-4 shadow-md my-4 flex rounded-lg hover:scale-[101%]">
         {status === "pending" && (
-          <ClockIcon className="h-6 w-6 text-yellow-500" />
+          <ClockIcon className="h-8 w-8 text-yellow-500" />
         )}
         {status === "approved" && (
-          <CheckCircleIcon className="h-6 w-6 text-blue-500" />
+          <CheckCircleIcon className="h-8 w-8 text-blue-500" />
         )}
         {status === "rejected" && (
-          <ExclamationCircleIcon className="h-6 w-6 text-red-500" />
+          <ExclamationCircleIcon className="h-8 w-8 text-red-500" />
         )}
-        <div className="px-1">{title}</div>
+        <div className="px-1 text-xl my-auto">{title}</div>
         <div className="text-gray-500 text-sm grow my-auto text-center">
           {status === "pending" &&
             `Waiting for HR to approve your
@@ -35,9 +45,12 @@ ${next}`
         </div>
         <div className="flex">
           {title === "i983" && (
-            <FolderArrowDownIcon className="h-6 w-6 text-blue-500 mr-1" />
+            <FolderArrowDownIcon className="h-8 w-8 text-blue-500 mr-1" />
           )}
-          <FolderPlusIcon className="h-6 w-6 text-blue-500" />
+          <FolderPlusIcon
+            className="h-8 w-8 text-blue-500"
+            onClick={handleUpload}
+          />
         </div>
       </div>
     </>
