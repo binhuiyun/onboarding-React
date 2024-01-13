@@ -33,6 +33,8 @@ const currentUserSlice = createSlice({
     });
     builder.addCase(loginThunk.rejected, (state) => {
       state.status = "failed";
+      state.isAutenicated = false;
+      state.user = {};
     });
     builder.addCase(registerThunk.pending, (state) => {
       state.status = "pending";

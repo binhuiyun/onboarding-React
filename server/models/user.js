@@ -30,4 +30,11 @@ const userSchema = new Schema({
   },
 });
 
+userSchema.methods.comparePassword =  function (candidatePassword, next) {
+
+    const isMatch =  candidatePassword === this.password;
+    return isMatch;
+ 
+};
+
 module.exports = mongoose.model("User", userSchema);

@@ -3,9 +3,10 @@ import { login, register} from "../services/auth-service";
 
 export const loginThunk = createAsyncThunk(
     'auth/login',
-    (data) => {
-        const user = login(data);
+    async (data) => {
+        const user = await login(data);
         localStorage.setItem('token', user.token);
+        console.log("thunk", user.token);
         return user;
     }
 
@@ -13,5 +14,5 @@ export const loginThunk = createAsyncThunk(
 
 export const registerThunk = createAsyncThunk(
     'auth/register',
-    (data) => register(data)
+     async (data) => await register(data)
 );

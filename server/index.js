@@ -3,20 +3,21 @@ const app = express();
 app.use(express.json());
 const cors = require("cors");
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
-const { default: mongoose } = require("mongoose");
+//const { default: mongoose } = require("mongoose");
 require("dotenv").config();
 const authRouter = require('./routes/auth');
+const PORT = 4000;
 
-const connectDB = async () => {
-  try {
-    await mongoose.connect(process.env.MONGODB_URL);
-    console.log("Connected to MongoDB");
-  } catch (err) {
-    console.error(err.message);
-  }
-};
+// const connectDB = async () => {
+//   try {
+//     await mongoose.connect(process.env.MONGODB_URL);
+//     console.log("Connected to MongoDB");
+//   } catch (err) {
+//     console.error(err.message);
+//   }
+// };
 
-connectDB();
+//connectDB();
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -29,4 +30,4 @@ app.use((req, res, next) => {
   next(err);
 });
 
-app.listen(4000, () => console.log("Server running on port 4000"));
+app.listen(PORT, () => console.log("Server running on port 4000"));

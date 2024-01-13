@@ -2,11 +2,13 @@ const db = require('../models');
 const jwt = require('jsonwebtoken');
 
 exports.signin = async function (req, res, next) {
+  console.log("signin:", req.body.username);
   try {
     // finding a user
     const user = await db.User.findOne({
       username: req.body.username
     });
+   
     const { id, username } = user;
 
     // checking if their password matches what was sent to the server
@@ -28,6 +30,7 @@ exports.signin = async function (req, res, next) {
         token
       });
     } else {
+      
       return next({
         status: 400,
         message: 'Invalid Email / Password.'

@@ -5,15 +5,17 @@ import AuthForm from '../../components/AuthForm';
 import { loginThunk } from '../../thunks/auth-thunk';
 
 
+
 export default function Login() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const location = useLocation();
 
     
     const onSubmit = (data) => {
         console.log(data);
         dispatch(loginThunk(data)).then(() => {
-            navigate('/');
+            navigate(location.state?.from || '/');
         });
     };
     
@@ -25,13 +27,12 @@ export default function Login() {
             title="Login"
             fields={[
             {
-                name: 'email',
-                placeholder: 'Email',
-                prefix: '@',
+                name: 'username',
+                placeholder: 'Username',
                 rules: [
                 {
                     required: true,
-                    message: 'Please input your email!',
+                    message: 'Please input your username!',
                 },
                 ],
             },
@@ -48,7 +49,9 @@ export default function Login() {
             },
             ]}
         />
-    
+      <p>
+        New to here? You can <Link to="/signup">sign up</Link> instead.
+      </p>
     </>
 
     );
