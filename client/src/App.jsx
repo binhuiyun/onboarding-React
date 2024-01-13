@@ -1,9 +1,10 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Home from './pages/Home';
-import './App.css';
-import PersonalInformationPage from './pages/PersonalInformation/PersonalInformationPage'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Home from "./pages/Home";
+import PersonalInformationPage from "./pages/PersonalInformation/PersonalInformationPage";
+import "./App.css";
+import VisaPage from "./pages/VisaManagement/VisaPage";
 
 function App() {
   return (
@@ -12,10 +13,16 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/personal-information" element={<PersonalInformationPage />} />
-    </Routes>
+
+        <Route path="/visa" element={<VisaPage />} />
+
+        <Route
+          path="/personal-information"
+          element={<PersonalInformationPage />}
+        />
+      </Routes>
     </BrowserRouter>
-  )
+  );
 }
 
-export default App
+export default App;

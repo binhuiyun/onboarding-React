@@ -2,5 +2,5 @@ const mongoose = require("mongoose");
 mongoose.set("debug", true);
 mongoose.Promise = Promise;
 
-module.exports.Employee = require("./employee");
+module.exports.User = require("./user");
 module.exports.Profile = require("./profile");
