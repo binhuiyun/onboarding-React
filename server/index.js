@@ -5,7 +5,8 @@ const cors = require("cors");
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 const { default: mongoose } = require("mongoose");
 require("dotenv").config();
-const authRouter = require('./routes/auth');
+const authRouter = require("./routes/auth");
+const visaRouter = require("./routes/visa");
 
 const connectDB = async () => {
   try {
@@ -28,5 +29,6 @@ app.use((req, res, next) => {
   err.status = 404;
   next(err);
 });
+app.use("/api/visa", visaRouter);
 
 app.listen(4000, () => console.log("Server running on port 4000"));
