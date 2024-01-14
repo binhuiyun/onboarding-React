@@ -8,6 +8,7 @@ import "./App.css";
 import VisaPage from "./pages/VisaManagement/VisaPage";
 import ReviewApplications from "./pages/HiringManagement/ReviewApplications";
 import PendingApplications from "./pages/HiringManagement/ReviewApplications/PendingApplications";
+import OnboardingPage from "./pages/Onboarding/OnboardingPage";
 
 function App() {
   return (
@@ -24,6 +25,10 @@ function App() {
         <Route
           path="/personal-information"
           element={<PersonalInformationPage />}
+        />
+        <Route
+          path="/onboarding"
+          element={<OnboardingPage />}
         />
       </Routes>
     </BrowserRouter>
