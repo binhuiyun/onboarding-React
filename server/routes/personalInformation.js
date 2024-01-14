@@ -6,7 +6,7 @@ const {
   createPersonalInformation,
 } = require("../handlers/personalInformation");
 
-router.get("/", getPersonalInformation);
+router.get("/:id", getPersonalInformation);
 router.put("/:id", updatePersonalInformation);
 router.post("/", createPersonalInformation);
 

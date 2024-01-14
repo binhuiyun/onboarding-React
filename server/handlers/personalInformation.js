@@ -24,8 +24,8 @@ const createPersonalInformation = async (req, res) => {
       summaryOfUploadedFiles,
     } = req.body;
     console.log(req.body);
-     const personalInformation = new PersonalInformation(req.body);
-     await personalInformation.save();
+    const personalInformation = new PersonalInformation(req.body);
+    await personalInformation.save();
     res.status(201).json(personalInformation);
   } catch (error) {
     res.status(409).json({ message: error.message });
@@ -33,8 +33,9 @@ const createPersonalInformation = async (req, res) => {
 };
 
 const getPersonalInformation = async (req, res) => {
+  const id = req.params.id;
   try {
-    const personalInformation = await PersonalInformation.find();
+    const personalInformation = await PersonalInformation.findById(id);
     res.status(200).json(personalInformation);
   } catch (error) {
     res.status(404).json({ message: error.message });
