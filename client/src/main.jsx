@@ -11,10 +11,6 @@ import 'antd/dist/reset.css';
 
 // if (localStorage.getItem("token")) {
 //   store.dispatch(setCurrentUser(jwtDecode(localStorage.getItem("token"))));
-//  console.log("token found");
-
-
-  
 // }
 
 ReactDOM.createRoot(document.getElementById("root")).render(
