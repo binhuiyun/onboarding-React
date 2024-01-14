@@ -1,30 +1,27 @@
 // UserProfileForm.js
 import React, { useState } from "react";
 import { createPersonalInformation } from "../../services/personalInformation-service";
+import { useNavigate } from "react-router-dom";
+
 const OnboardingPage = () => {
   const [formData, setFormData] = useState({
-    firstName: "",
-    lastName: "",
-    middleName: "",
-    preferredName: "",
+    name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
     profilePicture: "", // You can use this to store the image URL or a base64-encoded string
-    currentAddress: {
+    address: {
       aptNumber: "",
       streetName: "",
       city: "",
       state: "",
       zip: "",
     },
-    cellPhoneNumber: "",
-    workPhoneNumber: "",
+    phoneNumber: { cellPhoneNumber: "", workPhoneNumber: "" },
     email: "user@example.com", // Assuming email is pre-filled and cannot be edited
     ssn: "",
     dateOfBirth: "",
     gender: "",
-    citizenshipStatus: "",
-    citizenshipType: "",
-    workAuthorization: "",
-    fileUpload: null,
+    citizenship: "",
+    citizenType: "",
+    workAuthorization: { workAuthorizationType: "", files: null },
     reference: {
       firstName: "",
       lastName: "",
@@ -33,18 +30,22 @@ const OnboardingPage = () => {
       email: "",
       relationship: "",
     },
-    emergencyContact: {
-      firstName: "",
-      lastName: "",
-      middleName: "",
-      phone: "",
-      email: "",
-      relationship: "",
-    },
+    emergencyContact: [
+      {
+        firstName: "",
+        lastName: "",
+        middleName: "",
+        phone: "",
+        email: "",
+        relationship: "",
+      },
+    ],
     summaryOfUploadedFiles: "",
   });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
+    console.log(e.target);
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -52,12 +53,34 @@ const OnboardingPage = () => {
     });
   };
 
+  const handleNameChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      name: {
+        ...formData.name,
+        [name]: value,
+      },
+    });
+  };
+
   const handleAddressChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      currentAddress: {
-        ...formData.currentAddress,
+      address: {
+        ...formData.address,
+        [name]: value,
+      },
+    });
+  };
+
+  const handlePhoneNumberChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      phoneNumber: {
+        ...formData.phoneNumber,
         [name]: value,
       },
     });
@@ -102,6 +125,7 @@ const OnboardingPage = () => {
     e.preventDefault();
     console.log("Form submitted:", formData);
     await createPersonalInformation(formData);
+    navigate("/personal-information");
     // Handle form submission logic here
   }
 
@@ -110,7 +134,7 @@ const OnboardingPage = () => {
       {/* First Name */}
       <div className="mb-4">
         <label
-          htmlFor="firstName"
+          htmlFor="name.firstName"
           className="block text-sm font-medium text-gray-600"
         >
           First Name <span className="text-red-500">*</span>
@@ -119,8 +143,8 @@ const OnboardingPage = () => {
           type="text"
           id="firstName"
           name="firstName"
-          value={formData.firstName}
-          onChange={handleChange}
+          value={formData.name.firstName}
+          onChange={handleNameChange}
           required
           className="mt-1 p-2 border rounded-md w-full"
         />
@@ -138,8 +162,8 @@ const OnboardingPage = () => {
           type="text"
           id="lastName"
           name="lastName"
-          value={formData.lastName}
-          onChange={handleChange}
+          value={formData.name.lastName}
+          onChange={handleNameChange}
           required
           className="mt-1 p-2 border rounded-md w-full"
         />
@@ -157,8 +181,8 @@ const OnboardingPage = () => {
           type="text"
           id="middleName"
           name="middleName"
-          value={formData.middleName}
-          onChange={handleChange}
+          value={formData.name.middleName}
+          onChange={handleNameChange}
           className="mt-1 p-2 border rounded-md w-full"
         />
       </div>
@@ -175,8 +199,8 @@ const OnboardingPage = () => {
           type="text"
           id="preferredName"
           name="preferredName"
-          value={formData.preferredName}
-          onChange={handleChange}
+          value={formData.name.preferredName}
+          onChange={handleNameChange}
           className="mt-1 p-2 border rounded-md w-full"
         />
       </div>
@@ -217,7 +241,7 @@ const OnboardingPage = () => {
             type="text"
             id="aptNumber"
             name="aptNumber"
-            value={formData.currentAddress.aptNumber}
+            value={formData.address.aptNumber}
             onChange={handleAddressChange}
             placeholder="Apt Number"
             className="mt-1 p-2 border rounded-md"
@@ -226,7 +250,7 @@ const OnboardingPage = () => {
             type="text"
             id="streetName"
             name="streetName"
-            value={formData.currentAddress.streetName}
+            value={formData.address.streetName}
             onChange={handleAddressChange}
             placeholder="Street Name"
             className="mt-1 p-2 border rounded-md"
@@ -235,7 +259,7 @@ const OnboardingPage = () => {
             type="text"
             id="city"
             name="city"
-            value={formData.currentAddress.city}
+            value={formData.address.city}
             onChange={handleAddressChange}
             placeholder="City"
             className="mt-1 p-2 border rounded-md"
@@ -244,7 +268,7 @@ const OnboardingPage = () => {
             type="text"
             id="state"
             name="state"
-            value={formData.currentAddress.state}
+            value={formData.address.state}
             onChange={handleAddressChange}
             placeholder="State"
             className="mt-1 p-2 border rounded-md"
@@ -253,7 +277,7 @@ const OnboardingPage = () => {
             type="text"
             id="zip"
             name="zip"
-            value={formData.currentAddress.zip}
+            value={formData.address.zip}
             onChange={handleAddressChange}
             placeholder="Zip"
             className="mt-1 p-2 border rounded-md"
@@ -273,8 +297,8 @@ const OnboardingPage = () => {
           type="tel"
           id="cellPhoneNumber"
           name="cellPhoneNumber"
-          value={formData.cellPhoneNumber}
-          onChange={handleChange}
+          value={formData.phoneNumber.cellPhoneNumber}
+          onChange={handlePhoneNumberChange}
           required
           className="mt-1 p-2 border rounded-md w-full"
         />
@@ -292,8 +316,8 @@ const OnboardingPage = () => {
           type="tel"
           id="workPhoneNumber"
           name="workPhoneNumber"
-          value={formData.workPhoneNumber}
-          onChange={handleChange}
+          value={formData.phoneNumber.workPhoneNumber}
+          onChange={handlePhoneNumberChange}
           className="mt-1 p-2 border rounded-md w-full"
         />
       </div>
@@ -382,16 +406,16 @@ const OnboardingPage = () => {
       {/* Citizenship Status */}
       <div className="mb-4">
         <label
-          htmlFor="citizenshipStatus"
+          htmlFor="citizenship"
           className="block text-sm font-medium text-gray-600"
         >
           Permanent resident or citizen of the U.S.?{" "}
           <span className="text-red-500">*</span>
         </label>
         <select
-          id="citizenshipStatus"
-          name="citizenshipStatus"
-          value={formData.citizenshipStatus}
+          id="citizenship"
+          name="citizenship"
+          value={formData.citizenship}
           onChange={handleChange}
           required
           className="mt-1 p-2 border rounded-md w-full"
@@ -405,18 +429,18 @@ const OnboardingPage = () => {
       </div>
 
       {/* Conditional Rendering based on Citizenship Status */}
-      {formData.citizenshipStatus === "yes" && (
+      {formData.citizenship === "yes" && (
         <div className="mb-4">
           <label
-            htmlFor="citizenshipType"
+            htmlFor="citizenType"
             className="block text-sm font-medium text-gray-600"
           >
             Choose your status:
           </label>
           <select
-            id="citizenshipType"
-            name="citizenshipType"
-            value={formData.citizenshipType}
+            id="citizenType"
+            name="citizenType"
+            value={formData.citizenType}
             onChange={handleChange}
             className="mt-1 p-2 border rounded-md w-full"
           >
@@ -429,12 +453,12 @@ const OnboardingPage = () => {
         </div>
       )}
 
-      {formData.citizenshipStatus === "no" && (
+      {formData.citizenship === "no" && (
         <div>
           {/* Work Authorization */}
           <div className="mb-4">
             <label
-              htmlFor="workAuthorization"
+              htmlFor="workAuthorizationType"
               className="block text-sm font-medium text-gray-600"
             >
               What is your work authorization?{" "}
@@ -442,9 +466,9 @@ const OnboardingPage = () => {
             </label>
             <input
               type="text"
-              id="workAuthorization"
-              name="workAuthorization"
-              value={formData.workAuthorization}
+              id="workAuthorizationType"
+              name="workAuthorizationType"
+              value={formData.workAuthorization.workAuthorizationType}
               onChange={handleChange}
               required
               className="mt-1 p-2 border rounded-md w-full"
@@ -454,15 +478,15 @@ const OnboardingPage = () => {
           {/* File Upload for Work Authorization */}
           <div className="mb-4">
             <label
-              htmlFor="fileUpload"
+              htmlFor="workAuthorizationFiles"
               className="block text-sm font-medium text-gray-600"
             >
               Upload a file for work authorization:
             </label>
             <input
               type="file"
-              id="fileUpload"
-              name="fileUpload"
+              id="workAuthorizationFiles"
+              name="workAuthorizationFiles"
               accept=".pdf, .doc, .docx" // Allow specific file types
               onChange={handleFileUpload}
               className="mt-1 p-2 border rounded-md w-full"

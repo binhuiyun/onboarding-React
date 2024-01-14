@@ -9,7 +9,9 @@ import {
   Space,
   Popconfirm,
 } from "antd";
+import {useDispatch, useSelector} from "react-redux";
 import FileUpload from "./FileUpload";
+import { fetchPersonalInformation } from "../../redux/personalInformationSlice";
 
 const PersonalInformationPage = () => {
   const [height, setHeight] = useState();
@@ -20,6 +22,13 @@ const PersonalInformationPage = () => {
     useState(false);
   const [openEmploymentEditModal, setOpenEmploymentEditModal] = useState(false);
   const [openAddFileModal, setOpenAddFileModal] = useState(false);
+  const dispatch = useDispatch();
+  const personalInformation  = useSelector((state) => state.personalInformation);
+
+  // TODO: Fetch real userID from redux store
+  useEffect(() => {
+    dispatch(fetchPersonalInformation("65a39a2401e8eff282ae48dd"));
+  }, []);
 
   const targetRef = useRef();
   useLayoutEffect(() => {
