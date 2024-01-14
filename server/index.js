@@ -3,10 +3,11 @@ const app = express();
 app.use(express.json());
 const cors = require("cors");
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
-//const { default: mongoose } = require("mongoose");
+const { default: mongoose } = require("mongoose");
 require("dotenv").config();
 const authRouter = require('./routes/auth');
 const tokenHistoryRouter = require('./routes/tokenHistory');
+const visaRouter = require('./routes/visa');
 const PORT = 4000;
 
 const connectDB = async () => {
