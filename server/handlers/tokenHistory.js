@@ -3,16 +3,20 @@ require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const TokenHistory = require("../models/tokenHistory");
 
-const generateToken = (email) => {
+const generateAndSend = async (req, res) => {
+  const { email } = req.body;
   const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, 
   {expiresIn: "3h"});
-  return token;
-  };
-
-const sendEmail = async (email, token) => {
+  const tokenHistory = new TokenHistory({
+    email,
+    link: `http://localhost:5173/register/${token}`,
+  });
+  await tokenHistory.save();
   try {
     const transporter = nodeMailer.createTransport({
-      service: "gmail",
+      host : "smtp.163.com",
+      port: 465,
+      secure: false,
       auth: {
         user: process.env.EMAIL,
         pass: process.env.PASSWORD,
@@ -26,6 +30,12 @@ const sendEmail = async (email, token) => {
     };
     const info = await transporter.sendMail(mailOptions);
     console.log("Email sent: " + info.response);
+    const tokenHistory = new TokenHistory({
+      email,
+      link: `http://localhost:5173/register/${token}`,
+    });
+    res.json(tokenHistory);
+
   } catch (err) {
     console.error("Error sending email:", err);
   }
@@ -59,4 +69,4 @@ const getTokenHistory = async(req, res) => {
     }
 };
 
-module.exports = { generateToken, sendEmail, addTokenHistory, getTokenHistory };
+module.exports = { generateAndSend, addTokenHistory, getTokenHistory };

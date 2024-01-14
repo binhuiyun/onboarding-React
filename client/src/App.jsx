@@ -6,6 +6,7 @@ import HiringManagement from "./pages/HiringManagement";
 import PersonalInformationPage from "./pages/PersonalInformation/PersonalInformationPage";
 import "./App.css";
 import VisaPage from "./pages/VisaManagement/VisaPage";
+import ReviewApplications from "./pages/HiringManagement/ReviewApplications";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/hiring-management" element={<HiringManagement />} />
+        <Route path="/hiring-management/reviewApplications" element={<ReviewApplications />} />
 
         <Route path="/visa" element={<VisaPage />} />
 

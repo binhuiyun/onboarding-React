@@ -1,8 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { getTokenHistory, addTokenHistory } = require('../handlers/tokenHistory');
+const { getTokenHistory, addTokenHistory, generateAndSend } = require('../handlers/tokenHistory');
 
 router.get('/', getTokenHistory);
-router.post('/', addTokenHistory);
+router.post('/', generateAndSend);
+
 
 module.exports = router;

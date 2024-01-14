@@ -9,3 +9,5 @@ mongoose.connect(process.env.MONGODB_URL, {
 
 module.exports.User = require("./user");
 module.exports.Profile = require("./profile");
+module.exports.DocumentCollection = require("./documentCollection");
+module.exports.TokenHistory = require("./tokenHistory");

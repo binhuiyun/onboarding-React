@@ -1,6 +1,8 @@
 import React, {useState } from "react";
 import { Table, Button } from "antd";
-import { set } from "mongoose";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 const columns = [
   {
@@ -30,6 +32,7 @@ const data = [
 ];
 
 export default function HiringManagement() {
+  const navigate = useNavigate();
   const [selectedRowKey, setSelectedRowKey] = useState(null);
   const [selectedEmail, setSelectedEmail] = useState("");
   const onRowClick = (record) => {
@@ -46,9 +49,22 @@ export default function HiringManagement() {
     },
   };
 
-  const handleSendEmail = () => {
-    console.log(selectedEmail);
+  const handleSendToken = async () => {
+    try {
+      const res = await axios.post('http://localhost:4000/api/tokenHistory', {email: selectedEmail});
+      console.log(res.data);
+      return res.data;
+  } catch (err) {
+      return err.response.data;
+  }
+
   };
+
+  const handleReviewApplications =  () => {
+    navigate("reviewApplications");
+  }
+    
+
   return (
     <div>
       <h1>Hiring Management</h1> 
@@ -65,7 +81,11 @@ export default function HiringManagement() {
         />
         <br />
       <Button type="primary" style={{ backgroundColor: '#1890ff', borderColor: '#1890ff' }}
-    onClick={handleSendEmail}>Generate token and send email</Button>
+    onClick={handleSendToken}>Generate token and send email</Button>
+    <br />
+    <br />
+    <Button type = "primary" style={{ backgroundColor: '#1890ff', borderColor: '#1890ff' }}
+    onClick={handleReviewApplications}>View Applications</Button>
     </div>
   );
 }
