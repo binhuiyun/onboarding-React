@@ -9,6 +9,7 @@ import {
   Space,
   Popconfirm,
 } from "antd";
+import FileUpload from "./FileUpload";
 
 const PersonalInformationPage = () => {
   const [height, setHeight] = useState();
@@ -17,6 +18,9 @@ const PersonalInformationPage = () => {
   const [openContactInfoModal, setOpenContactInfoModal] = useState(false);
   const [openContactInfoEditModal, setOpenContactInfoEditModal] =
     useState(false);
+  const [openEmploymentEditModal, setOpenEmploymentEditModal] = useState(false);
+  const [openAddFileModal, setOpenAddFileModal] = useState(false);
+
   const targetRef = useRef();
   useLayoutEffect(() => {
     console.log(targetRef);
@@ -32,6 +36,11 @@ const PersonalInformationPage = () => {
     setOpenContactInfoModal(false);
   };
 
+  const handleEmploymentEditButtonClick = () => {
+    console.log("EmploymentEditButton clicked");
+    setOpenEmploymentEditModal(true);
+  };
+
   const handleContactInfoButtonClick = () => {
     console.log("ContactInfoButton clicked");
     setOpenContactInfoModal(true);
@@ -45,6 +54,11 @@ const PersonalInformationPage = () => {
   const handleContactInfoEditButton = () => {
     console.log("ContactInfoEditButton clicked");
     setOpenContactInfoEditModal(true);
+  };
+
+  const handleDocumentsEditButtonClick = () => {
+    console.log("DocumentsEditButton clicked");
+    setOpenAddFileModal(true);
   };
 
   const [form] = Form.useForm();
@@ -65,8 +79,63 @@ const PersonalInformationPage = () => {
     ssn: "",
   });
 
+  const [employmentData, setEmploymentData] = useState({
+    visatitle: "",
+    startdate: {
+      day: "",
+      month: "",
+      year: "",
+    },
+    enddate: {
+      day: "",
+      month: "",
+      year: "",
+    },
+  });
+
+  const handleSave = (e) => {
+    console.log(e);
+    setOpenEmploymentEditModal(false);
+  };
+
   const handleChange = (e) => {
+    console.log(e.target);
     const { name, value } = e.target;
+    if (name == "visatitle") {
+      setEmploymentData({
+        ...employmentData,
+        visatitle: value,
+      });
+    }
+
+    if (
+      name == "startdateday" ||
+      name == "startdatemonth" ||
+      name == "startdateyear"
+    ) {
+      setEmploymentData({
+        ...employmentData,
+        startdate: {
+          ...employmentData.startdate,
+          [name.slice(9).toLowerCase()]: value,
+        },
+      });
+    }
+
+    if (
+      name == "enddateday" ||
+      name == "enddatemonth" ||
+      name == "enddateyear"
+    ) {
+      setEmploymentData({
+        ...employmentData,
+        enddate: {
+          ...employmentData.enddate,
+          [name.slice(7).toLowerCase()]: value,
+        },
+      });
+    }
+
     if (name === "dobDay" || name === "dobMonth" || name === "dobYear") {
       setFormData({
         ...formData,
@@ -148,6 +217,122 @@ const PersonalInformationPage = () => {
           >
             Edit
           </button>
+        </Modal>
+
+        <Modal
+          title="Add File"
+          onOk={handleOk}
+          onCancel={handleCancel}
+          maskClosable={false}
+          open={openAddFileModal}
+          footer={[
+            <Button key="cancel">Cancel</Button>,
+            <Button key="save">Save</Button>,
+          ]}
+        >
+          <FileUpload />
+        </Modal>
+
+        <Modal
+          title="Edit Employment Info"
+          onOk={handleOk}
+          onCancel={handleCancel}
+          maskClosable={false}
+          open={openEmploymentEditModal}
+          footer={[
+            <Button key="cancel">Cancel</Button>,
+            <Button key="save" name="employmentinfosave" onClick={handleSave}>
+              Save
+            </Button>,
+          ]}
+        >
+          <form className="max-w-md mx-auto mt-8" onSubmit={handleSubmit}>
+            <div className="mb-2">
+              <label htmlFor="visatitle" className="block text-sm font-medium">
+                Visa Title
+              </label>
+              <input
+                type="text"
+                id="visatitle"
+                name="visatitle"
+                value={employmentData.visatitle}
+                onChange={handleChange}
+                className="mt-1 p-2 border rounded-md w-full"
+              />
+            </div>
+            <div className="flex flex-row w-full space-x-2">
+              <div className="mb-4">
+                <label className="block text-sm font-medium">Start Date</label>
+                <div className="flex">
+                  <select
+                    id="startdateday"
+                    name="startdateday"
+                    value={employmentData.startdate.day}
+                    onChange={handleChange}
+                    className="mr-1 p-2 border rounded-md"
+                  >
+                    <option value="">Day</option>
+                    {generateDropdownOptions(1, 31)}
+                  </select>
+                  <select
+                    id="startdatemonth"
+                    name="startdatemonth"
+                    value={employmentData.startdate.month}
+                    onChange={handleChange}
+                    className="mr-1 p-2 border rounded-md"
+                  >
+                    <option value="">Month</option>
+                    {generateDropdownOptions(1, 12)}
+                  </select>
+                  <select
+                    id="startdateyear"
+                    name="startdateyear"
+                    value={employmentData.startdate.year}
+                    onChange={handleChange}
+                    className="p-2 border rounded-md"
+                  >
+                    <option value="">Year</option>
+                    {generateDropdownOptions(2000, 2030)}
+                  </select>
+                </div>
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-medium">End Date</label>
+                <div className="flex">
+                  <select
+                    id="enddateday"
+                    name="enddateday"
+                    value={employmentData.enddate.day}
+                    onChange={handleChange}
+                    className="mr-1 p-2 border rounded-md"
+                  >
+                    <option value="">Day</option>
+                    {generateDropdownOptions(1, 31)}
+                  </select>
+                  <select
+                    id="enddatemonth"
+                    name="enddatemonth"
+                    value={employmentData.enddate.month}
+                    onChange={handleChange}
+                    className="mr-1 p-2 border rounded-md"
+                  >
+                    <option value="">Month</option>
+                    {generateDropdownOptions(1, 12)}
+                  </select>
+                  <select
+                    id="enddateyear"
+                    name="enddateyear"
+                    value={employmentData.enddate.year}
+                    onChange={handleChange}
+                    className="p-2 border rounded-md"
+                  >
+                    <option value="">Year</option>
+                    {generateDropdownOptions(2000, 2030)}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </form>
         </Modal>
 
         <Modal
@@ -517,6 +702,7 @@ const PersonalInformationPage = () => {
                   strokeWidth="1.5"
                   stroke="currentColor"
                   className="w-6 h-6"
+                  onClick={handleEmploymentEditButtonClick}
                 >
                   <path
                     strokeLinecap="round"
@@ -626,6 +812,7 @@ const PersonalInformationPage = () => {
                   strokeWidth="1.5"
                   stroke="currentColor"
                   className="w-6 h-6"
+                  onClick={handleDocumentsEditButtonClick}
                 >
                   <path
                     strokeLinecap="round"
