@@ -42,22 +42,22 @@ const generateAndSend = async (req, res) => {
 };
 
 
-const addTokenHistory = async (req, res) => {
-  try{
-    const {email, name, link} = req.body;
-    const tokenHistory = new TokenHistory({
-      email,
-      name,
-      link,
+// const addTokenHistory = async (req, res) => {
+//   try{
+//     const {email, name, link} = req.body;
+//     const tokenHistory = new TokenHistory({
+//       email,
+//       name,
+//       link,
      
-    });
-    await tokenHistory.save();
-    res.json(tokenHistory);
-  } catch(err){
-    res.status(500).json({message: "Server Error"});
-  }
+//     });
+//     await tokenHistory.save();
+//     res.json(tokenHistory);
+//   } catch(err){
+//     res.status(500).json({message: "Server Error"});
+//   }
   
-};
+// };
 
 const getTokenHistory = async(req, res) => {
    try{
@@ -69,4 +69,4 @@ const getTokenHistory = async(req, res) => {
     }
 };
 
-module.exports = { generateAndSend, addTokenHistory, getTokenHistory };
+module.exports = { generateAndSend, getTokenHistory };
