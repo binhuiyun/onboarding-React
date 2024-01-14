@@ -31,5 +31,6 @@ app.use((req, res, next) => {
   err.status = 404;
   next(err);
 });
+app.use("/api/visa", visaRouter);
 
 app.listen(PORT, () => console.log("Server running on port 4000"));
