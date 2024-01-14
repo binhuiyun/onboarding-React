@@ -4,10 +4,12 @@ app.use(express.json());
 const cors = require("cors");
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 const { default: mongoose } = require("mongoose");
+const { default: mongoose } = require("mongoose");
 require("dotenv").config();
 const authRouter = require('./routes/auth');
 const tokenHistoryRouter = require('./routes/tokenHistory');
 const visaRouter = require('./routes/visa');
+const personalInformationRouter = require('./routes/personalInformation');
 const PORT = 4000;
 
 const connectDB = async () => {
@@ -27,6 +29,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/auth", authRouter);
 app.use("/api/tokenHistory", tokenHistoryRouter);
+app.use("/api/personalInformation", personalInformationRouter);
 app.use((req, res, next) => {
   const err = new Error("Not Found");
   err.status = 404;

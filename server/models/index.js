@@ -7,6 +7,6 @@ mongoose.Promise = Promise;
 //     });
 
 module.exports.User = require("./user");
-module.exports.Profile = require("./profile");
+module.exports.Profile = require("./personalInformation");
 module.exports.DocumentCollection = require("./documentCollection");
 module.exports.TokenHistory = require("./tokenHistory");

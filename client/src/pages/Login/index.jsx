@@ -12,7 +12,11 @@ export default function Login() {
   const onSubmit = (data) => {
     console.log(data);
     dispatch(loginThunk(data)).then(() => {
-      navigate("/hiring-management");
+      // TODO (by Yiqian):
+      // change the following line to navigate to the page you want to go after login
+      // currently, it will navigate to the onboarding page
+      navigate("/onboarding");
+      //navigate("/hiring-management");
     });
   };
 
