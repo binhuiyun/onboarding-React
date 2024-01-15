@@ -11,16 +11,16 @@ const visaRouter = require('./routes/visa');
 const personalInformationRouter = require('./routes/personalInformation');
 const PORT = 4000;
 
-// const connectDB = async () => {
-//   try {
-//     await mongoose.connect(process.env.MONGODB_URL);
-//     console.log("Connected to MongoDB");
-//   } catch (err) {
-//     console.error(err.message);
-//   }
-// };
+const connectDB = async () => {
+  try {
+    await mongoose.connect(process.env.MONGODB_URL);
+    console.log("Connected to MongoDB");
+  } catch (err) {
+    console.error(err.message);
+  }
+};
 
-// connectDB();
+connectDB();
 
 
 
