@@ -16,7 +16,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        <Route path="/register/:token" element={<Register />} />
         <Route path="/hiring-management" element={<HiringManagement />} />
         <Route path="/hiring-management/applications" element={<ReviewApplications />} />
         <Route path="/hiring-management/applications/pending" element={<PendingApplications />} />

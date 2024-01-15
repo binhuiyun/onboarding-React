@@ -9,3 +9,4 @@ export const createToken = async (data) => {
         return err.response.data;
     }
 }
+
