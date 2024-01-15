@@ -22,9 +22,7 @@ const connectDB = async () => {
 
 connectDB();
 
-app.get("/", (req, res) => {
-  res.send("Hello World!");
-});
+
 
 app.use("/api/auth", authRouter);
 app.use("/api/tokenHistory", tokenHistoryRouter);

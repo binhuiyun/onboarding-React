@@ -1,18 +1,20 @@
-import React from "react";
+import React, { useEffect} from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import AuthForm from "../../components/AuthForm";
 import { registerThunk } from "../../thunks/auth-thunk";
+import axios from "axios";
+
 
 export default function Register() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { token } = useParams();
 
   const fields = [
     {
       name: "username",
       placeholder: "username",
-      prefix: "@",
       rules: [
         {
           required: true,
@@ -49,6 +51,26 @@ export default function Register() {
       navigate("/login");
     });
   };
+
+  useEffect(() => {
+    if (token) {
+      axios.post('http://localhost:4000/api/auth/register',null, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }).then(res => {
+        console.log("res", res);
+      }).catch(err => {
+        console.log("err", err);
+      });
+      console.log("token", token);
+    }
+    else {
+      // TODO: navigate to error page
+      console.log("no token");
+    }
+  }, []);
+
   return (
     <>
       <AuthForm
