@@ -44,7 +44,7 @@ ${next}`
           {status === "rejected" && `${feedback}`}
         </div>
         <div className="flex">
-          {title === "i983" && (
+          {title === "I983" && (
             <FolderArrowDownIcon className="h-8 w-8 text-blue-500 mr-1" />
           )}
           <FolderPlusIcon

@@ -16,13 +16,16 @@ const optDocSchema = new Schema({
   fileType: {
     type: String,
     required: true,
+    // opt receipt / opt ead / i983 / i20
   },
 });
 const optDocModel = mongoose.model("optDocModel", optDocSchema);
 
 const visaSchema = new Schema({
   employee: {
-    type: Schema.Types.ObjectId,
+    // TODO: change it back to ObjectId for user
+    // type: Schema.Types.ObjectId,
+    type: String,
     required: true,
   },
   optReceipt: {
