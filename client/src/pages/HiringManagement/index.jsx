@@ -26,15 +26,22 @@ const data = [
     name: "Alice",
     email: "alice@gmail.com",
   },
+  {
+    key: "3",
+    name: "Bob",
+    email: "bob@gmail.com",
+  }
 ];
 
 export default function HiringManagement() {
   const navigate = useNavigate();
   const [selectedRowKey, setSelectedRowKey] = useState(null);
   const [selectedEmail, setSelectedEmail] = useState("");
+  const [selectedName, setSelectedName] = useState("");
   const onRowClick = (record) => {
     setSelectedRowKey(record.key);
     setSelectedEmail(record.email);
+    setSelectedName(record.name);
   };
 
   const rowSelection = {
@@ -43,6 +50,7 @@ export default function HiringManagement() {
     onChange: (selectedRowKeys, selectedRows) => {
       setSelectedRowKey(selectedRowKeys[0]);
       setSelectedEmail(selectedRows[0]?.email || "");
+      setSelectedName(selectedRows[0]?.name || "");
     },
   };
 
@@ -50,6 +58,7 @@ export default function HiringManagement() {
     try {
       const res = await axios.post("http://localhost:4000/api/tokenHistory", {
         email: selectedEmail,
+        name: selectedName,
       });
       console.log(res.data);
       return res.data;
@@ -81,6 +90,9 @@ export default function HiringManagement() {
       <br />
       <br />
       <Button onClick={handleReviewApplications}>View Applications</Button>
+      <br />
+      <br />
+      <Button onClick={()=> navigate("token")}> View Token History</Button>
     </div>
   );
 }

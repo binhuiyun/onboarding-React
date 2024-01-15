@@ -4,12 +4,14 @@ const jwt = require("jsonwebtoken");
 const TokenHistory = require("../models/tokenHistory");
 
 const generateAndSend = async (req, res) => {
-  const { email } = req.body;
-  const token = jwt.sign({ email }, process.env.JWT_SECRET_KEY, 
-  {expiresIn: "3h"});
+  const { email, name } = req.body;
+  const token = jwt.sign({ name }, process.env.JWT_SECRET_KEY, 
+    // TODO: change expiresIn to 3h for production
+  {expiresIn: "72h"});
   try{
     const tokenHistory = new TokenHistory({
     email,
+    name,
     link: `http://localhost:5173/register/${token}`,
   });
   await tokenHistory.save();

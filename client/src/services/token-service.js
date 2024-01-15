@@ -1,12 +1,12 @@
 import axios from 'axios';
-const BASE_URL = 'http://localhost:4000';
+const TOKEN_API = 'http://localhost:4000/api/tokenHistory';
 
-export const createToken = async (data) => {
-    try {
-        const res = await axios.post(BASE_URL+'/api/tokenHistory', data);
+
+export const fetchTokenHistory = async () => {
+    try{
+        const res = await axios.get(TOKEN_API);
         return res.data;
-    } catch (err) {
+    }catch(err){
         return err.response.data;
     }
 }
-

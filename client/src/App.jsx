@@ -9,6 +9,7 @@ import VisaPage from "./pages/VisaManagement/VisaPage";
 import ReviewApplications from "./pages/HiringManagement/ReviewApplications";
 import PendingApplications from "./pages/HiringManagement/ReviewApplications/PendingApplications";
 import OnboardingPage from "./pages/Onboarding/OnboardingPage";
+import ReviewTokenHistory from "./pages/HiringManagement/ReviewTokenHistory";
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
         <Route path="/hiring-management" element={<HiringManagement />} />
         <Route path="/hiring-management/applications" element={<ReviewApplications />} />
         <Route path="/hiring-management/applications/pending" element={<PendingApplications />} />
+        <Route path="/hiring-management/token" element={<ReviewTokenHistory />} />
+        
         <Route path="/visa" element={<VisaPage />} />
 
         <Route

@@ -1,9 +1,9 @@
 import axios from 'axios';
-const BASE_URL = 'http://localhost:4000';
+const AUTH_API = 'http://localhost:4000/api/auth';
 
 export const login = async (data) => {
     try {
-        const res = await axios.post(BASE_URL+'/api/auth/login', data);
+        const res = await axios.post(AUTH_API+'/login', data);
         return res.data;
     } catch (err) {
         return err.response.data;
@@ -12,7 +12,7 @@ export const login = async (data) => {
 
 export const register = async (data) => {
     try {
-        const res = await axios.post(BASE_URL+'/api/auth/register', data);
+        const res = await axios.post(AUTH_API+'/register', data);
         return res.data;
     } catch (err) {
         return err.response.data;

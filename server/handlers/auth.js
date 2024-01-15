@@ -31,26 +31,52 @@ exports.login = async function (req, res, next) {
     } else {
       return next({
         status: 400,
-        message: "Invalid Email / Password.",
+        message: "Invalid Username / Password.",
       });
     }
   } catch (err) {
     return next({
       status: 400,
-      message: "Invalid Email / Password.",
+      message: "Invalid Username / Password.",
     });
   }
 };
 
-exports.register = async function (req, res) {
-
-  const token = req.headers.authorization.split(' ')[1]; 
-
+exports.verifyToken = async function (req, res) {
+  const token = req.headers.authorization.split(" ")[1];
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
     res.json(decoded);
   } catch (err) {
     console.error("Token verification failed:", err);
     res.status(401).json({ message: "Invalid Token" });
+  }
+};
+
+exports.register = async function (req, res, next) {
+  try {
+    let user = await db.User.create(req.body);
+    let { id, username } = user;
+    let token = jwt.sign(
+      {
+        id,
+        username,
+      },
+      process.env.JWT_SECRET_KEY
+    );
+    return res.status(200).json({
+      id,
+      username,
+      token,
+    });  
+  }catch (err) {
+    // if a validation fails!
+    if (err.code === 11000) {
+      err.message = "Sorry, that username is already taken";
+    }
+    return next({
+      status: 400,
+      message: err.message,
+    });
   }
 };

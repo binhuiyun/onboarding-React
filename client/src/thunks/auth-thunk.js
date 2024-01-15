@@ -1,15 +1,35 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { login, register } from "../services/auth-service";
-import { createPersonalInformation } from "../services/personalInformation-service";
+import { addError, removeError } from "../redux/errorSlice";
 
-export const loginThunk = createAsyncThunk("auth/login", async (data) => {
-  const user = await login(data);
-  localStorage.setItem("token", user.token);
-  console.log("thunk", user.token);
-  return user;
-});
+export const loginThunk = createAsyncThunk(
+  "auth/login",
+  async (data, thunkAPI) => {
+    try {
+      const user = await login(data);
+      localStorage.setItem("token", user.token);
+      console.log("thunk", user.token);
+      thunkAPI.dispatch(removeError());
+      return user;
+    } catch (error) {
+      const { message } = error;
+      thunkAPI.dispatch(addError(message));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
 
-export const registerThunk = createAsyncThunk("auth/register", async (data) => {
-  await register(data);
-  //await createPersonalInformation(data);
-});
+export const registerThunk = createAsyncThunk(
+  "auth/register", 
+  async (data, thunkAPI) => {
+    try {
+      const user = await register(data);
+      thunkAPI.dispatch(removeError());
+      return user;
+    } catch (error) {
+      const { message } = error;
+      thunkAPI.dispatch(addError(message));
+      return thunkAPI.rejectWithValue(message);
+    }
+  }
+);
