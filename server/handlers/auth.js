@@ -44,6 +44,7 @@ exports.login = async function (req, res, next) {
 
 exports.verifyToken = async function (req, res) {
   const token = req.headers.authorization.split(" ")[1];
+  console.log("verify token", token);
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY);
     res.json(decoded);

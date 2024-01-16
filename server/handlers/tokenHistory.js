@@ -52,4 +52,15 @@ const getTokenHistory = async(req, res) => {
     }
 };
 
-module.exports = { generateAndSend, getTokenHistory };
+const updateTokenStatus = async (req, res) => {
+  try{
+    const { id } = req.params;
+    const { status } = req.body;
+    const tokenHistory = await TokenHistory.findByIdAndUpdate(id, {status}, {new: true});
+    res.json(tokenHistory);
+  }catch(err){
+    res.status(500).json({message: "Server Error"});
+  }
+};  
+
+module.exports = { generateAndSend, getTokenHistory, updateTokenStatus };

@@ -6,6 +6,7 @@ const router = express.Router();
 const tokenRequired =  async (req, res, next) => {
   try {
   const token = req.headers.authorization.split(' ')[1]; // Bearer token
+  console.log("token", token);
   const decoded = await jwt.verify(token, process.env.JWT_SECRET_KEY);
   if (decoded) {
     req.user = decoded.user;
