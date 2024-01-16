@@ -10,7 +10,7 @@ import {
   FolderPlusIcon,
 } from "@heroicons/react/24/outline";
 import PopUp from "./PopUp";
-const FileUploader = ({ title, status, feedback, next }) => {
+const FileUploader = ({ title, fileType, status, feedback, next }) => {
   const [isPopUp, setIsPopUp] = useState(false);
   const handleUpload = (e) => {
     e.preventDefault();
@@ -20,7 +20,10 @@ const FileUploader = ({ title, status, feedback, next }) => {
   return (
     <>
       {isPopUp &&
-        createPortal(<PopUp handleUpload={handleUpload} />, document.body)}
+        createPortal(
+          <PopUp handleUpload={handleUpload} fileType={fileType} />,
+          document.body
+        )}
       <div className="w-[60%] py-4 px-4 shadow-md my-4 flex rounded-lg hover:scale-[101%]">
         {status === "pending" && (
           <ClockIcon className="h-8 w-8 text-yellow-500" />

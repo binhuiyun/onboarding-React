@@ -8,9 +8,9 @@ const mockUser = {
 };
 
 const mockInfo = {
-  fileName: "i983",
+  fileName: "I983",
   status: "approved",
-  feedback: "",
+  feedback: "reupload correct one",
   next: "OPT EAD",
 };
 
@@ -59,24 +59,28 @@ const VisaPage = () => {
       <div className="w-full flex flex-col items-center">
         <FileUploader
           title={"OPT Receipt"}
+          fileType="optReceipt"
           status={mockInfo.status}
           feedback={mockInfo.feedback}
           next={mockInfo.next}
         />
         <FileUploader
           title={"OPT EAD"}
+          fileType="optEAD"
           status={mockInfo.status}
           feedback={mockInfo.feedback}
           next={mockInfo.next}
         />
         <FileUploader
-          title={"I983"}
+          title={"I-983"}
+          fileType="I983"
           status={mockInfo.status}
           feedback={mockInfo.feedback}
           next={mockInfo.next}
         />
         <FileUploader
-          title={"I20"}
+          title={"I-20"}
+          fileType="I20"
           status={mockInfo.status}
           feedback={mockInfo.feedback}
           next={mockInfo.next}

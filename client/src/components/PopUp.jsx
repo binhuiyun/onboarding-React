@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { FolderPlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
 
+const mockUser = {
+  _id: "qweasdzxc123321",
+  firstName: "Ruike",
+};
 const PopUp = (props) => {
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -12,9 +16,20 @@ const PopUp = (props) => {
   const onFileUpload = (e) => {
     e.preventDefault();
     const formData = new FormData();
-
-    formData.append("myFile", selectedFile, selectedFile.name);
-
+    formData.append("file", selectedFile, selectedFile.name);
+    const storeFile = async () => {
+      const response = await axios.post(
+        `http://localhost:4000/api/visa/${mockUser._id}/${props.fileType}`,
+        formData,
+        {
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+      console.log(response);
+    };
+    storeFile();
     console.log(selectedFile);
   };
   return (
@@ -32,7 +47,7 @@ const PopUp = (props) => {
         </div>
         <input type="file" className="w-1/2" onChange={onFileChange} />
         <button
-          className="bg-blue-500 text-white my-2 px-8 py-2 rounded-md hover:scale-[103%]"
+          className="bg-blue-500 text-white my-4 px-8 py-2 rounded-md hover:scale-[103%]"
           disabled={selectedFile === null}
           onClick={onFileUpload}
         >

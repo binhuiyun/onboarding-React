@@ -1,5 +1,4 @@
-const { visaModel } = require("../models/visaDocuments");
-
+const { visaModel, optDocModel } = require("../models/visaDocuments");
 const createVisaModel = async (req, res) => {
   try {
     const { employee } = req.body;
@@ -19,7 +18,26 @@ const getVisaById = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
+const addToVisaDocumentation = async (req, res) => {
+  try {
+    const visaDoc = await visaModel.findOne({ employee: req.params.id });
+    const fileType = req.params.fileType;
+    const optDoc = await optDocModel.create({
+      fileName: req.file.mimetype,
+      fileDoc: req.file.buffer,
+      fileType: fileType,
+      status: "pending",
+    });
+    console.log(optDoc);
+    visaDoc[fileType] = optDoc._id;
+    visaDoc.save();
+  } catch (err) {
+    res.status(500).json({ message: "Server Error" });
+  }
+};
 module.exports = {
   createVisaModel,
   getVisaById,
+  addToVisaDocumentation,
 };

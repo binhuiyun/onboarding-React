@@ -36,11 +36,11 @@ const visaSchema = new Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "optDocModel",
   },
-  i983: {
+  I983: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "optDocModel",
   },
-  i20: {
+  I20: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "optDocModel",
   },
