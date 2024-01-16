@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
+import { useSelector, useDispatch } from 'react-redux'; 
 import { Table } from 'antd';
-import { fetchTokenHistory } from '../../../services/token-service';
+import { fetchTokenHistoryThunk } from '../../../thunks/token-thunk';
 
 
 const columns = [
@@ -38,13 +39,14 @@ const columns = [
     const data = [];
 
 export default function ReviewTokenHistory() {
-    const [tokenHistory, setTokenHistory] = useState([]);
+    const dispatch = useDispatch();
+    const {tokenHistory} = useSelector((state) => state.tokenHistory);
+ 
     useEffect(() => {
-        fetchTokenHistory().then((res) => {
-            console.log(res[0]);
-            setTokenHistory(res);    
-        });
-    }, []);
+        dispatch(fetchTokenHistoryThunk())
+        console.log("tokenHistory", tokenHistory)
+    } , []);    
+     
   return (
     <>
     <h1>ReviewTokenHistory</h1>
