@@ -5,7 +5,6 @@ import "./index.css";
 import store from "./redux/store";
 import { jwtDecode } from "jwt-decode";
 import { Provider } from "react-redux";
-
 import { setCurrentUser } from "./redux/userSlice.js";
 import 'antd/dist/reset.css';
 

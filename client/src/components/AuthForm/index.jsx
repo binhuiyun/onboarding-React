@@ -35,7 +35,6 @@ export default function AuthForm({
         ))}
         <Form.Item>
           <Button
-            type="primary"
             htmlType="submit"
             className={styles.btn}
             size="large"
