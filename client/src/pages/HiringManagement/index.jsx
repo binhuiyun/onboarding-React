@@ -1,7 +1,9 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { Table, Button } from "antd";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
+
+import { createTokenThunk } from "../../thunks/token-thunk";
 
 const columns = [
   {
@@ -35,6 +37,7 @@ const data = [
 
 export default function HiringManagement() {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const [selectedRowKey, setSelectedRowKey] = useState(null);
   const [selectedEmail, setSelectedEmail] = useState("");
   const [selectedName, setSelectedName] = useState("");
@@ -55,16 +58,9 @@ export default function HiringManagement() {
   };
 
   const handleSendToken = async () => {
-    try {
-      const res = await axios.post("http://localhost:4000/api/tokenHistory", {
-        email: selectedEmail,
-        name: selectedName,
-      });
-      console.log(res.data);
-      return res.data;
-    } catch (err) {
-      return err.response.data;
-    }
+  
+      dispatch(createTokenThunk({email: selectedEmail, name: selectedName}));
+  
   };
 
   const handleReviewApplications = () => {

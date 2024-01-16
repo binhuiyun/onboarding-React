@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 mongoose.set("debug", true);
 mongoose.Promise = Promise;
 
-mongoose.connect(process.env.MONGODB_URL);
+//mongoose.connect(process.env.MONGODB_URL);
 
 
 module.exports.User = require("./user");
