@@ -1,7 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { loginThunk, registerThunk } from "../thunks/auth-thunk";
 
-
 export const initialState = {
   isAutenicated: false,
   user: {},
@@ -13,9 +12,9 @@ const currentUserSlice = createSlice({
   initialState,
   reducers: {
     setCurrentUser: (state, action) => {
-        state.isAutenicated = !!Object.keys(action.payload).length;
-        state.user = action.payload;
-        },
+      state.isAutenicated = !!Object.keys(action.payload).length;
+      state.user = action.payload;
+    },
     logout: (state) => {
       state.isAutenicated = false;
       state.user = {};
@@ -49,6 +48,6 @@ const currentUserSlice = createSlice({
   },
 });
 
-export const { setCurrentUser,logout } = currentUserSlice.actions;
-
+export const { setCurrentUser, logout } = currentUserSlice.actions;
+export const selectUser = (state) => state.currentUser.user;
 export default currentUserSlice.reducer;

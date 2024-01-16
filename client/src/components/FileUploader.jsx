@@ -50,7 +50,9 @@ ${next}`
         <div className="flex">
           {title === "I-983" && (
             <Popover content="Download Empty Template and Sample Template">
-              <FolderArrowDownIcon className="h-8 w-8 text-blue-500 mr-1" />
+              <a href="http://localhost:4000/api/visa/sample">
+                <FolderArrowDownIcon className="h-8 w-8 text-blue-500 mr-1" />
+              </a>
             </Popover>
           )}
           <Popover content="Upload File">

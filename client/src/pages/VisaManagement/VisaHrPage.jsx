@@ -10,18 +10,18 @@ const VisaHrPage = () => {
     },
     {
       title: "Work Authorization",
-      dataIndex: "Work Authorization",
+      dataIndex: "Work_Authorization",
       key: "Work Authorization",
     },
     {
       title: "Next Step",
-      dataIndex: "Next Step",
+      dataIndex: "Next_Step",
       key: "Next Step",
     },
     {
       title: "Action",
-      dataIndex: "action",
-      key: "action",
+      dataIndex: "Action",
+      key: "Action",
     },
   ];
   const columns2 = [
@@ -33,18 +33,27 @@ const VisaHrPage = () => {
     },
     {
       title: "Work Authorization",
-      dataIndex: "Work Authorization",
-      key: "Work Authorization",
+      dataIndex: "Work_Authorization",
+      key: "Work_Authorization",
     },
     {
       title: "Next Step",
-      dataIndex: "Next Step",
-      key: "Next Step",
+      dataIndex: "Next_Step",
+      key: "Next_Step",
     },
     {
       title: "Documentation",
       dataIndex: "Documentation",
       key: "Documentation",
+    },
+  ];
+  const mockData = [
+    {
+      key: "1",
+      name: "Ruike Qiu",
+      Work_Authorization: "F1(CPT/OPT)",
+      Next_Step: "ead",
+      Documentation: "abc",
     },
   ];
   const [status, setStatus] = useState("IN PROGRESS");
@@ -74,9 +83,9 @@ const VisaHrPage = () => {
       </div>
       <div className=" flex items-center justify-center">
         {status === "IN PROGRESS" ? (
-          <Table columns={columns1} className="w-[70%]" />
+          <Table columns={columns1} dataSource={mockData} className="w-[70%]" />
         ) : (
-          <Table columns={columns2} className="w-[70%]" />
+          <Table columns={columns2} dataSource={mockData} className="w-[70%]" />
         )}
       </div>
     </div>

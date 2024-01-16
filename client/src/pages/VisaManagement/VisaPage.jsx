@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import FileUploader from "../../components/FileUploader";
 import axios from "axios";
-
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/userSlice";
 const mockUser = {
   _id: "qweasdzxc123321",
   firstName: "Ruike",
@@ -15,8 +16,7 @@ const mockInfo = {
 };
 
 const VisaPage = () => {
-  const userID = localStorage.getItem("user");
-  console.log(userID);
+  // const user = useSelector(selectUser);
   const [info, setInfo] = useState(mockInfo);
   useEffect(() => {
     const fetchDocs = async () => {

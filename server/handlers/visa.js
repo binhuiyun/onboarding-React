@@ -36,8 +36,22 @@ const addToVisaDocumentation = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+const downloadEmptyAndSample = async (req, res) => {
+  try {
+    const filePath = "../server/public/Template.zip";
+    res.download(filePath, (err) => {
+      if (err) {
+        console.error("Error downloading files:", err);
+        res.status(500).json({ error: "Internal server error" });
+      }
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+};
 module.exports = {
   createVisaModel,
   getVisaById,
   addToVisaDocumentation,
+  downloadEmptyAndSample,
 };
