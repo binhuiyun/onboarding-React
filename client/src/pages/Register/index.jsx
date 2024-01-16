@@ -54,14 +54,14 @@ export default function Register() {
 
   useEffect(() => {
     if (token) {
-      axios.post('http://localhost:4000/api/auth/register',null, {
+      axios.post('http://localhost:4000/api/auth/register', null, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       }).then(res => {
         console.log("res", res);
       }).catch(err => {
-        console.log("err", err);
+        console.log("post failed", err);
       });
       console.log("token", token);
     }
@@ -69,7 +69,7 @@ export default function Register() {
       // TODO: navigate to error page
       console.log("no token");
     }
-  }, []);
+  }, [token]);
 
   return (
     <>
