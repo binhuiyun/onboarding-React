@@ -35,6 +35,14 @@ const VisaHrPage = () => {
       title: "Work Authorization",
       dataIndex: "Work_Authorization",
       key: "Work_Authorization",
+      render: (_, { Work_Authorization }) => (
+        <>
+          <Tag color="geekblue">{Work_Authorization.title}</Tag>
+          <Tag color="green">{`Start Date : ${Work_Authorization.start_date}`}</Tag>
+          <Tag color="yellow">{`End Date : ${Work_Authorization.end_date}`}</Tag>
+          <Tag color="volcano">{`Remaining : ${Work_Authorization.remaining} days`}</Tag>
+        </>
+      ),
     },
     {
       title: "Next Step",
@@ -51,7 +59,12 @@ const VisaHrPage = () => {
     {
       key: "1",
       name: "Ruike Qiu",
-      Work_Authorization: "F1(CPT/OPT)",
+      Work_Authorization: {
+        title: "F1(CPT/OPT)",
+        start_date: "Jan 1st",
+        end_date: "Sept 1st",
+        remaining: 25,
+      },
       Next_Step: "ead",
       Documentation: "abc",
     },

@@ -51,6 +51,23 @@ const VisaPage = () => {
     };
     fetchDocs();
   }, []);
+  const mockData = {
+    employee: "qweasdzxc123321",
+    optReceipt: "65a5eb91ab5636c45e4c754b",
+    optEAD: "65a5cb0ecf9cb9681dc57cd0",
+  };
+  const mockOptReceipt = {
+    fileName: "aws.png",
+    fileDoc: "udhuhd",
+    status: "approved",
+    fileType: "optReceipt",
+  };
+  const mockOptEAD = {
+    fileName: "abs.png",
+    fileDoc: "udhhuhd",
+    status: "pending",
+    fileType: "optEAD",
+  };
 
   return (
     <>
@@ -60,32 +77,33 @@ const VisaPage = () => {
       </div>
       <div className="w-full flex flex-col items-center">
         <FileUploader
-          title={"OPT Receipt"}
+          title="OPT Receipt"
           fileType="optReceipt"
-          status={mockInfo.status}
+          status={mockOptReceipt.status}
           feedback={mockInfo.feedback}
-          next={mockInfo.next}
+          next="OPT EAD"
         />
         <FileUploader
-          title={"OPT EAD"}
+          title="OPT EAD"
           fileType="optEAD"
-          status={mockInfo.status}
+          status={mockOptEAD.status}
           feedback={mockInfo.feedback}
-          next={mockInfo.next}
+          next="I-983"
+          // disable={mockOptReceipt.status !== "approved"}
         />
         <FileUploader
-          title={"I-983"}
+          title="I-983"
           fileType="I983"
           status={mockInfo.status}
           feedback={mockInfo.feedback}
-          next={mockInfo.next}
+          next="I-20"
         />
         <FileUploader
-          title={"I-20"}
+          title="I-20"
           fileType="I20"
           status={mockInfo.status}
           feedback={mockInfo.feedback}
-          next={mockInfo.next}
+          next=""
         />
       </div>
     </>
