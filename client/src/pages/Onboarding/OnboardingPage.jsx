@@ -53,6 +53,17 @@ const OnboardingPage = () => {
     });
   };
 
+  const handleWorkAuthorizationChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      workAuthorization: {
+        ...formData.workAuthorization,
+        [name]: value,
+      },
+    });
+  }
+
   const handleNameChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -469,7 +480,7 @@ const OnboardingPage = () => {
               id="workAuthorizationType"
               name="workAuthorizationType"
               value={formData.workAuthorization.workAuthorizationType}
-              onChange={handleChange}
+              onChange={handleWorkAuthorizationChange}
               required
               className="mt-1 p-2 border rounded-md w-full"
             />

@@ -10,16 +10,18 @@
 //   const dispatch = useDispatch();
 //   const location = useLocation();
 
-//   const onSubmit = (data) => {
-//     console.log(data);
-//     dispatch(loginThunk(data)).then(() => {
-//       // TODO (by Yiqian):
-//       // change the following line to navigate to the page you want to go after login
-//       // currently, it will navigate to the onboarding page
-//       navigate("/onboarding");
-//       //navigate("/hiring-management");
-//     });
-//   };
+  const onSubmit = (data) => {
+    console.log(data);
+    dispatch(loginThunk(data)).then(() => {
+      // TODO (by Yiqian):
+      // change the following line to navigate to the page you want to go after login
+      // currently, it will navigate to the onboarding page
+      navigate("/onboarding");
+      //navigate("/personal-information")
+      //navigate("/hiring-management");
+      
+    });
+  };
 
 //   return (
 //     <>

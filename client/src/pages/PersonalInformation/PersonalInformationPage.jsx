@@ -9,9 +9,12 @@ import {
   Space,
   Popconfirm,
 } from "antd";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import FileUpload from "./FileUpload";
-import { fetchPersonalInformation } from "../../redux/personalInformationSlice";
+import {
+  fetchPersonalInformation,
+  selectPersonalInformation,
+} from "../../redux/personalInformationSlice";
 
 const PersonalInformationPage = () => {
   const [height, setHeight] = useState();
@@ -23,11 +26,17 @@ const PersonalInformationPage = () => {
   const [openEmploymentEditModal, setOpenEmploymentEditModal] = useState(false);
   const [openAddFileModal, setOpenAddFileModal] = useState(false);
   const dispatch = useDispatch();
-  const personalInformation  = useSelector((state) => state.personalInformation);
+  const personalInformation = useSelector(selectPersonalInformation);
 
   // TODO: Fetch real userID from redux store
   useEffect(() => {
-    dispatch(fetchPersonalInformation("65a39a2401e8eff282ae48dd"));
+    console.log("Fetching personal information of:");
+    dispatch(fetchPersonalInformation("65a39a2401e8eff282ae48dd")).then(
+      (response) => {
+        console.log(response.payload.name);
+        setFormData(response.payload);
+      }
+    );
   }, []);
 
   const targetRef = useRef();
@@ -57,6 +66,7 @@ const PersonalInformationPage = () => {
 
   const handlePersonalInfoEditButtonClick = () => {
     console.log("PersonalInfoEditButton clicked");
+    console.log(formData);
     setOpenPersonalInfoEditModal(true);
   };
 
@@ -73,19 +83,31 @@ const PersonalInformationPage = () => {
   const [form] = Form.useForm();
 
   const [formData, setFormData] = useState({
-    fname: "",
-    lname: "",
-    mname: "",
-    pname: "",
-    email: "",
-    address: "",
-    pronoun: "",
+    name: { firstName : "", lastName : "", middleName : "", preferredName : "" },
+    profilePicture: {},
+    address: {
+      aptNumber : "",
+      streetName : "",
+      city : "",
+      state : "",
+      zip : ""
+    },
+    phoneNumber: {
+      cellPhoneNumber : "",
+      workPhoneNumbe : "",
+    },
+    email : "",
+    ssn : "",
+    dateOfBirth : "",
+    gender : "",
+    citizenship : "",
+    citizenType : "",
+    
     dob: {
       day: "",
       month: "",
       year: "",
     },
-    ssn: "",
   });
 
   const [employmentData, setEmploymentData] = useState({
@@ -110,6 +132,14 @@ const PersonalInformationPage = () => {
   const handleChange = (e) => {
     console.log(e.target);
     const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      name: {
+        ...formData.name,
+      [name]: value,
+      },
+    });
+
     if (name == "visatitle") {
       setEmploymentData({
         ...employmentData,
@@ -382,16 +412,16 @@ const PersonalInformationPage = () => {
           <form className="max-w-md mx-auto mt-8" onSubmit={handleSubmit}>
             <div className="mb-4">
               <label
-                htmlFor="fname"
+                htmlFor="firstName"
                 className="block text-sm font-medium text-gray-600"
               >
                 First Name
               </label>
               <input
                 type="text"
-                id="fname"
-                name="fname"
-                value={formData.fname}
+                id="firstName"
+                name="firstName"
+                value={formData.name.firstName}
                 onChange={handleChange}
                 className="mt-1 p-2 border rounded-md w-full"
               />
@@ -493,7 +523,7 @@ const PersonalInformationPage = () => {
                 <select
                   id="dobDay"
                   name="dobDay"
-                  value={formData.dob.day}
+                  // value={formData.dob.day}
                   onChange={handleChange}
                   className="mr-2 p-2 border rounded-md"
                 >
@@ -503,7 +533,7 @@ const PersonalInformationPage = () => {
                 <select
                   id="dobMonth"
                   name="dobMonth"
-                  value={formData.dob.month}
+                  // value={formData.dob.month}
                   onChange={handleChange}
                   className="mr-2 p-2 border rounded-md"
                 >
@@ -513,7 +543,7 @@ const PersonalInformationPage = () => {
                 <select
                   id="dobYear"
                   name="dobYear"
-                  value={formData.dob.year}
+                  // value={formData.dob.year}
                   onChange={handleChange}
                   className="p-2 border rounded-md"
                 >
@@ -675,14 +705,28 @@ const PersonalInformationPage = () => {
           </div>
 
           <div className="mt-6 flex flex-col items-center space-y-2">
-            <span className="text-3xl font-bold">John Doe</span>
-            <span className="text-xl font-light text-gray-500">He/Him</span>
+            <span className="text-3xl font-bold">
+              {personalInformation.name.firstName}{" "}
+              {personalInformation.name.lastName}
+            </span>
+            {personalInformation.gender == "male" ? (
+              <span className="text-xl font-light text-gray-500">He/His</span>
+            ) : personalInformation.gender == "female" ? (
+              <span className="text-xl font-light text-gray-500">She/Her</span>
+            ) : (
+              <span className="text-xl font-light text-gray-500">
+                They/Their
+              </span>
+            )}
             <div className="flex flex-col items-center">
               <span className="text-xl font-light text-gray-500">
-                159 Rocky River St. Brooklyn,
+                {personalInformation.address.streetName}{" "}
+                {personalInformation.address.aptNumber}
               </span>
               <span className="text-xl font-light text-gray-500">
-                New York, NY 11220
+                {personalInformation.address.city},{" "}
+                {personalInformation.address.state}{" "}
+                {personalInformation.address.zip}
               </span>
             </div>
             <button

@@ -79,7 +79,6 @@ const personalInformationSchema = new Schema({
     type: String,
     default: "Never submitted",
   },
-
 });
 
 module.exports = mongoose.model("Profile", personalInformationSchema);
