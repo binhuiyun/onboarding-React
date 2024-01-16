@@ -5,15 +5,24 @@ const fetchPersonalInformation = createAsyncThunk(
   "personalInformation/fetchPersonalInformation",
   async (id) => {
     console.log(id);
-    const response = await axios.get(
-      `http://localhost:4000/api/personalInformation/${id}`
-    );
-    console.log(response.data);
-    return response.data;
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/api/personalInformation/${id}`
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
   }
 );
 
-const initialState = {};
+const initialState = {
+  personalInformation: {
+    name: {},
+    address: {},
+  },
+};
 
 const personalInformationSlice = createSlice({
   name: "personalInformation",
@@ -39,5 +48,7 @@ const personalInformationSlice = createSlice({
 
 const { reducer, actions } = personalInformationSlice;
 export { fetchPersonalInformation };
+export const selectPersonalInformation = (state) =>
+  state.personalInformation.personalInformation;
 export const { setPersonalInformation } = actions;
 export default reducer;

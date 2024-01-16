@@ -75,6 +75,10 @@ const personalInformationSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "DocumentCollection",
   },
+  onboardingStatus: {
+    type: String,
+    default: "Never submitted",
+  },
 });
 
 module.exports = mongoose.model("Profile", personalInformationSchema);
