@@ -8,9 +8,11 @@ const {
   getVisaById,
   addToVisaDocumentation,
   downloadEmptyAndSample,
+  getAllVisa,
 } = require("../handlers/visa");
 
 router.post("/", createVisaModel);
+router.get("/", getAllVisa);
 router.get("/sample", downloadEmptyAndSample);
 router.get("/:id", getVisaById);
 router.post("/:id/:fileType", upload.single("file"), addToVisaDocumentation);

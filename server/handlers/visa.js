@@ -1,4 +1,12 @@
 const { visaModel, optDocModel } = require("../models/visaDocuments");
+const getAllVisa = async (req, res) => {
+  try {
+    const visaDoc = await visaModel.find();
+    res.status(200).json(visaDoc);
+  } catch (err) {
+    res.status(500).json({ message: "Server Error" });
+  }
+};
 const createVisaModel = async (req, res) => {
   try {
     const { employee } = req.body;
@@ -54,4 +62,5 @@ module.exports = {
   getVisaById,
   addToVisaDocumentation,
   downloadEmptyAndSample,
+  getAllVisa,
 };
