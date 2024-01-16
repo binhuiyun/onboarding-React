@@ -15,6 +15,8 @@ const mockInfo = {
 };
 
 const VisaPage = () => {
+  const userID = localStorage.getItem("user");
+  console.log(userID);
   const [info, setInfo] = useState(mockInfo);
   useEffect(() => {
     const fetchDocs = async () => {
@@ -52,8 +54,8 @@ const VisaPage = () => {
 
   return (
     <>
-      <div className="text-5xl text-gray-500 mx-5 my-5">{`Hi, ${mockUser.firstName}`}</div>
-      <div className="text-3xl text-blue-500 mx-5 mb-10">
+      <div className="text-5xl text-gray-500 mx-10 my-5">{`Hi, ${mockUser.firstName}`}</div>
+      <div className="text-3xl text-chuwa-blue mx-10 mb-10">
         Visa Management System
       </div>
       <div className="w-full flex flex-col items-center">

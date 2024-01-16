@@ -23,15 +23,15 @@ const addToVisaDocumentation = async (req, res) => {
   try {
     const visaDoc = await visaModel.findOne({ employee: req.params.id });
     const fileType = req.params.fileType;
-    const optDoc = await optDocModel.create({
-      fileName: req.file.mimetype,
+    const optDoc = await optDocModel.findByIdAndUpdate(visaDoc[fileType]._id, {
+      fileName: req.file.originalname,
       fileDoc: req.file.buffer,
       fileType: fileType,
       status: "pending",
     });
     console.log(optDoc);
     visaDoc[fileType] = optDoc._id;
-    visaDoc.save();
+    await visaDoc.save();
   } catch (err) {
     res.status(500).json({ message: "Server Error" });
   }

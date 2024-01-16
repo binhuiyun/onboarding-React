@@ -52,22 +52,33 @@ const VisaHrPage = () => {
     setStatus(e.target.value);
   };
   return (
-    <div className="">
-      <p>Visa Status Management</p>
+    <div className="mx-10 ">
+      <p className="text-3xl text-chuwa-blue my-10">Visa Status Management</p>
       <div className="">
-        <input type="text" placeholder="Search Employee" />
+        <input
+          type="text"
+          placeholder="  Search Employee  "
+          className="h-[5vh] w-[40%] mb-8 border-2 rounded-md text-xl text-gray-600"
+        />
       </div>
       <div className="">
-        <select name="status" id="status" onChange={handleStatusChange}>
+        <select
+          name="status"
+          id="status"
+          onChange={handleStatusChange}
+          className="py-3 px-2 bg-slate-200 text-chuwa-blue rounded-md shadow-md"
+        >
           <option value="IN PROGRESS">IN PROGRESS</option>
           <option value="ALL">ALL</option>
         </select>
       </div>
-      {status === "IN PROGRESS" ? (
-        <Table columns={columns1} />
-      ) : (
-        <Table columns={columns2} />
-      )}
+      <div className=" flex items-center justify-center">
+        {status === "IN PROGRESS" ? (
+          <Table columns={columns1} className="w-[70%]" />
+        ) : (
+          <Table columns={columns2} className="w-[70%]" />
+        )}
+      </div>
     </div>
   );
 };
