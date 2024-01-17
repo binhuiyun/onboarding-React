@@ -5,6 +5,7 @@ const cors = require("cors");
 app.use(cors({ credentials: true, origin: "http://localhost:5173" }));
 const { default: mongoose } = require("mongoose");
 require("dotenv").config();
+const errorHandler = require("./handlers/error");
 const authRouter = require("./routes/auth");
 const tokenHistoryRouter = require("./routes/tokenHistory");
 const visaRouter = require("./routes/visa");
@@ -27,6 +28,7 @@ app.use("/api/auth", authRouter);
 app.use("/api/tokenHistory", tokenHistoryRouter);
 app.use("/api/personalInformation", personalInformationRouter);
 app.use("/api/visa", visaRouter);
+app.use(errorHandler);
 app.use((req, res, next) => {
   const err = new Error("Not Found");
   err.status = 404;

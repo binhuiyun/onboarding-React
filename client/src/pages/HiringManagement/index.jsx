@@ -20,8 +20,8 @@ const columns = [
 const data = [
   {
     key: "1",
-    name: "Huiyun",
-    email: "bin.h@northeastern.edu",
+    name: "Bin",
+    email: "binhuiyun@gmail.com",
   },
   {
     key: "2",
@@ -57,9 +57,10 @@ export default function HiringManagement() {
     },
   };
 
-  const handleSendToken = async () => {
+  const handleSendToken =  () => {
   
       dispatch(createTokenThunk({email: selectedEmail, name: selectedName}));
+      console.log("crete token success for ", selectedName);
   
   };
 

@@ -20,7 +20,7 @@ export const loginThunk = createAsyncThunk(
 );
 
 export const registerThunk = createAsyncThunk(
-  "auth/register", 
+  "auth/register",
   async (data, thunkAPI) => {
     try {
       const user = await register(data);

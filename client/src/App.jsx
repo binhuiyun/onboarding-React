@@ -11,6 +11,7 @@ import PendingApplications from "./pages/HiringManagement/ReviewApplications/Pen
 import OnboardingPage from "./pages/Onboarding/OnboardingPage";
 import ReviewTokenHistory from "./pages/HiringManagement/ReviewTokenHistory";
 import VisaHrPage from "./pages/VisaManagement/VisaHrPage";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -41,6 +42,7 @@ function App() {
           element={<PersonalInformationPage />}
         />
         <Route path="/onboarding" element={<OnboardingPage />} />
+        <Route path="*" element={<NotFound/>} />
       </Routes>
     </BrowserRouter>
   );
