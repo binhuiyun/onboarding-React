@@ -12,6 +12,7 @@ const visaRouter = require("./routes/visa");
 const personalInformationRouter = require("./routes/personalInformation");
 const userRouter = require("./routes/user");
 const applicationRouter = require("./routes/application");
+const path = require("path");
 const PORT = 4000;
 
 const connectDB = async () => {
@@ -24,7 +25,7 @@ const connectDB = async () => {
 };
 
 connectDB();
-
+app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use("/api/auth", authRouter);
 app.use("/api/tokenHistory", tokenHistoryRouter);

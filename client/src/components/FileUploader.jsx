@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { createPortal } from "react-dom";
+import { Popover } from "antd";
 import {
   ExclamationCircleIcon,
   CheckCircleIcon,
@@ -47,13 +48,19 @@ ${next}`
           {status === "rejected" && `${feedback}`}
         </div>
         <div className="flex">
-          {title === "I983" && (
-            <FolderArrowDownIcon className="h-8 w-8 text-blue-500 mr-1" />
+          {title === "I-983" && (
+            <Popover content="Download Empty Template and Sample Template">
+              <a href="http://localhost:4000/api/visa/sample">
+                <FolderArrowDownIcon className="h-8 w-8 text-blue-500 mr-1" />
+              </a>
+            </Popover>
           )}
-          <FolderPlusIcon
-            className="h-8 w-8 text-blue-500"
-            onClick={handleUpload}
-          />
+          <Popover content="Upload File">
+            <FolderPlusIcon
+              className="h-8 w-8 text-blue-500"
+              onClick={handleUpload}
+            />
+          </Popover>
         </div>
       </div>
     </>

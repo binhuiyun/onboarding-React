@@ -15,6 +15,8 @@ import {
   fetchPersonalInformation,
   selectPersonalInformation,
 } from "../../redux/personalInformationSlice";
+import Header from "../layout/Header";
+import Footer from "../layout/Footer";
 
 const PersonalInformationPage = () => {
   const [height, setHeight] = useState();
@@ -83,26 +85,26 @@ const PersonalInformationPage = () => {
   const [form] = Form.useForm();
 
   const [formData, setFormData] = useState({
-    name: { firstName : "", lastName : "", middleName : "", preferredName : "" },
+    name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
     profilePicture: {},
     address: {
-      aptNumber : "",
-      streetName : "",
-      city : "",
-      state : "",
-      zip : ""
+      aptNumber: "",
+      streetName: "",
+      city: "",
+      state: "",
+      zip: "",
     },
     phoneNumber: {
-      cellPhoneNumber : "",
-      workPhoneNumbe : "",
+      cellPhoneNumber: "",
+      workPhoneNumbe: "",
     },
-    email : "",
-    ssn : "",
-    dateOfBirth : "",
-    gender : "",
-    citizenship : "",
-    citizenType : "",
-    
+    email: "",
+    ssn: "",
+    dateOfBirth: "",
+    gender: "",
+    citizenship: "",
+    citizenType: "",
+
     dob: {
       day: "",
       month: "",
@@ -132,22 +134,35 @@ const PersonalInformationPage = () => {
   const handleChange = (e) => {
     console.log(e.target);
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      name: {
-        ...formData.name,
-      [name]: value,
-      },
-    });
 
-    if (name == "visatitle") {
+    if (
+      name == "firstName" ||
+      name == "lastName" ||
+      name == "middleName" ||
+      name == "preferredName"
+    ) {
+      setFormData({
+        ...formData,
+        name: {
+          ...formData.name,
+          [name]: value,
+        },
+      });
+      console.log(formData);
+    } else if (name == "cellPhoneNumber" || name == "workPhoneNumber") {
+      setFormData({
+        ...formData,
+        phoneNumber: {
+          ...formData.phoneNumber,
+          [name]: value,
+        },
+      });
+    } else if (name == "visatitle") {
       setEmploymentData({
         ...employmentData,
         visatitle: value,
       });
-    }
-
-    if (
+    } else if (
       name == "startdateday" ||
       name == "startdatemonth" ||
       name == "startdateyear"
@@ -159,9 +174,7 @@ const PersonalInformationPage = () => {
           [name.slice(9).toLowerCase()]: value,
         },
       });
-    }
-
-    if (
+    } else if (
       name == "enddateday" ||
       name == "enddatemonth" ||
       name == "enddateyear"
@@ -173,9 +186,7 @@ const PersonalInformationPage = () => {
           [name.slice(7).toLowerCase()]: value,
         },
       });
-    }
-
-    if (name === "dobDay" || name === "dobMonth" || name === "dobYear") {
+    } else if (name === "dobDay" || name === "dobMonth" || name === "dobYear") {
       setFormData({
         ...formData,
         dob: {
@@ -221,23 +232,7 @@ const PersonalInformationPage = () => {
   return (
     <>
       <div className="flex flex-col justify-between overflow-auto">
-        <header className="flex items-center justify-between bg-[#F0F0F0] px-20 py-4">
-          <div className="text-3xl flex items-center">Chuwa America</div>
-          <div className="flex flex-row">
-            <button className="px-2 border-b-2 border-transparent transition duration-300 hover:border-black">
-              Personal Information
-            </button>
-            <button className="px-2 border-b-2 border-transparent transition duration-300 hover:border-black">
-              Visa Status
-            </button>
-            <div className="pl-14">
-              <img
-                className="p-0.5 w-[40px] h-[40px] rounded-full ring-2 ring-black object-cover"
-                src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              />
-            </div>
-          </div>
-        </header>
+        <Header />
 
         <Modal
           title="Your Name"
@@ -429,16 +424,16 @@ const PersonalInformationPage = () => {
 
             <div className="mb-4">
               <label
-                htmlFor="lname"
+                htmlFor="lastName"
                 className="block text-sm font-medium text-gray-600"
               >
                 Last Name
               </label>
               <input
                 type="text"
-                id="lname"
-                name="lname"
-                value={formData.lname}
+                id="lastName"
+                name="lastName"
+                value={formData.name.lastName}
                 onChange={handleChange}
                 className="mt-1 p-2 border rounded-md w-full"
               />
@@ -446,16 +441,16 @@ const PersonalInformationPage = () => {
 
             <div className="mb-4">
               <label
-                htmlFor="mname"
+                htmlFor="middleName"
                 className="block text-sm font-medium text-gray-600"
               >
                 Middle Name
               </label>
               <input
                 type="text"
-                id="mname"
-                name="mname"
-                value={formData.mname}
+                id="middleName"
+                name="middleName"
+                value={formData.name.middleName}
                 onChange={handleChange}
                 className="mt-1 p-2 border rounded-md w-full"
               />
@@ -463,16 +458,16 @@ const PersonalInformationPage = () => {
 
             <div className="mb-4">
               <label
-                htmlFor="pname"
+                htmlFor="preferredName"
                 className="block text-sm font-medium text-gray-600"
               >
                 Preferred Name
               </label>
               <input
                 type="text"
-                id="pname"
-                name="pname"
-                value={formData.pname}
+                id="preferredName"
+                name="preferredName"
+                value={formData.name.preferredName}
                 onChange={handleChange}
                 className="mt-1 p-2 border rounded-md w-full"
               />
@@ -500,18 +495,17 @@ const PersonalInformationPage = () => {
                 htmlFor="pronoun"
                 className="block text-sm font-medium text-gray-600"
               >
-                Pronouns
+                Gender
               </label>
               <select
-                id="pronoun"
-                name="pronoun"
-                value={formData.pronoun}
+                id="gender"
+                name="gender"
+                value={formData.gender}
                 className="mt-1 p-2 border rounded-md w-full"
               >
-                <option value="male">He/His</option>
-                <option value="female">She/Her</option>
-                <option value="they">They/Them</option>
-                <option value="other">Other</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">I do not wish to answer</option>
               </select>
             </div>
 
@@ -572,15 +566,15 @@ const PersonalInformationPage = () => {
 
             <div className="mb-4">
               <label
-                htmlFor="homephone"
+                htmlFor="cellPhoneNumber"
                 className="block text-sm font-medium text-gray-600"
               >
-                Home Phone
+                Cell Phone
               </label>
               <input
-                id="homephone"
-                name="homephone"
-                value={formData.address}
+                id="cellPhoneNumber"
+                name="cellPhoneNumber"
+                value={formData.phoneNumber.cellPhoneNumber}
                 onChange={handleChange}
                 className="mt-1 p-2 border rounded-md w-full"
               />
@@ -588,15 +582,15 @@ const PersonalInformationPage = () => {
 
             <div className="mb-4">
               <label
-                htmlFor="workphone"
+                htmlFor="workPhoneNumber"
                 className="block text-sm font-medium text-gray-600"
               >
                 Work Phone
               </label>
               <input
-                id="workphone"
-                name="workphone"
-                value={formData.address}
+                id="workPhoneNumber"
+                name="workPhoneNumber"
+                value={formData.phoneNumber.workPhoneNumber}
                 onChange={handleChange}
                 className="mt-1 p-2 border rounded-md w-full"
               />
@@ -604,15 +598,15 @@ const PersonalInformationPage = () => {
 
             <div className="mb-4">
               <label
-                htmlFor="addressline1"
+                htmlFor="streetName"
                 className="block text-sm font-medium text-gray-600"
               >
                 Street Address
               </label>
               <input
-                id="addressline1"
-                name="addressline1"
-                value={formData.address}
+                id="streetName"
+                name="streetName"
+                value={formData.address.streetName}
                 onChange={handleChange}
                 className="mt-1 p-2 border rounded-md w-full"
               />
@@ -620,15 +614,15 @@ const PersonalInformationPage = () => {
 
             <div className="mb-4">
               <label
-                htmlFor="addressline2"
+                htmlFor="aptNumber"
                 className="block text-sm font-medium text-gray-600"
               >
                 Apt, suite, etc.
               </label>
               <input
-                id="addressline2"
-                name="addressline2"
-                value={formData.address}
+                id="aptNumber"
+                name="aptNumber"
+                value={formData.address.aptNumber}
                 onChange={handleChange}
                 className="mt-1 p-2 border rounded-md w-full"
               />
@@ -644,7 +638,7 @@ const PersonalInformationPage = () => {
               <input
                 id="city"
                 name="city"
-                value={formData.address}
+                value={formData.address.city}
                 onChange={handleChange}
                 className="mt-1 p-2 border rounded-md w-full"
               />
@@ -660,7 +654,7 @@ const PersonalInformationPage = () => {
               <input
                 id="state"
                 name="state"
-                value={formData.address}
+                value={formData.address.state}
                 onChange={handleChange}
                 className="mt-1 p-2 border rounded-md w-full"
               />
@@ -668,15 +662,15 @@ const PersonalInformationPage = () => {
 
             <div className="mb-4">
               <label
-                htmlFor="zipcode"
+                htmlFor="zip"
                 className="block text-sm font-medium text-gray-600"
               >
                 Zip Code
               </label>
               <input
-                id="zipcode"
-                name="zipcode"
-                value={formData.address}
+                id="zip"
+                name="zipczipode"
+                value={formData.address.zip}
                 onChange={handleChange}
                 className="mt-1 p-2 border rounded-md w-full"
               />
@@ -923,7 +917,7 @@ const PersonalInformationPage = () => {
           </div>
         </div>
 
-        <footer className="flex items-center justify-between bg-[#F0F0F0] px-10 py-6"></footer>
+        <Footer />
       </div>
     </>
   );

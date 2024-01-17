@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import FileUploader from "../../components/FileUploader";
 import axios from "axios";
-
+import { useSelector } from "react-redux";
+import { selectUser } from "../../redux/userSlice";
 const mockUser = {
   _id: "qweasdzxc123321",
   firstName: "Ruike",
@@ -15,6 +16,7 @@ const mockInfo = {
 };
 
 const VisaPage = () => {
+  // const user = useSelector(selectUser);
   const [info, setInfo] = useState(mockInfo);
   useEffect(() => {
     const fetchDocs = async () => {
@@ -49,41 +51,59 @@ const VisaPage = () => {
     };
     fetchDocs();
   }, []);
+  const mockData = {
+    employee: "qweasdzxc123321",
+    optReceipt: "65a5eb91ab5636c45e4c754b",
+    optEAD: "65a5cb0ecf9cb9681dc57cd0",
+  };
+  const mockOptReceipt = {
+    fileName: "aws.png",
+    fileDoc: "udhuhd",
+    status: "approved",
+    fileType: "optReceipt",
+  };
+  const mockOptEAD = {
+    fileName: "abs.png",
+    fileDoc: "udhhuhd",
+    status: "pending",
+    fileType: "optEAD",
+  };
 
   return (
     <>
-      <div className="text-5xl text-gray-500 mx-5 my-5">{`Hi, ${mockUser.firstName}`}</div>
-      <div className="text-3xl text-blue-500 mx-5 mb-10">
+      <div className="text-5xl text-gray-500 mx-10 my-5">{`Hi, ${mockUser.firstName}`}</div>
+      <div className="text-3xl text-chuwa-blue mx-10 mb-10">
         Visa Management System
       </div>
       <div className="w-full flex flex-col items-center">
         <FileUploader
-          title={"OPT Receipt"}
+          title="OPT Receipt"
           fileType="optReceipt"
-          status={mockInfo.status}
+          status={mockOptReceipt.status}
           feedback={mockInfo.feedback}
-          next={mockInfo.next}
+          next="OPT EAD"
         />
         <FileUploader
-          title={"OPT EAD"}
+          title="OPT EAD"
           fileType="optEAD"
-          status={mockInfo.status}
+          status={mockOptEAD.status}
           feedback={mockInfo.feedback}
-          next={mockInfo.next}
+          next="I-983"
+          // disable={mockOptReceipt.status !== "approved"}
         />
         <FileUploader
-          title={"I-983"}
+          title="I-983"
           fileType="I983"
           status={mockInfo.status}
           feedback={mockInfo.feedback}
-          next={mockInfo.next}
+          next="I-20"
         />
         <FileUploader
-          title={"I-20"}
+          title="I-20"
           fileType="I20"
           status={mockInfo.status}
           feedback={mockInfo.feedback}
-          next={mockInfo.next}
+          next=""
         />
       </div>
     </>
