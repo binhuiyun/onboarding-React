@@ -55,6 +55,11 @@ const VisaHrPage = () => {
       key: "Documentation",
     },
   ];
+  const data = async () => {
+    const doc = await axios.get("http://localhost:4000/api/visa");
+    console.log(doc);
+  };
+  data();
   const mockData = [
     {
       key: "1",
