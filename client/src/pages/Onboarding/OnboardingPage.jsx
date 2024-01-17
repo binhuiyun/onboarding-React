@@ -1,6 +1,5 @@
 // UserProfileForm.js
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import { createPersonalInformation } from "../../services/personalInformation-service";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";

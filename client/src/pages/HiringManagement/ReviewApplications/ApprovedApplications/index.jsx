@@ -1,11 +1,10 @@
 import React from "react";
+import { useParams } from "react-router-dom";
+import StatusComponent from "../../../../components/StatusComponent";
 
-const ApprovedApplications = () => {
-    return (
-        <div>
-        <h1>ApprovedApplications</h1>
-        </div>
-    );
-    };
 
-export default ApprovedApplications;
+export default function ApprovedApplications() {
+  const { status } = useParams();
+  return <StatusComponent status={status} />  
+
+}
