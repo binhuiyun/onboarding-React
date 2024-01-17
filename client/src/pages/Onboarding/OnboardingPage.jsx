@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import {submitOnboarding } from "../../redux/onboardingSlice";
 const OnboardingPage = () => {
+  const {user} = useSelector((state) => state.user);
+  console.log("user:", user.id);
   const [formData, setFormData] = useState({
     name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
     profilePicture: "", // You can use this to store the image URL or a base64-encoded string

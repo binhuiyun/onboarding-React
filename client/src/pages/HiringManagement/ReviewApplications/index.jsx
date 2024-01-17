@@ -7,6 +7,12 @@ const ReviewApplications = () => {
   const handlePending = () => {
     navigate("pending");
   }
+  const handleRejected = () => {
+    navigate("rejected");
+  }
+  const handleApproved = () => {
+    navigate("approved");
+  }
   return (
     <div>
       <h1>ReviewApplications</h1>
@@ -18,12 +24,12 @@ const ReviewApplications = () => {
         </Col>
         <Col span={8}>
           <Card title="Rejected" bordered={false}>
-          <Button >view</Button>
+          <Button onClick={handleRejected}>view</Button>
           </Card>
         </Col>
         <Col span={8}>
           <Card title="Approved" bordered={false}>
-          <Button >view</Button>
+          <Button onClick={handleApproved}>view</Button>
           </Card>
         </Col>
       </Row>
