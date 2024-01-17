@@ -2,7 +2,8 @@
 import React, { useState } from "react";
 import { createPersonalInformation } from "../../services/personalInformation-service";
 import { useNavigate } from "react-router-dom";
-
+import { useSelector, useDispatch } from "react-redux";
+import {submitOnboarding } from "../../redux/onboardingSlice";
 const OnboardingPage = () => {
   const [formData, setFormData] = useState({
     name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
@@ -43,6 +44,7 @@ const OnboardingPage = () => {
     summaryOfUploadedFiles: "",
   });
   const navigate = useNavigate();
+ const dispatch = useDispatch();
 
   const handleChange = (e) => {
     console.log(e.target);
@@ -135,7 +137,8 @@ const OnboardingPage = () => {
   async function createInfo(e) {
     e.preventDefault();
     console.log("Form submitted:", formData);
-    await createPersonalInformation(formData);
+    //await createPersonalInformation(formData);
+    dispatch(submitOnboarding(formData));
     navigate("/personal-information");
     // Handle form submission logic here
   }
