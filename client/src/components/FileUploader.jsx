@@ -11,7 +11,7 @@ import {
   FolderPlusIcon,
 } from "@heroicons/react/24/outline";
 import PopUp from "./PopUp";
-const FileUploader = ({ title, fileType, status, feedback, next }) => {
+const FileUploader = ({ title, fileType, status, feedback, next, prev }) => {
   const [isPopUp, setIsPopUp] = useState(false);
   const handleUpload = (e) => {
     e.preventDefault();
@@ -55,12 +55,14 @@ ${next}`
               </a>
             </Popover>
           )}
-          <Popover content="Upload File">
-            <FolderPlusIcon
-              className="h-8 w-8 text-blue-500"
-              onClick={handleUpload}
-            />
-          </Popover>
+          {prev === "approved" && (
+            <Popover content="Upload File">
+              <FolderPlusIcon
+                className="h-8 w-8 text-blue-500"
+                onClick={handleUpload}
+              />
+            </Popover>
+          )}
         </div>
       </div>
     </>

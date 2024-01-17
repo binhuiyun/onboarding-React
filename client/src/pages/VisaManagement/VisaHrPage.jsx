@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Space, Table, Tag } from "antd";
 const VisaHrPage = () => {
   const columns1 = [
@@ -55,11 +56,11 @@ const VisaHrPage = () => {
       key: "Documentation",
     },
   ];
-  const data = async () => {
-    const doc = await axios.get("http://localhost:4000/api/visa");
-    console.log(doc);
+  // mock data //
+  const mockUser = {
+    _id: "qweasdzxc123321",
+    firstName: "Ruike",
   };
-  data();
   const mockData = [
     {
       key: "1",
@@ -74,7 +75,9 @@ const VisaHrPage = () => {
       Documentation: "abc",
     },
   ];
+  // end of mock data //
   const [status, setStatus] = useState("IN PROGRESS");
+
   const handleStatusChange = (e) => {
     setStatus(e.target.value);
   };
