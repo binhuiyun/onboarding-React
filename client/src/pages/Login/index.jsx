@@ -1,7 +1,9 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import AuthForm from "../../components/AuthForm";
-import { loginThunk } from "../../thunks/auth-thunk";
+import { fetchUserByIdThunk, loginThunk } from "../../thunks/auth-thunk";
+import { fetchUserById } from "../../services/user-service";
+import { useEffect } from "react";
 
 export default function LogIn() {
   const dispatch = useDispatch();
@@ -25,13 +27,16 @@ export default function LogIn() {
   ];
 
   const onSubmit = (data) => {
-    dispatch(loginThunk(data)).then((res) => {
-      if (res.payload.token) {
-        console.log("user:", res.payload);
-        navigate("/onboarding");
-      }
-    });
-  };
+     dispatch(loginThunk(data)).then((res) => {
+       if (res.payload.token) {
+        //  dispatch(fetchUserByIdThunk(res.payload.id));
+          console.log("userid:", res.payload);
+          navigate("/onboarding");
+        }
+
+      });
+    };
+  
 
   return (
     <div>

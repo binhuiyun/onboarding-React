@@ -82,8 +82,3 @@ exports.register = async function (req, res, next) {
   }
 };
 
-// exports.findUserById = async (req, res) => {
-//   try {
-//     const user = await db.User.findById(req.)
-//   }
-// }

@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginThunk, registerThunk } from "../thunks/auth-thunk";
+import { loginThunk, registerThunk, fetchUserByIdThunk } from "../thunks/auth-thunk";
 
 
 export const initialState = {
@@ -45,6 +45,9 @@ const currentUserSlice = createSlice({
     });
     builder.addCase(registerThunk.rejected, (state) => {
       state.status = "idle";
+    });
+    builder.addCase(fetchUserByIdThunk.fulfilled, (state, action) => {
+      state.user = action.payload;
     });
   },
 });

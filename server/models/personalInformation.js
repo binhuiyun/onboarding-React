@@ -77,7 +77,7 @@ const personalInformationSchema = new Schema({
   },
   onboardingStatus: {
     type: String,
-    default: "Never submitted",
+    default: "Pending",
   },
 });
 
