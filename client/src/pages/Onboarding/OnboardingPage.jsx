@@ -3,11 +3,22 @@ import React, { useState } from "react";
 import { createPersonalInformation } from "../../services/personalInformation-service";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {submitOnboarding } from "../../redux/onboardingSlice";
+import { submitOnboarding } from "../../redux/onboardingSlice";
+import { Document, Page, pdfjs } from "react-pdf";
+import FilePreviewer from "../../components/FilePreviewer";
+
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  "pdfjs-dist/build/pdf.worker.min.js",
+  import.meta.url
+).toString();
+
 const OnboardingPage = () => {
-  const {user} = useSelector((state) => state.user);
+  const [files, setFiles] = useState([]);
+  const { user } = useSelector((state) => state.user);
+  //const { user } = dispatch(fetchUserByID());
   console.log("user:", user.id);
   const [formData, setFormData] = useState({
+    user: user.id,
     name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
     profilePicture: "", // You can use this to store the image URL or a base64-encoded string
     address: {
@@ -22,9 +33,13 @@ const OnboardingPage = () => {
     ssn: "",
     dateOfBirth: "",
     gender: "",
-    citizenship: "",
-    citizenType: "",
-    workAuthorization: { workAuthorizationType: "", files: null },
+
+    workAuthorization: {
+      citizenship: "",
+      citizenType: "",
+      workAuthorizationType: "",
+      files: null,
+    },
     reference: {
       firstName: "",
       lastName: "",
@@ -46,7 +61,8 @@ const OnboardingPage = () => {
     summaryOfUploadedFiles: "",
   });
   const navigate = useNavigate();
- const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const formData2 = new FormData();
 
   const handleChange = (e) => {
     console.log(e.target);
@@ -103,11 +119,15 @@ const OnboardingPage = () => {
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    setFormData({
-      ...formData,
-      fileUpload: file,
-    });
+    console.log(file.name);
+    formData2.append("file", file, file.name);
+    setFiles([...files, file]);
   };
+
+  const addFile = (file) => {
+    setFiles([...files, file]);
+  };
+      
 
   const handleReferenceChange = (e) => {
     const { name, value } = e.target;
@@ -140,20 +160,27 @@ const OnboardingPage = () => {
     e.preventDefault();
     console.log("Form submitted:", formData);
     //await createPersonalInformation(formData);
+    //dispatch(submitOnboarding(formData, user.id, fileType));
     dispatch(submitOnboarding(formData));
     navigate("/personal-information");
     // Handle form submission logic here
-  }
+  };
 
   return (
     <>
       <header className="flex items-center justify-between bg-[#F0F0F0] px-20 py-4">
         <div className="text-3xl flex items-center">Chuwa America</div>
         <div className="flex flex-row">
-          <button className="px-2 border-b-2 border-transparent transition duration-300 hover:border-black" disabled>
+          <button
+            className="px-2 border-b-2 border-transparent transition duration-300 hover:border-black"
+            disabled
+          >
             Personal Information
           </button>
-          <button className="px-2 border-b-2 border-transparent transition duration-300 hover:border-black" disabled>
+          <button
+            className="px-2 border-b-2 border-transparent transition duration-300 hover:border-black"
+            disabled
+          >
             Visa Status
           </button>
           <div className="pl-14">
@@ -370,7 +397,7 @@ const OnboardingPage = () => {
             id="email"
             name="email"
             value={formData.email}
-            readOnly
+            readOnly={user.isHR == "hr"}
             className="mt-1 p-2 border rounded-md w-full bg-gray-100"
           />
         </div>
@@ -450,8 +477,8 @@ const OnboardingPage = () => {
           <select
             id="citizenship"
             name="citizenship"
-            value={formData.citizenship}
-            onChange={handleChange}
+            value={formData.workAuthorization.citizenship}
+            onChange={handleWorkAuthorizationChange}
             required
             className="mt-1 p-2 border rounded-md w-full"
           >
@@ -464,7 +491,7 @@ const OnboardingPage = () => {
         </div>
 
         {/* Conditional Rendering based on Citizenship Status */}
-        {formData.citizenship === "yes" && (
+        {formData.workAuthorization.citizenship === "yes" && (
           <div className="mb-4">
             <label
               htmlFor="citizenType"
@@ -475,8 +502,8 @@ const OnboardingPage = () => {
             <select
               id="citizenType"
               name="citizenType"
-              value={formData.citizenType}
-              onChange={handleChange}
+              value={formData.workAuthorization.citizenType}
+              onChange={handleWorkAuthorizationChange}
               className="mt-1 p-2 border rounded-md w-full"
             >
               <option value="" disabled>
@@ -488,7 +515,7 @@ const OnboardingPage = () => {
           </div>
         )}
 
-        {formData.citizenship === "no" && (
+        {formData.workAuthorization.citizenship === "no" && (
           <div>
             {/* Work Authorization */}
             <div className="mb-4">
@@ -526,14 +553,7 @@ const OnboardingPage = () => {
                   >
                     Upload a file for work authorization:
                   </label>
-                  <input
-                    type="file"
-                    id="workAuthorizationFiles"
-                    name="workAuthorizationFiles"
-                    accept=".pdf, .doc, .docx" // Allow specific file types
-                    onChange={handleFileUpload}
-                    className="mt-1 p-2 border rounded-md w-full"
-                  />
+                  <FilePreviewer addFile={addFile} />
                 </div>
               </>
             )}
@@ -688,6 +708,8 @@ const OnboardingPage = () => {
         </div>
 
         {/* Summary of Uploaded Files */}
+        <FilePreviewer handleFileUpload={handleFileUpload}/>
+      
         <div className="mb-4">
           <label
             htmlFor="summaryOfUploadedFiles"
@@ -713,6 +735,24 @@ const OnboardingPage = () => {
           >
             Save Profile
           </button>
+        </div>
+
+        {/* Feedback */}
+        <div className="mb-4">
+          <label
+            htmlFor="summaryOfUploadedFiles"
+            className="block text-sm font-medium text-gray-600"
+          >
+            Feedback
+          </label>
+          <textarea
+            id="summaryOfUploadedFiles"
+            name="summaryOfUploadedFiles"
+            value={formData.summaryOfUploadedFiles}
+            onChange={handleChange}
+            rows="3"
+            className="mt-1 p-2 border rounded-md w-full"
+          ></textarea>
         </div>
       </form>
     </>

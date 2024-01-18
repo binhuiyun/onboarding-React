@@ -49,9 +49,9 @@ const personalInformationSchema = new Schema({
   ssn: { type: String, required: true },
   dateOfBirth: { type: String, required: true },
   gender: { type: String, required: true },
-  citizenship: { type: String, required: true },
-  citizenType: { type: String, required: true },
   workAuthorization: {
+    citizenship: String,
+    citizenType: String,
     workAuthorizationType: String,
     files: {
       type: Schema.Types.ObjectId,
@@ -82,6 +82,10 @@ const personalInformationSchema = new Schema({
   onboardingStatus: {
     type: String,
     default: "Pending",
+  },
+  HRfeedback: {
+    type: String,
+    default: "",
   },
 });
 

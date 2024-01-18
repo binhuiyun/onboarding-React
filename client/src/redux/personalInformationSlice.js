@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+//u_id
 const fetchPersonalInformation = createAsyncThunk(
   "personalInformation/fetchPersonalInformation",
   async (id) => {
@@ -8,6 +9,23 @@ const fetchPersonalInformation = createAsyncThunk(
     try {
       const response = await axios.get(
         `http://localhost:4000/api/personalInformation/${id}`
+      );
+      console.log(response.data);
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+//p_id
+const fetchPersonalInformationByPID = createAsyncThunk(
+  "personalInformation/fetchPersonalInformationByPID",
+  async (pid) => {
+    console.log(pid);
+    try {
+      const response = await axios.get(
+        `http://localhost:4000/api/personalInformationByPID/${pid}`
       );
       console.log(response.data);
       return response.data;
