@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Space, Table, Tag } from "antd";
 const VisaHrPage = () => {
@@ -56,6 +56,21 @@ const VisaHrPage = () => {
       key: "Documentation",
     },
   ];
+  const [info, setInfo] = useState({});
+  useEffect(() => {
+    const fetchDocs = async () => {
+      const response = await axios.get(
+        `http://localhost:4000/api/visa/${mockUser._id}`,
+        {
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+      setInfo(response.data);
+    };
+    fetchDocs();
+  }, []);
   // mock data //
   const mockUser = {
     _id: "qweasdzxc123321",
@@ -75,6 +90,7 @@ const VisaHrPage = () => {
       Documentation: "abc",
     },
   ];
+
   // end of mock data //
   const [status, setStatus] = useState("IN PROGRESS");
 
