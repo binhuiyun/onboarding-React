@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import FileUploader from "../../components/FileUploader";
 import axios from "axios";
 import { useSelector } from "react-redux";
-import { selectUser } from "../../redux/userSlice";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 const mockUser = {
@@ -18,8 +17,8 @@ const mockInfo = {
 };
 
 const VisaPage = () => {
-  // const user = useSelector(selectUser);
-  const [info, setInfo] = useState(mockInfo);
+  // const { user } = useSelector((state) => state);
+  const [info, setInfo] = useState({});
   const [optReceiptStatus, setOptReceiptStatus] = useState("never uploaded");
   const [optEADtStatus, setOptEADtStatus] = useState("never uploaded");
   const [I983Status, setI983Status] = useState("never uploaded");
@@ -95,7 +94,6 @@ const VisaPage = () => {
           feedback={mockInfo.feedback}
           next="I-983"
           prev={optReceiptStatus}
-          // disable={mockOptReceipt.status !== "approved"}
         />
 
         <FileUploader

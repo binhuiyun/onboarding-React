@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Space, Table, Tag } from "antd";
+import ReviewAction from "../../components/ReviewAction";
 const VisaHrPage = () => {
   const columns1 = [
     {
@@ -54,9 +55,19 @@ const VisaHrPage = () => {
       title: "Documentation",
       dataIndex: "Documentation",
       key: "Documentation",
+      render: (_, { Documentation }) => {
+        // Documentation.map((doc) => {
+        return <ReviewAction doc={Documentation} filter={status} />;
+        // });
+      },
     },
   ];
   const [info, setInfo] = useState({});
+  const [status, setStatus] = useState("IN PROGRESS");
+  const mockUser = {
+    _id: "qweasdzxc123321",
+    firstName: "Ruike",
+  };
   useEffect(() => {
     const fetchDocs = async () => {
       const response = await axios.get(
@@ -67,15 +78,13 @@ const VisaHrPage = () => {
           },
         }
       );
+      console.log(response.data);
       setInfo(response.data);
     };
     fetchDocs();
   }, []);
   // mock data //
-  const mockUser = {
-    _id: "qweasdzxc123321",
-    firstName: "Ruike",
-  };
+
   const mockData = [
     {
       key: "1",
@@ -87,12 +96,11 @@ const VisaHrPage = () => {
         remaining: 25,
       },
       Next_Step: "ead",
-      Documentation: "abc",
+      Documentation: info,
     },
   ];
 
   // end of mock data //
-  const [status, setStatus] = useState("IN PROGRESS");
 
   const handleStatusChange = (e) => {
     setStatus(e.target.value);
