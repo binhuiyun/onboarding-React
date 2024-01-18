@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { login, register } from "../services/auth-service";
 import { addError, removeError } from "../redux/errorSlice";
-
+import { fetchUserById } from "../services/user-service";
 export const loginThunk = createAsyncThunk(
   "auth/login",
   async (data, thunkAPI) => {
@@ -32,4 +32,13 @@ export const registerThunk = createAsyncThunk(
       return thunkAPI.rejectWithValue(message);
     }
   }
+);
+
+export const fetchUserByIdThunk = createAsyncThunk(
+  "auth/fetchUserById",
+  async (id) => {
+    
+      const user = await fetchUserById(id);
+      return user;
+    }
 );

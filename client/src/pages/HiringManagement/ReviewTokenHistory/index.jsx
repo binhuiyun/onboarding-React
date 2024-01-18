@@ -36,7 +36,7 @@ const columns = [
     },
     
     ];
-    const data = [];
+ 
 
 export default function ReviewTokenHistory() {
     const dispatch = useDispatch();
@@ -45,21 +45,24 @@ export default function ReviewTokenHistory() {
     useEffect(() => {
         dispatch(fetchTokenHistoryThunk())
         console.log("tokenHistory", tokenHistory)
-    } , []);    
+    } , [dispatch]);    
      
   return (
     <>
     <h1>ReviewTokenHistory</h1>
-    {tokenHistory.map((token) => {
-        data.push({
-            key: token._id,
-            name: token.name,
-            email: token.email,
-            registrationLink: token.link,
-            status: token.status,
-        });
-    })}
-    <Table columns={columns} dataSource={data} />
+
+    <Table 
+    columns={columns} 
+    dataSource={tokenHistory.map((token) => 
+   ({
+    key: token._id,
+    name: token.name,
+    email: token.email,
+    registrationLink: token.link,
+    status: token.status,
+}))} 
+  
+    />
     </>
   )
 }

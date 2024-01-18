@@ -8,7 +8,9 @@ export default function AuthForm({
   buttonText,
   onSubmit,
   title,
-  fields
+  fields,
+  errors
+
 }) {
   const { status } = useSelector(state => state.user);
 
@@ -17,7 +19,8 @@ export default function AuthForm({
      
       <Form onFinish={onSubmit} autoComplete="off">
         {fields.map(field => (
-          <Form.Item key={field.name} name={field.name} rules={field.rules}>
+          <Form.Item key={field.name} name={field.name} rules={field.rules}
+          validateStatus={field.validateStatus} help={field.help}>
             {field.type === 'password' ? (
               <Input.Password
                 placeholder={field.placeholder}

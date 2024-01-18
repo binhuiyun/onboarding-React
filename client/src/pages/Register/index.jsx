@@ -62,6 +62,7 @@ export default function Register() {
         console.log("res", res);
       }).catch(err => {
         console.log("post failed", err);
+        navigate("/not-found");
       });
       console.log("token", token);
     }
