@@ -40,9 +40,9 @@ const VisaHrPage = () => {
       render: (_, { Work_Authorization }) => (
         <>
           <Tag color="geekblue">{Work_Authorization.title}</Tag>
-          <Tag color="green">{`Start Date : ${Work_Authorization.start_date}`}</Tag>
-          <Tag color="yellow">{`End Date : ${Work_Authorization.end_date}`}</Tag>
-          <Tag color="volcano">{`Remaining : ${Work_Authorization.remaining} days`}</Tag>
+          <Tag color="geekblue">{`Start Date : ${Work_Authorization.start_date}`}</Tag>
+          <Tag color="geekblue">{`End Date : ${Work_Authorization.end_date}`}</Tag>
+          <Tag color="geekblue">{`Remaining : ${Work_Authorization.remaining} days`}</Tag>
         </>
       ),
     },
@@ -107,7 +107,7 @@ const VisaHrPage = () => {
   };
   return (
     <div className="mx-10 ">
-      <p className="text-3xl text-chuwa-blue my-10">Visa Status Management</p>
+      <p className="text-3xl text-geekblue my-10">Visa Status Management</p>
       <div className="">
         <input
           type="text"
@@ -120,7 +120,7 @@ const VisaHrPage = () => {
           name="status"
           id="status"
           onChange={handleStatusChange}
-          className="py-3 px-2 bg-slate-200 text-chuwa-blue rounded-md shadow-md"
+          className="py-3 px-2 bg-slate-200 text-geekblue rounded-md shadow-md"
         >
           <option value="IN PROGRESS">IN PROGRESS</option>
           <option value="ALL">ALL</option>
@@ -128,9 +128,9 @@ const VisaHrPage = () => {
       </div>
       <div className=" flex items-center justify-center">
         {status === "IN PROGRESS" ? (
-          <Table columns={columns1} dataSource={mockData} className="w-[70%]" />
+          <Table columns={columns1} dataSource={mockData} className="w-[80%]" />
         ) : (
-          <Table columns={columns2} dataSource={mockData} className="w-[70%]" />
+          <Table columns={columns2} dataSource={mockData} className="w-[80%]" />
         )}
       </div>
     </div>

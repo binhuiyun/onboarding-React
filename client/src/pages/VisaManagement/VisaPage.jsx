@@ -74,8 +74,8 @@ const VisaPage = () => {
   return (
     <>
       <Header />
-      <div className="text-5xl text-gray-500 mx-20 my-5">{`Hi, ${mockUser.firstName}`}</div>
-      <div className="text-3xl text-chuwa-blue mx-20 mb-10">
+      <div className="text-4xl text-slate-400 mx-20 my-5">{`Hi, ${mockUser.firstName}`}</div>
+      <div className="text-3xl text-geekblue mx-20 mb-10">
         Visa Management System
       </div>
       <div className="w-full flex flex-col items-center">

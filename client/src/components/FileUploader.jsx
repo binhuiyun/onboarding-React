@@ -30,7 +30,7 @@ const FileUploader = ({ title, fileType, status, feedback, next, prev }) => {
           <ClockIcon className="h-8 w-8 text-yellow-500" />
         )}
         {status === "approved" && (
-          <CheckCircleIcon className="h-8 w-8 text-blue-500" />
+          <CheckCircleIcon className="h-8 w-8 text-geekblue" />
         )}
         {status === "rejected" && (
           <ExclamationCircleIcon className="h-8 w-8 text-red-500" />
@@ -76,7 +76,7 @@ const FileUploader = ({ title, fileType, status, feedback, next, prev }) => {
           {prev === "approved" && (
             <Popover content="Upload File">
               <FolderPlusIcon
-                className="h-8 w-8 text-blue-500"
+                className="h-8 w-8 text-geekblue"
                 onClick={handleUpload}
               />
             </Popover>

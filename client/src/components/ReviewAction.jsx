@@ -1,4 +1,7 @@
 import React, { useEffect, useState } from "react";
+import RejectFeedback from "./RejectFeedback";
+import { Button } from "antd";
+
 const ReviewAction = (props) => {
   const { optReceipt, optEAD, I983, I20 } = props.doc;
   const [optReceiptURL, setOptReceiptURL] = useState("");
@@ -14,10 +17,10 @@ const ReviewAction = (props) => {
     };
     createURL();
   }, []);
-
+  // TODO: when click reject, the popup window appears, after writing feedback and click send, the status of file could be changed to reject.
   return (
     <>
-      <div className="flex ">
+      <div className="flex items-center ">
         {optReceipt && (
           <a href={optReceiptURL} width="10%" height="20px">
             Opt Receipt
@@ -37,8 +40,10 @@ const ReviewAction = (props) => {
         {I20URL && (
           <iframe title="I20" src={I20URL} width="10%" height="20px"></iframe>
         )}
-        <button className="mx-1">Approve</button>
-        <button>Reject</button>
+        <Button type="primary" className="ml-8 mr-2 h-10 w-20" ghost>
+          Approve
+        </Button>
+        <RejectFeedback />
       </div>
     </>
   );
