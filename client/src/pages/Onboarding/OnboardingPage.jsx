@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { submitOnboarding } from "../../redux/onboardingSlice";
 import { Document, Page, pdfjs } from "react-pdf";
+import FilePreviewer from "../../components/FilePreviewer";
+
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
   import.meta.url
@@ -119,20 +121,13 @@ const OnboardingPage = () => {
     const file = e.target.files[0];
     console.log(file.name);
     formData2.append("file", file, file.name);
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      setFiles((prevFiles) => [
-        ...prevFiles,
-        {
-          name: file.name,
-          preview: reader.result,
-          type: file.type,
-        },
-      ]);
-    };
-    reader.readAsDataURL(file);
+    setFiles([...files, file]);
   };
+
+  const addFile = (file) => {
+    setFiles([...files, file]);
+  };
+      
 
   const handleReferenceChange = (e) => {
     const { name, value } = e.target;
@@ -169,54 +164,7 @@ const OnboardingPage = () => {
     dispatch(submitOnboarding(formData));
     navigate("/personal-information");
     // Handle form submission logic here
-  }
-
-  const handlePreviewClick = (dataURL, fileType) => {
-    console.log(dataURL, fileType);
-    // Open the preview based on the file type
-    if (fileType === "application/pdf") {
-      // Display PDF using react-pdf
-      return (
-        <Document file="https://www.africau.edu/images/default/sample.pdf">
-          dsadsa
-          <Page pageNumber={1} />
-        </Document>
-      );
-    }
   };
-  // const renderPreview = (file) => {
-  //   console.log(files);
-  //   const reader = new FileReader();
-
-  //   reader.onload = () => {
-  //     const dataURL = reader.result;
-  //     console.log(dataURL);
-  //     console.log(file);
-
-  //     if (fileType === "application/pdf") {
-  //       // Display PDF using react-pdf
-  //       // You may need to adjust this based on your folder structure
-  //       const pdfViewer = (
-  //         <Document file={{ data: dataURL }} onLoadSuccess={console.log}>
-  //           <Page pageNumber={1} />
-  //         </Document>
-  //       );
-  //       window.open("", "_blank").document.write(pdfViewer);
-  //     }
-  //     // return (
-  //     //   <div className="file-item">
-  //     //     <h3>{file.name}</h3>
-  //     //     <img
-  //     //       src={dataURL}
-  //     //       alt={file.name}
-  //     //       onClick={() => handlePreviewClick(dataURL)}
-  //     //     />
-  //     //   </div>
-  //     // );
-  //   };
-
-  //   reader.readAsDataURL(new Blob([file.data], { type: "image/*" }));
-  // };
 
   return (
     <>
@@ -605,14 +553,7 @@ const OnboardingPage = () => {
                   >
                     Upload a file for work authorization:
                   </label>
-                  <input
-                    type="file"
-                    id="workAuthorizationFiles"
-                    name="workAuthorizationFiles"
-                    accept=".pdf, .doc, .docx" // Allow specific file types
-                    onChange={handleFileUpload}
-                    className="mt-1 p-2 border rounded-md w-full"
-                  />
+                  <FilePreviewer addFile={addFile} />
                 </div>
               </>
             )}
@@ -767,28 +708,8 @@ const OnboardingPage = () => {
         </div>
 
         {/* Summary of Uploaded Files */}
-        <div className="file-preview">
-          file-preview
-          {files.map((file) => (
-            <div
-              key={file.name}
-              className="file-item"
-              onClick={() => handlePreviewClick(file.preview, file.type)}
-            >
-              <h3>{file.name}</h3>
-              {file.type === "application/pdf" && (
-                <p>PDF Document: {file.name}</p>
-                // react-pdf viewer will be opened in a new window
-              )}
-            </div>
-          ))}
-        </div>
-
-        <Document file="https://www.africau.edu/images/default/sample.pdf">
-          dsadsa
-          <Page pageNumber={1} />
-        </Document>
-
+        <FilePreviewer handleFileUpload={handleFileUpload}/>
+      
         <div className="mb-4">
           <label
             htmlFor="summaryOfUploadedFiles"
@@ -815,8 +736,6 @@ const OnboardingPage = () => {
             Save Profile
           </button>
         </div>
-
-
 
         {/* Feedback */}
         <div className="mb-4">
