@@ -9,8 +9,8 @@ const getAllVisa = async (req, res) => {
 };
 const createVisaModel = async (req, res) => {
   try {
-    const { employee } = req.body;
-    const visaDocument = await visaModel.create({ employee: employee });
+    const { user } = req.body;
+    const visaDocument = await visaModel.create({ user: user });
     res.status(201).json(visaDocument);
   } catch (err) {
     res.status(500).json({ message: "Server Error" });
@@ -19,7 +19,7 @@ const createVisaModel = async (req, res) => {
 
 const getVisaById = async (req, res) => {
   try {
-    const visaDoc = await visaModel.findOne({ employee: req.params.id });
+    const visaDoc = await visaModel.findOne({ user: req.params.id });
     if (visaDoc) res.status(200).json(visaDoc);
     else res.status(204).json({ message: "Not found" });
   } catch (err) {
@@ -30,7 +30,7 @@ const getVisaById = async (req, res) => {
 const addToVisaDocumentation = async (req, res) => {
   try {
     const fileType = req.params.fileType;
-    const visaDoc = await visaModel.findOne({ employee: req.params.id });
+    const visaDoc = await visaModel.findOne({ user: req.params.id });
     visaDoc[fileType] = {
       fileName: req.file.originalname,
       fileDoc: req.file.buffer,
@@ -55,6 +55,11 @@ const downloadEmptyAndSample = async (req, res) => {
   } catch (err) {
     res.status(500).json(err);
   }
+};
+const getHrSideData = async (req, res) => {
+  try {
+    const visaDoc = await visaModel.find();
+  } catch (err) {}
 };
 module.exports = {
   createVisaModel,

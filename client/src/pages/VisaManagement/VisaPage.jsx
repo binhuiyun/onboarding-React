@@ -12,12 +12,13 @@ const mockUser = {
 const mockInfo = {
   fileName: "I983",
   status: "approved",
-  feedback: "reupload correct one",
+  feedback: "Re-Upload Correct One",
   next: "OPT EAD",
 };
 
 const VisaPage = () => {
   // const { user } = useSelector((state) => state);
+  // console.log(user);
   const [info, setInfo] = useState({});
   const [optReceiptStatus, setOptReceiptStatus] = useState("never uploaded");
   const [optEADtStatus, setOptEADtStatus] = useState("never uploaded");
@@ -53,7 +54,7 @@ const VisaPage = () => {
         const res = await axios.post(
           "http://localhost:4000/api/visa",
           {
-            employee: mockUser._id,
+            user: mockUser._id,
           },
           {
             headers: {
