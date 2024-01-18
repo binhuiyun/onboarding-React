@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { submitOnboarding } from "../../redux/onboardingSlice";
 import { Document, Page, pdfjs } from "react-pdf";
 import FilePreviewer from "../../components/FilePreviewer";
+import Header from "../layout/Header";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -58,7 +59,6 @@ const OnboardingPage = () => {
         relationship: "",
       },
     ],
-    summaryOfUploadedFiles: "",
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -117,17 +117,9 @@ const OnboardingPage = () => {
     });
   };
 
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    console.log(file.name);
-    formData2.append("file", file, file.name);
-    setFiles([...files, file]);
-  };
-
   const addFile = (file) => {
     setFiles([...files, file]);
   };
-      
 
   const handleReferenceChange = (e) => {
     const { name, value } = e.target;
@@ -159,46 +151,20 @@ const OnboardingPage = () => {
   async function createInfo(e) {
     e.preventDefault();
     console.log("Form submitted:", formData);
-    //await createPersonalInformation(formData);
     //dispatch(submitOnboarding(formData, user.id, fileType));
     dispatch(submitOnboarding(formData));
     navigate("/personal-information");
     // Handle form submission logic here
-  };
+  }
 
   return (
     <>
-      <header className="flex items-center justify-between bg-[#F0F0F0] px-20 py-4">
-        <div className="text-3xl flex items-center">Chuwa America</div>
-        <div className="flex flex-row">
-          <button
-            className="px-2 border-b-2 border-transparent transition duration-300 hover:border-black"
-            disabled
-          >
-            Personal Information
-          </button>
-          <button
-            className="px-2 border-b-2 border-transparent transition duration-300 hover:border-black"
-            disabled
-          >
-            Visa Status
-          </button>
-          <div className="pl-14">
-            <img
-              className="p-0.5 w-[40px] h-[40px] rounded-full ring-2 ring-black object-cover"
-              src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            />
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <form className="max-w-md mx-auto mt-8" onSubmit={handleSubmit}>
         {/* First Name */}
         <div className="mb-4">
-          <label
-            htmlFor="name.firstName"
-            className="block text-sm font-medium text-gray-600"
-          >
+          <label htmlFor="name.firstName" className="block text-gray-600">
             First Name <span className="text-red-500">*</span>
           </label>
           <input
@@ -214,10 +180,7 @@ const OnboardingPage = () => {
 
         {/* Last Name */}
         <div className="mb-4">
-          <label
-            htmlFor="lastName"
-            className="block text-sm font-medium text-gray-600"
-          >
+          <label htmlFor="lastName" className="block text-gray-600">
             Last Name <span className="text-red-500">*</span>
           </label>
           <input
@@ -233,10 +196,7 @@ const OnboardingPage = () => {
 
         {/* Middle Name */}
         <div className="mb-4">
-          <label
-            htmlFor="middleName"
-            className="block text-sm font-medium text-gray-600"
-          >
+          <label htmlFor="middleName" className="block text-gray-600">
             Middle Name
           </label>
           <input
@@ -251,10 +211,7 @@ const OnboardingPage = () => {
 
         {/* Preferred Name */}
         <div className="mb-4">
-          <label
-            htmlFor="preferredName"
-            className="block text-sm font-medium text-gray-600"
-          >
+          <label htmlFor="preferredName" className="block text-gray-600">
             Preferred Name
           </label>
           <input
@@ -269,10 +226,7 @@ const OnboardingPage = () => {
 
         {/* Profile Picture */}
         <div className="mb-4">
-          <label
-            htmlFor="profilePicture"
-            className="block text-sm font-medium text-gray-600"
-          >
+          <label htmlFor="profilePicture" className="block text-gray-600">
             Profile Picture
           </label>
           <input
@@ -295,7 +249,7 @@ const OnboardingPage = () => {
 
         {/* Current Address */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-600">
+          <label className="block text-gray-600">
             Current Address <span className="text-red-500">*</span>
           </label>
           <div className="grid grid-cols-2 gap-4">
@@ -349,10 +303,7 @@ const OnboardingPage = () => {
 
         {/* Cell Phone Number */}
         <div className="mb-4">
-          <label
-            htmlFor="cellPhoneNumber"
-            className="block text-sm font-medium text-gray-600"
-          >
+          <label htmlFor="cellPhoneNumber" className="block text-gray-600">
             Cell Phone Number <span className="text-red-500">*</span>
           </label>
           <input
@@ -368,10 +319,7 @@ const OnboardingPage = () => {
 
         {/* Work Phone Number */}
         <div className="mb-4">
-          <label
-            htmlFor="workPhoneNumber"
-            className="block text-sm font-medium text-gray-600"
-          >
+          <label htmlFor="workPhoneNumber" className="block text-gray-600">
             Work Phone Number
           </label>
           <input
@@ -386,10 +334,7 @@ const OnboardingPage = () => {
 
         {/* Email */}
         <div className="mb-4">
-          <label
-            htmlFor="email"
-            className="block text-sm font-medium text-gray-600"
-          >
+          <label htmlFor="email" className="block text-gray-600">
             Email
           </label>
           <input
@@ -404,10 +349,7 @@ const OnboardingPage = () => {
 
         {/* SSN */}
         <div className="mb-4">
-          <label
-            htmlFor="ssn"
-            className="block text-sm font-medium text-gray-600"
-          >
+          <label htmlFor="ssn" className="block text-gray-600">
             SSN <span className="text-red-500">*</span>
           </label>
           <input
@@ -423,10 +365,7 @@ const OnboardingPage = () => {
 
         {/* Date of Birth */}
         <div className="mb-4">
-          <label
-            htmlFor="dateOfBirth"
-            className="block text-sm font-medium text-gray-600"
-          >
+          <label htmlFor="dateOfBirth" className="block text-gray-600">
             Date of Birth <span className="text-red-500">*</span>
           </label>
           <input
@@ -442,10 +381,7 @@ const OnboardingPage = () => {
 
         {/* Gender */}
         <div className="mb-4">
-          <label
-            htmlFor="gender"
-            className="block text-sm font-medium text-gray-600"
-          >
+          <label htmlFor="gender" className="block  text-gray-600">
             Gender <span className="text-red-500">*</span>
           </label>
           <select
@@ -467,10 +403,7 @@ const OnboardingPage = () => {
 
         {/* Citizenship Status */}
         <div className="mb-4">
-          <label
-            htmlFor="citizenship"
-            className="block text-sm font-medium text-gray-600"
-          >
+          <label htmlFor="citizenship" className="block text-gray-600">
             Permanent resident or citizen of the U.S.?{" "}
             <span className="text-red-500">*</span>
           </label>
@@ -493,10 +426,7 @@ const OnboardingPage = () => {
         {/* Conditional Rendering based on Citizenship Status */}
         {formData.workAuthorization.citizenship === "yes" && (
           <div className="mb-4">
-            <label
-              htmlFor="citizenType"
-              className="block text-sm font-medium text-gray-600"
-            >
+            <label htmlFor="citizenType" className="block text-gray-600">
               Choose your status:
             </label>
             <select
@@ -521,7 +451,7 @@ const OnboardingPage = () => {
             <div className="mb-4">
               <label
                 htmlFor="workAuthorizationType"
-                className="block text-sm font-medium text-gray-600"
+                className="block text-gray-600"
               >
                 What is your work authorization?{" "}
                 <span className="text-red-500">*</span>
@@ -549,7 +479,7 @@ const OnboardingPage = () => {
                 <div className="mb-4">
                   <label
                     htmlFor="workAuthorizationFiles"
-                    className="block text-sm font-medium text-gray-600"
+                    className="block text-gray-600"
                   >
                     Upload a file for work authorization:
                   </label>
@@ -562,7 +492,7 @@ const OnboardingPage = () => {
                 <div className="mb-4">
                   <label
                     htmlFor="cellPhoneNumber"
-                    className="block text-sm font-medium text-gray-600"
+                    className="block text-gray-600"
                   >
                     Visa Title <span className="text-red-500">*</span>
                   </label>
@@ -583,9 +513,7 @@ const OnboardingPage = () => {
 
         {/* Reference */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-600">
-            Reference
-          </label>
+          <label className="block text-gray-600">Reference</label>
           <div className="grid grid-cols-2 gap-4">
             <input
               type="text"
@@ -646,9 +574,7 @@ const OnboardingPage = () => {
 
         {/* Emergency Contact */}
         <div className="mb-4">
-          <label className="block text-sm font-medium text-gray-600">
-            Emergency Contact
-          </label>
+          <label className="block text-gray-600">Emergency Contact</label>
           <div className="grid grid-cols-2 gap-4">
             <input
               type="text"
@@ -708,24 +634,21 @@ const OnboardingPage = () => {
         </div>
 
         {/* Summary of Uploaded Files */}
-        <FilePreviewer handleFileUpload={handleFileUpload}/>
-      
-        <div className="mb-4">
-          <label
-            htmlFor="summaryOfUploadedFiles"
-            className="block text-sm font-medium text-gray-600"
-          >
-            Summary of Uploaded Files
-          </label>
-          <textarea
-            id="summaryOfUploadedFiles"
-            name="summaryOfUploadedFiles"
-            value={formData.summaryOfUploadedFiles}
-            onChange={handleChange}
-            rows="3"
-            className="mt-1 p-2 border rounded-md w-full"
-          ></textarea>
-        </div>
+        {files != "" && (
+          <div className="mb-4">
+            <label
+              htmlFor="summaryOfUploadedFiles"
+              className="block text-gray-600"
+            >
+              Summary of Uploaded Files
+              <div className="flex flex-row items-center justify-between mt-1 p-2 border rounded-md w-full">
+                {files.map((i) => {
+                  return <span>{i.name}</span>;
+                })}
+              </div>
+            </label>
+          </div>
+        )}
 
         {/* Submit Button */}
         <div className="mt-4">
@@ -733,15 +656,15 @@ const OnboardingPage = () => {
             type="submit"
             className="bg-blue-500 text-white px-4 py-2 rounded-md"
           >
-            Save Profile
+            Submit
           </button>
         </div>
 
         {/* Feedback */}
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label
             htmlFor="summaryOfUploadedFiles"
-            className="block text-sm font-medium text-gray-600"
+            className="block *:text-gray-600"
           >
             Feedback
           </label>
@@ -753,7 +676,7 @@ const OnboardingPage = () => {
             rows="3"
             className="mt-1 p-2 border rounded-md w-full"
           ></textarea>
-        </div>
+        </div> */}
       </form>
     </>
   );

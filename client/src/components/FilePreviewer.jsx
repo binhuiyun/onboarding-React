@@ -4,6 +4,7 @@ const FilePreviewer = ({ addFile }) => {
 
   const onFileUpload = (event) => {
     const selectedFile = event.target.files[0];
+    console.log(selectedFile);
     setFile(selectedFile);
     addFile(selectedFile);
   };
