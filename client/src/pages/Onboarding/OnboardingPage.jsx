@@ -6,14 +6,17 @@ import { useSelector, useDispatch } from "react-redux";
 import { submitOnboarding } from "../../redux/onboardingSlice";
 import { Document, Page, pdfjs } from "react-pdf";
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  'pdfjs-dist/build/pdf.worker.min.js',
-  import.meta.url,
+  "pdfjs-dist/build/pdf.worker.min.js",
+  import.meta.url
 ).toString();
 
 const OnboardingPage = () => {
-  const {user} = useSelector((state) => state.user);
+  const [files, setFiles] = useState([]);
+  const { user } = useSelector((state) => state.user);
+  //const { user } = dispatch(fetchUserByID());
   console.log("user:", user.id);
   const [formData, setFormData] = useState({
+    user: user.id,
     name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
     profilePicture: "", // You can use this to store the image URL or a base64-encoded string
     address: {
@@ -162,8 +165,8 @@ const OnboardingPage = () => {
     e.preventDefault();
     console.log("Form submitted:", formData);
     //await createPersonalInformation(formData);
-    dispatch(submitOnboarding(formData, userID, fileType));
-
+    //dispatch(submitOnboarding(formData, user.id, fileType));
+    dispatch(submitOnboarding(formData));
     navigate("/personal-information");
     // Handle form submission logic here
   }
@@ -446,7 +449,7 @@ const OnboardingPage = () => {
             id="email"
             name="email"
             value={formData.email}
-            readOnly
+            readOnly={user.isHR == "hr"}
             className="mt-1 p-2 border rounded-md w-full bg-gray-100"
           />
         </div>
@@ -811,6 +814,26 @@ const OnboardingPage = () => {
           >
             Save Profile
           </button>
+        </div>
+
+
+
+        {/* Feedback */}
+        <div className="mb-4">
+          <label
+            htmlFor="summaryOfUploadedFiles"
+            className="block text-sm font-medium text-gray-600"
+          >
+            Feedback
+          </label>
+          <textarea
+            id="summaryOfUploadedFiles"
+            name="summaryOfUploadedFiles"
+            value={formData.summaryOfUploadedFiles}
+            onChange={handleChange}
+            rows="3"
+            className="mt-1 p-2 border rounded-md w-full"
+          ></textarea>
         </div>
       </form>
     </>

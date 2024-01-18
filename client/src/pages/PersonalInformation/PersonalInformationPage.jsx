@@ -29,11 +29,12 @@ const PersonalInformationPage = () => {
   const [openAddFileModal, setOpenAddFileModal] = useState(false);
   const dispatch = useDispatch();
   const personalInformation = useSelector(selectPersonalInformation);
+  const { user } = useSelector((state) => state.user);
 
   // TODO: Fetch real userID from redux store
   useEffect(() => {
     console.log("Fetching personal information of:");
-    dispatch(fetchPersonalInformation("65a8523154c5a21df5d46873")).then(
+    dispatch(fetchPersonalInformation(user.id)).then(
       (response) => {
         console.log(response.payload.name);
         setFormData(response.payload);

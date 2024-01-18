@@ -5,7 +5,7 @@ import addToVisaDocumentation  from "../services/visaDocument-service";
 
 const submitOnboarding = createAsyncThunk(
   "onboarding/submitOnboarding",
-  async ({data, userID, fileType}) => {
+  async (data) => {
     try {
       console.log(data);
       const res = await createPersonalInformation(data);

@@ -83,6 +83,10 @@ const personalInformationSchema = new Schema({
     type: String,
     default: "Pending",
   },
+  HRfeedback: {
+    type: String,
+    default: "",
+  },
 });
 
 module.exports = mongoose.model("Profile", personalInformationSchema);
