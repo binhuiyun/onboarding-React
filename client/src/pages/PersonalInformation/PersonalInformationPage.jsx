@@ -33,7 +33,7 @@ const PersonalInformationPage = () => {
   // TODO: Fetch real userID from redux store
   useEffect(() => {
     console.log("Fetching personal information of:");
-    dispatch(fetchPersonalInformation("65a39a2401e8eff282ae48dd")).then(
+    dispatch(fetchPersonalInformation("65a8523154c5a21df5d46873")).then(
       (response) => {
         console.log(response.payload.name);
         setFormData(response.payload);

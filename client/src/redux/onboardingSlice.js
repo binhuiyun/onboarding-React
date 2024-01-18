@@ -1,18 +1,22 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import createPersonalInformation from "../services/personalInformation-service";
+import addToVisaDocumentation  from "../services/visaDocument-service";
 
 const submitOnboarding = createAsyncThunk(
   "onboarding/submitOnboarding",
-  async (data) => {
-    try {console.log(data);
+  async ({data, userID, fileType}) => {
+    try {
+      console.log(data);
       const res = await createPersonalInformation(data);
-      console.log(res);
+      const res2 = await addToVisaDocumentation(data, userID, fileType);
+      console.log(res, res2);
     } catch (err) {
       return err.response.data;
     }
   }
 );
+
 const initialState = {
   onboarding: {},
 };

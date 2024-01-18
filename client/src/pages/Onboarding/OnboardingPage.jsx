@@ -3,8 +3,15 @@ import React, { useState } from "react";
 import { createPersonalInformation } from "../../services/personalInformation-service";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import {submitOnboarding } from "../../redux/onboardingSlice";
+import { submitOnboarding } from "../../redux/onboardingSlice";
+import { Document, Page, pdfjs } from "react-pdf";
+pdfjs.GlobalWorkerOptions.workerSrc = new URL(
+  'pdfjs-dist/build/pdf.worker.min.js',
+  import.meta.url,
+).toString();
+
 const OnboardingPage = () => {
+  const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
     name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
     profilePicture: "", // You can use this to store the image URL or a base64-encoded string
@@ -20,9 +27,13 @@ const OnboardingPage = () => {
     ssn: "",
     dateOfBirth: "",
     gender: "",
-    citizenship: "",
-    citizenType: "",
-    workAuthorization: { workAuthorizationType: "", files: null },
+
+    workAuthorization: {
+      citizenship: "",
+      citizenType: "",
+      workAuthorizationType: "",
+      files: null,
+    },
     reference: {
       firstName: "",
       lastName: "",
@@ -44,7 +55,8 @@ const OnboardingPage = () => {
     summaryOfUploadedFiles: "",
   });
   const navigate = useNavigate();
- const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const formData2 = new FormData();
 
   const handleChange = (e) => {
     console.log(e.target);
@@ -101,10 +113,21 @@ const OnboardingPage = () => {
 
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    setFormData({
-      ...formData,
-      fileUpload: file,
-    });
+    console.log(file.name);
+    formData2.append("file", file, file.name);
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setFiles((prevFiles) => [
+        ...prevFiles,
+        {
+          name: file.name,
+          preview: reader.result,
+          type: file.type,
+        },
+      ]);
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleReferenceChange = (e) => {
@@ -138,20 +161,74 @@ const OnboardingPage = () => {
     e.preventDefault();
     console.log("Form submitted:", formData);
     //await createPersonalInformation(formData);
-    dispatch(submitOnboarding(formData));
+    dispatch(submitOnboarding(formData, userID, fileType));
+
     navigate("/personal-information");
     // Handle form submission logic here
   }
+
+  const handlePreviewClick = (dataURL, fileType) => {
+    console.log(dataURL, fileType);
+    // Open the preview based on the file type
+    if (fileType === "application/pdf") {
+      // Display PDF using react-pdf
+      return (
+        <Document file="https://www.africau.edu/images/default/sample.pdf">
+          dsadsa
+          <Page pageNumber={1} />
+        </Document>
+      );
+    }
+  };
+  // const renderPreview = (file) => {
+  //   console.log(files);
+  //   const reader = new FileReader();
+
+  //   reader.onload = () => {
+  //     const dataURL = reader.result;
+  //     console.log(dataURL);
+  //     console.log(file);
+
+  //     if (fileType === "application/pdf") {
+  //       // Display PDF using react-pdf
+  //       // You may need to adjust this based on your folder structure
+  //       const pdfViewer = (
+  //         <Document file={{ data: dataURL }} onLoadSuccess={console.log}>
+  //           <Page pageNumber={1} />
+  //         </Document>
+  //       );
+  //       window.open("", "_blank").document.write(pdfViewer);
+  //     }
+  //     // return (
+  //     //   <div className="file-item">
+  //     //     <h3>{file.name}</h3>
+  //     //     <img
+  //     //       src={dataURL}
+  //     //       alt={file.name}
+  //     //       onClick={() => handlePreviewClick(dataURL)}
+  //     //     />
+  //     //   </div>
+  //     // );
+  //   };
+
+  //   reader.readAsDataURL(new Blob([file.data], { type: "image/*" }));
+  // };
 
   return (
     <>
       <header className="flex items-center justify-between bg-[#F0F0F0] px-20 py-4">
         <div className="text-3xl flex items-center">Chuwa America</div>
         <div className="flex flex-row">
-          <button className="px-2 border-b-2 border-transparent transition duration-300 hover:border-black" disabled>
+          <button
+            className="px-2 border-b-2 border-transparent transition duration-300 hover:border-black"
+            disabled
+          >
             Personal Information
           </button>
-          <button className="px-2 border-b-2 border-transparent transition duration-300 hover:border-black" disabled>
+          <button
+            className="px-2 border-b-2 border-transparent transition duration-300 hover:border-black"
+            disabled
+          >
             Visa Status
           </button>
           <div className="pl-14">
@@ -448,8 +525,8 @@ const OnboardingPage = () => {
           <select
             id="citizenship"
             name="citizenship"
-            value={formData.citizenship}
-            onChange={handleChange}
+            value={formData.workAuthorization.citizenship}
+            onChange={handleWorkAuthorizationChange}
             required
             className="mt-1 p-2 border rounded-md w-full"
           >
@@ -462,7 +539,7 @@ const OnboardingPage = () => {
         </div>
 
         {/* Conditional Rendering based on Citizenship Status */}
-        {formData.citizenship === "yes" && (
+        {formData.workAuthorization.citizenship === "yes" && (
           <div className="mb-4">
             <label
               htmlFor="citizenType"
@@ -473,8 +550,8 @@ const OnboardingPage = () => {
             <select
               id="citizenType"
               name="citizenType"
-              value={formData.citizenType}
-              onChange={handleChange}
+              value={formData.workAuthorization.citizenType}
+              onChange={handleWorkAuthorizationChange}
               className="mt-1 p-2 border rounded-md w-full"
             >
               <option value="" disabled>
@@ -486,7 +563,7 @@ const OnboardingPage = () => {
           </div>
         )}
 
-        {formData.citizenship === "no" && (
+        {formData.workAuthorization.citizenship === "no" && (
           <div>
             {/* Work Authorization */}
             <div className="mb-4">
@@ -686,6 +763,28 @@ const OnboardingPage = () => {
         </div>
 
         {/* Summary of Uploaded Files */}
+        <div className="file-preview">
+          file-preview
+          {files.map((file) => (
+            <div
+              key={file.name}
+              className="file-item"
+              onClick={() => handlePreviewClick(file.preview, file.type)}
+            >
+              <h3>{file.name}</h3>
+              {file.type === "application/pdf" && (
+                <p>PDF Document: {file.name}</p>
+                // react-pdf viewer will be opened in a new window
+              )}
+            </div>
+          ))}
+        </div>
+
+        <Document file="https://www.africau.edu/images/default/sample.pdf">
+          dsadsa
+          <Page pageNumber={1} />
+        </Document>
+
         <div className="mb-4">
           <label
             htmlFor="summaryOfUploadedFiles"
