@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Space, Table, Tag } from "antd";
 import ReviewAction from "../../components/ReviewAction";
+import SendNotification from "../../components/SendNotification";
 
 // api : router.get("/hr", getHrSideData);
 const VisaHrPage = () => {
@@ -32,12 +33,21 @@ const VisaHrPage = () => {
     {
       title: "Action",
       dataIndex: "action",
-      key: "action",
-      // render: (_, { action }) => {
-      //   // Documentation.map((doc) => {
-      //   return <ReviewAction doc={Documentation} filter={status} />;
-      //   // });
-      // },
+      key: "newAction",
+      // {newAction.message === "need review" ? <ReviewAction file={newAction.fileToDeal} fileTitle="opt"> : <SendNotification />}
+      render: (_, { newAction }) => (
+        <>
+          {newAction.message === "need review" ? (
+            <ReviewAction
+              file={newAction.fileToDeal}
+              fileTitle={newAction.fileToDealName}
+              filter={filter}
+            />
+          ) : (
+            <SendNotification />
+          )}
+        </>
+      ),
     },
   ];
   const columns2 = [
@@ -71,26 +81,34 @@ const VisaHrPage = () => {
 
       render: (_, { Documentation }) => (
         <>
-          <ReviewAction
-            file={Documentation.optReceipt}
-            fileTitle="OPT Receipt"
-            filter={filter}
-          />
-          <ReviewAction
-            file={Documentation.optEAD}
-            fileTitle="OPT EAD"
-            filter={filter}
-          />
-          <ReviewAction
-            file={Documentation.I983}
-            fileTitle="I-983"
-            filter={filter}
-          />
-          <ReviewAction
-            file={Documentation.I20}
-            fileTitle="I-20"
-            filter={filter}
-          />
+          {Documentation.optReceipt.fileDoc && (
+            <ReviewAction
+              file={Documentation.optReceipt}
+              fileTitle="OPT Receipt"
+              filter={filter}
+            />
+          )}
+          {Documentation.optEAD.fileDoc && (
+            <ReviewAction
+              file={Documentation.optEAD}
+              fileTitle="OPT EAD"
+              filter={filter}
+            />
+          )}
+          {Documentation.I983.fileDoc && (
+            <ReviewAction
+              file={Documentation.I983}
+              fileTitle="I-983"
+              filter={filter}
+            />
+          )}
+          {Documentation.I20.fileDoc && (
+            <ReviewAction
+              file={Documentation.I20}
+              fileTitle="I-20"
+              filter={filter}
+            />
+          )}
         </>
       ),
     },
@@ -104,6 +122,11 @@ const VisaHrPage = () => {
     };
     fetchDocs();
   }, []);
+
+  console.log(info);
+  const infoInProgress = info.filter(
+    (user) => user.docStatus === "IN PROGRESS"
+  );
   const dataSourceAll = info.map(
     ({ name, Work_Authorization, Next_Step, Documentation }, index) => {
       return {
@@ -115,18 +138,42 @@ const VisaHrPage = () => {
       };
     }
   );
-  console.log(dataSourceAll);
-  const dataSourceInProgress = info.map(
-    ({ name, Work_Authorization, Next_Step, action, fileToDeal }, index) => {
+  const dataSourceInProgress = infoInProgress.map(
+    (
+      {
+        name,
+        Work_Authorization,
+        Next_Step,
+        action,
+        fileToDeal,
+        Documentation,
+        fileToDealName,
+      },
+      index
+    ) => {
+      let newAction = {};
+      if (action === "need review") {
+        newAction = {
+          message: "need review",
+          fileToDeal: Documentation[fileToDeal],
+          fileToDealName: fileToDealName,
+        };
+      } else if (action === "send notification") {
+        newAction = {
+          message: "send notification",
+          notification: Next_Step,
+        };
+      }
       return {
         key: index + 1,
         name,
         Work_Authorization,
         Next_Step,
-        action,
+        newAction,
       };
     }
   );
+  console.log(dataSourceInProgress);
 
   const handleFilterChange = (e) => {
     setFilter(e.target.value);

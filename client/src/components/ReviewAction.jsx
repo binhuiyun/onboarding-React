@@ -24,7 +24,7 @@ const ReviewAction = (props) => {
           </Popover>
         )}
         <div className="">
-          {file.fileDoc && (
+          {filter === "IN PROGRESS" && (
             <Button
               type="primary"
               className="ml-8 mr-2 h-8 w-20 text-geekblue"
@@ -35,7 +35,7 @@ const ReviewAction = (props) => {
             </Button>
           )}
 
-          {file.fileDoc && <RejectFeedback />}
+          {filter === "IN PROGRESS" && <RejectFeedback />}
         </div>
       </div>
     </>
