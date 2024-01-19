@@ -7,7 +7,7 @@ const Header = () => {
     navigate("/personal-information");
   };
   const handleVisaStatusButtonClick = () => {
-    navigate("/visa-status");
+    navigate("/visa");
   };
   return (
     <>

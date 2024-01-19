@@ -17,8 +17,8 @@ const mockInfo = {
 };
 
 const VisaPage = () => {
-  // const { user } = useSelector((state) => state);
-  // console.log(user);
+  const { user } = useSelector((state) => state);
+  console.log(user);
   const [info, setInfo] = useState({});
   const [optReceiptStatus, setOptReceiptStatus] = useState("never uploaded");
   const [optEADtStatus, setOptEADtStatus] = useState("never uploaded");
