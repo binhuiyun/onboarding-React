@@ -40,7 +40,12 @@ const ReviewAction = (props) => {
         {I20URL && (
           <iframe title="I20" src={I20URL} width="10%" height="20px"></iframe>
         )}
-        <Button type="primary" className="ml-8 mr-2 h-10 w-20" ghost>
+        <Button
+          type="primary"
+          className="ml-8 mr-2 h-10 w-20 text-geekblue"
+          style={{ color: "#597ef7" }}
+          ghost
+        >
           Approve
         </Button>
         <RejectFeedback />
