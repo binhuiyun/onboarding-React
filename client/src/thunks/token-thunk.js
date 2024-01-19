@@ -12,8 +12,9 @@ export const fetchTokenHistoryThunk = createAsyncThunk(
 
 export const updateTokenStatusThunk = createAsyncThunk(
     "tokenHistory/updateTokenStatus",
-    async (id) => {
-        const token = await updateTokenStatus(id);
+    async (email) => {
+        const token = await updateTokenStatus(email);
+        console.log("token status updated", email);
         return token;
     }
     );

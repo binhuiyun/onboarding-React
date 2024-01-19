@@ -32,7 +32,7 @@ const createPersonalInformation = async (req, res) => {
   }
 };
 
-// p_id
+// u_id
 const getPersonalInformation = async (req, res) => {
   const u_id = req.params.id;
   try {

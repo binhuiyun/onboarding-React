@@ -1,11 +1,13 @@
 // UserProfileForm.js
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { createPersonalInformation } from "../../services/personalInformation-service";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { submitOnboarding } from "../../redux/onboardingSlice";
 import { Document, Page, pdfjs } from "react-pdf";
 import FilePreviewer from "../../components/FilePreviewer";
+import { fetchUserByIdThunk } from "../../thunks/auth-thunk";
+import { updateTokenStatusThunk } from "../../thunks/token-thunk";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
@@ -16,7 +18,7 @@ const OnboardingPage = () => {
   const [files, setFiles] = useState([]);
   const { user } = useSelector((state) => state.user);
   //const { user } = dispatch(fetchUserByID());
-  console.log("user:", user.id);
+  //console.log("user:", user.id);
   const [formData, setFormData] = useState({
     user: user.id,
     name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
@@ -63,6 +65,13 @@ const OnboardingPage = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const formData2 = new FormData();
+
+  useEffect(() => {
+    dispatch(fetchUserByIdThunk(user.id));
+    console.log("current user:", user.username);
+    
+  }, []);
+
 
   const handleChange = (e) => {
     console.log(e.target);
@@ -154,6 +163,7 @@ const OnboardingPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     createInfo(e);
+    dispatch(updateTokenStatusThunk(user.email));
   };
 
   async function createInfo(e) {
