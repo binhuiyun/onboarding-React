@@ -16,6 +16,7 @@ import VisaHrPage from "./pages/VisaManagement/VisaHrPage";
 import NotFound from "./pages/NotFound";
 import EmployeeProfilePage from "./pages/EmployeeProfile/EmployeeProfilePage";
 import EmployeeProfileDetailsPage from "./pages/EmployeeProfile/EmployeeProfileDetailsPage";
+import ApplicationFeedback from "./pages/HiringManagement/ReviewApplications/ApplicationFeedback";
 
 const ApplicationStatusRouter = () => {
   return (
@@ -57,6 +58,10 @@ function App() {
         <Route
           path="/hiring-management/token"
           element={<ReviewTokenHistory />}
+        />
+        <Route
+          path="/applications/:id"
+          element={<ApplicationFeedback />}  
         />
 
         <Route path="/visa" element={<VisaPage />} />

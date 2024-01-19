@@ -54,9 +54,9 @@ const getTokenHistory = async(req, res) => {
 
 const updateTokenStatus = async (req, res) => {
   try{
-    const { id } = req.params;
+    const { email } = req.params;
     const { status } = req.body;
-    const tokenHistory = await TokenHistory.findByIdAndUpdate(id, {status}, {new: true});
+    const tokenHistory = await TokenHistory.updateOne({email}, { $set: {status}}, {new: true});
     res.json(tokenHistory);
   }catch(err){
     res.status(500).json({message: "Server Error"});

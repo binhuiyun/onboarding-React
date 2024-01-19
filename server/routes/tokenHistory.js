@@ -4,7 +4,7 @@ const { getTokenHistory, generateAndSend, updateTokenStatus } = require('../hand
 
 router.get('/', getTokenHistory);
 router.post('/', generateAndSend);
-router.put('/:id', updateTokenStatus);
+router.put('/:email', updateTokenStatus);
 
 
 module.exports = router;

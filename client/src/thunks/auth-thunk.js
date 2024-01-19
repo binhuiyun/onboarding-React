@@ -38,6 +38,7 @@ export const fetchUserByIdThunk = createAsyncThunk(
   "auth/fetchUserById",
   async (id) => {
       const user = await fetchUserById(id);
+      console.log("fetch user by id", user.isHR);
       return user;
     }
 );
