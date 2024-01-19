@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
+import { useNavigate, createSearchParams, Link } from "react-router-dom";
+
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -12,12 +14,20 @@ import { Layout, Menu, Button, theme } from "antd";
 const { Sider, Content } = Layout;
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
-import { fetchAllEmployees } from "../../redux/employeeProfileSlice";
+import {
+  fetchAllEmployees,
+  fetchEmployeeByName,
+  getEmployeeProfileByPID,
+} from "../../redux/employeeProfileSlice";
+import { Navigate } from "react-router";
 
 const EmployeeProfilePage = () => {
   const [collapsed, setCollapsed] = useState(false);
   const [allEmployees, setAllEmployees] = useState([]);
+  const [searchName, setSearchName] = useState("");
   const [sortedEmployees, setSortedEmployees] = useState([]);
+  const [employeeProfile, setEmployeeProfile] = useState();
+  const navigate = useNavigate();
 
   const toggleSider = () => {
     setCollapsed(!collapsed);
@@ -27,7 +37,6 @@ const EmployeeProfilePage = () => {
 
   const sortEmployees = (employees) => {
     const sorted = [...employees].sort((a, b) => {
-      console.log("a: ", a);
       if (a.name.lastName < b.name.lastName) {
         return -1;
       }
@@ -47,6 +56,43 @@ const EmployeeProfilePage = () => {
       sortEmployees(res.payload);
     });
   }, []);
+
+  const handleSearchButtonClick = () => {
+    console.log("Searching for employees with name: ", searchName);
+    dispatch(fetchEmployeeByName(searchName)).then((res) => {
+      console.log(`Fetched employees with name ${searchName}: `, res.payload);
+      setAllEmployees(res.payload);
+      sortEmployees(res.payload);
+    });
+  };
+
+  async function handleViewProfileButtonClick(p_id) {
+    //     console.log("Viewing profile for employee with id: ", p_id);
+    //     dispatch(getEmployeeProfileByPID(p_id))
+    //       .then((res) => {
+    //         console.log(`Fetched employee with p_id ${p_id}: `, res.payload);
+    //         setEmployeeProfile(res.payload);
+
+    //         //   setAllEmployees(res.payload);
+    //         //   sortEmployees(res.payload);
+    //       })
+    //       .then(() => {
+    //         navigate({
+    //           pathname: "/employee-profile/details",
+    //           search: `${createSearchParams({
+    //             p_id: `${p_id}`,
+    //           })}`,
+    //           state: { employeeProfile },
+    //         });
+    //       });
+
+    navigate({
+      pathname: "/employee-profile/details",
+      search: `${createSearchParams({
+        p_id: `${p_id}`,
+      })}`,
+    });
+  }
 
   return (
     <Layout className="w-screen h-screen overflow-auto">
@@ -86,10 +132,17 @@ const EmployeeProfilePage = () => {
                     <input
                       className="w-full px-4 rounded-3xl text-base p-4 focus:outline-none"
                       type="text"
+                      name="searchName"
+                      value={searchName}
+                      onChange={(e) => setSearchName(e.target.value)}
                       placeholder="John Doe"
                     />
                   </div>
-                  <button className="w-full text-base bg-blue-500 rounded-3xl p-4 text-white">
+                  <button
+                    type="button"
+                    onClick={handleSearchButtonClick}
+                    className="w-full text-base bg-blue-500 rounded-3xl p-4 text-white"
+                  >
                     Search
                   </button>
                 </div>
@@ -133,7 +186,13 @@ const EmployeeProfilePage = () => {
                       Email: <span className="underline">{employee.email}</span>
                     </label>
                     <div className="flex justify-end">
-                      <button className="rounded-3xl bg-blue-500 text-white px-20 py-4">
+                      <button
+                        type="button"
+                        className="rounded-3xl bg-blue-500 text-white px-20 py-4"
+                        onClick={(e) =>
+                          handleViewProfileButtonClick(employee._id)
+                        }
+                      >
                         View Profile
                       </button>
                     </div>
@@ -144,7 +203,6 @@ const EmployeeProfilePage = () => {
           })}
         </Content>
       </Layout>
-    
     </Layout>
   );
 };
