@@ -60,19 +60,30 @@ const downloadEmptyAndSample = async (req, res) => {
     res.status(500).json(err);
   }
 };
-// temp api for hr side table
-// POST /api/visa/feedback/:id/:fileType
-
-const addHrFeedback = async (req, res) => {
+// POST /api/visa/approve/:id/:fileType
+const approveFile = async (req, res) => {
   try {
     const visaDoc = await visaModel.findOne({ user: req.params.id });
-    visaDoc[fileType].feedback = req.params.feedback;
+    const { fileType } = req.params;
+    visaDoc.fileType.status = "approved";
     await visaDoc.save();
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-// GET
+// POST /api/visa/feedback/:id/:fileType
+const addHrFeedback = async (req, res) => {
+  try {
+    const visaDoc = await visaModel.findOne({ user: req.params.id });
+    const { message } = req.body;
+    console.log(message);
+    visaDoc.fileType.feedback = message;
+    await visaDoc.save();
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+// GET /api/visa/hr
 const getHrSideData = async (req, res) => {
   try {
     const arr = [];
@@ -129,6 +140,7 @@ const getHrSideData = async (req, res) => {
       if (profileData) {
         const { name, employment } = profileData;
         const data = {
+          id: id,
           firstName: name.firstName,
           lastName: name.lastName,
           name: `${name.firstName} ${name.lastName}`,
@@ -171,4 +183,5 @@ module.exports = {
   getAllVisa,
   getHrSideData,
   addHrFeedback,
+  approveFile,
 };

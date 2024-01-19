@@ -5,7 +5,9 @@ import ReviewAction from "../../components/ReviewAction";
 import SendNotification from "../../components/SendNotification";
 
 // api : router.get("/hr", getHrSideData);
+
 const VisaHrPage = () => {
+  // Table for IN PROGRESS
   const columns1 = [
     {
       title: "Name",
@@ -34,7 +36,6 @@ const VisaHrPage = () => {
       title: "Action",
       dataIndex: "action",
       key: "newAction",
-      // {newAction.message === "need review" ? <ReviewAction file={newAction.fileToDeal} fileTitle="opt"> : <SendNotification />}
       render: (_, { newAction }) => (
         <>
           {newAction.message === "need review" ? (
@@ -42,6 +43,8 @@ const VisaHrPage = () => {
               file={newAction.fileToDeal}
               fileTitle={newAction.fileToDealName}
               filter={filter}
+              id={newAction.id}
+              fileType={newAction.fileType}
             />
           ) : (
             <SendNotification />
@@ -141,6 +144,7 @@ const VisaHrPage = () => {
   const dataSourceInProgress = infoInProgress.map(
     (
       {
+        id,
         name,
         Work_Authorization,
         Next_Step,
@@ -155,12 +159,15 @@ const VisaHrPage = () => {
       if (action === "need review") {
         newAction = {
           message: "need review",
+          id: id,
+          fileType: fileToDeal,
           fileToDeal: Documentation[fileToDeal],
           fileToDealName: fileToDealName,
         };
       } else if (action === "send notification") {
         newAction = {
           message: "send notification",
+          id: id,
           notification: Next_Step,
         };
       }

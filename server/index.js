@@ -13,6 +13,7 @@ const personalInformationRouter = require("./routes/personalInformation");
 const userRouter = require("./routes/user");
 const applicationRouter = require("./routes/application");
 const employeeProfileRouter = require("./routes/employeeProfile");
+const bodyParser = require("body-parser");
 const path = require("path");
 const PORT = 4000;
 
@@ -26,7 +27,7 @@ const connectDB = async () => {
 };
 
 connectDB();
-
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use("/api/auth", authRouter);

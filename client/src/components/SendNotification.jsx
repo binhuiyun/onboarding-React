@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "antd";
 
+// TODO : send notification by email need to be implemented.
 const SendNotification = () => {
   return (
     <Button

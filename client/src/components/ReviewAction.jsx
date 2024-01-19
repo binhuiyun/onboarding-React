@@ -4,7 +4,7 @@ import { Button, Popover } from "antd";
 
 //TODO : one file, one reject, one approve
 const ReviewAction = (props) => {
-  const { file, fileTitle, filter } = props;
+  const { file, fileTitle, filter, id, fileType } = props;
   const [fileURL, setFileURL] = useState("");
   useEffect(() => {
     const createURL = async () => {
@@ -12,7 +12,6 @@ const ReviewAction = (props) => {
     };
     createURL();
   }, []);
-  // console.log(`${fileTitle}`, file);
   return (
     <>
       <div className="flex items-center justify-between my-2">
@@ -35,7 +34,9 @@ const ReviewAction = (props) => {
             </Button>
           )}
 
-          {filter === "IN PROGRESS" && <RejectFeedback />}
+          {filter === "IN PROGRESS" && (
+            <RejectFeedback id={id} fileType={fileType} />
+          )}
         </div>
       </div>
     </>
