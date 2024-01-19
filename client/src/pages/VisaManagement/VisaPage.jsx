@@ -4,21 +4,10 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
-const mockUser = {
-  _id: "jdisjfidfjidfndi",
-  firstName: "Ruike",
-};
-
-const mockInfo = {
-  fileName: "I983",
-  status: "approved",
-  feedback: "Re-Upload Correct One",
-  next: "OPT EAD",
-};
 
 const VisaPage = () => {
-  // const { user } = useSelector((state) => state);
-  // console.log(user);
+  const { user } = useSelector((state) => state.user);
+  console.log("here is user", user.id);
   const [info, setInfo] = useState({});
   const [optReceiptStatus, setOptReceiptStatus] = useState("never uploaded");
   const [optEADtStatus, setOptEADtStatus] = useState("never uploaded");
@@ -27,7 +16,7 @@ const VisaPage = () => {
   useEffect(() => {
     const fetchDocs = async () => {
       const response = await axios.get(
-        `http://localhost:4000/api/visa/${mockUser._id}`,
+        `http://localhost:4000/api/visa/${user.id}`,
         {
           headers: {
             Accept: "application/json",
@@ -35,7 +24,6 @@ const VisaPage = () => {
         }
       );
       if (response.status === 200) {
-        console.log(response.data);
         const optData = response.data;
         setInfo(response.data);
         if (optData.optReceipt) {
@@ -54,7 +42,7 @@ const VisaPage = () => {
         const res = await axios.post(
           "http://localhost:4000/api/visa",
           {
-            user: mockUser._id,
+            user: user.id,
           },
           {
             headers: {
@@ -74,7 +62,8 @@ const VisaPage = () => {
   return (
     <>
       <Header />
-      <div className="text-4xl text-slate-400 mx-20 my-5">{`Hi, ${mockUser.firstName}`}</div>
+      {/* TODO: change to real name */}
+      <div className="text-4xl text-slate-400 mx-20 my-5">{`Hi, alice`}</div>
       <div className="text-3xl text-geekblue mx-20 mb-10">
         Visa Management System
       </div>
@@ -83,7 +72,7 @@ const VisaPage = () => {
           title="OPT Receipt"
           fileType="optReceipt"
           status={optReceiptStatus}
-          feedback={mockInfo.feedback}
+          feedback={info.optReceipt ? info.optReceipt.feedback : undefined}
           next="OPT EAD"
           prev="approved"
         />
@@ -92,7 +81,7 @@ const VisaPage = () => {
           title="OPT EAD"
           fileType="optEAD"
           status={optEADtStatus}
-          feedback={mockInfo.feedback}
+          feedback={info.optEAD ? info.optEAD.feedback : undefined}
           next="I-983"
           prev={optReceiptStatus}
         />
@@ -101,7 +90,7 @@ const VisaPage = () => {
           title="I-983"
           fileType="I983"
           status={I983Status}
-          feedback={mockInfo.feedback}
+          feedback={info.I983 ? info.I983.feedback : undefined}
           next="I-20"
           prev={optEADtStatus}
         />
@@ -110,7 +99,7 @@ const VisaPage = () => {
           title="I-20"
           fileType="I20"
           status={I20Status}
-          feedback={mockInfo.feedback}
+          feedback={info.I20 ? info.I20.feedback : undefined}
           next=""
           prev={I983Status}
         />

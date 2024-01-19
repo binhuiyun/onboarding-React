@@ -17,6 +17,9 @@ const visaSchema = new Schema({
     status: {
       type: String,
     },
+    feedback: {
+      type: String,
+    },
   },
   optEAD: {
     fileName: {
@@ -26,6 +29,9 @@ const visaSchema = new Schema({
       type: Buffer,
     },
     status: {
+      type: String,
+    },
+    feedback: {
       type: String,
     },
   },
@@ -39,6 +45,9 @@ const visaSchema = new Schema({
     status: {
       type: String,
     },
+    feedback: {
+      type: String,
+    },
   },
   I20: {
     fileName: {
@@ -48,6 +57,9 @@ const visaSchema = new Schema({
       type: Buffer,
     },
     status: {
+      type: String,
+    },
+    feedback: {
       type: String,
     },
   },

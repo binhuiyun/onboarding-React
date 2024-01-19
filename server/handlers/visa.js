@@ -60,78 +60,118 @@ const downloadEmptyAndSample = async (req, res) => {
     res.status(500).json(err);
   }
 };
-// temp api for hr side table
-// POST /api/visa/feedback/:id/:fileType
-//
-const addHrFeedback = async (req, res) => {
+// POST /api/visa/approve/:id/:fileType
+const approveFile = async (req, res) => {
   try {
     const visaDoc = await visaModel.findOne({ user: req.params.id });
-    visaDoc[fileType].feedback = req.params.feedback;
+    const { fileType } = req.params;
+    console.log(fileType);
+    visaDoc[fileType].status = "approved";
     await visaDoc.save();
+    res.status(200).json("success");
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+// POST /api/visa/feedback/:id/:fileType
+const addHrFeedback = async (req, res) => {
+  try {
+    const visaDoc = await visaModel.findOne({ user: req.params.id });
+    const { feedback } = req.body;
+    const { fileType } = req.params;
+    visaDoc[fileType].feedback = feedback;
+    visaDoc[fileType].status = "rejected";
+    await visaDoc.save();
+    res.status(200).json("success");
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
+// GET /api/visa/hr
 const getHrSideData = async (req, res) => {
   try {
     const arr = [];
-    for (const model of visaModel) {
+    for (const model of await visaModel.find({})) {
       const id = model.user;
       const profileData = await PersonalInformation.findOne({ user: id });
-      const nextStep = "";
-      const action = "";
-      const docStatus = "IN PROGRESS";
-      if (model[optReceipt] && model[optReceipt].status === "pending") {
+      let nextStep = "";
+      let action = "";
+      let docStatus = "IN PROGRESS";
+      let fileToDeal = "";
+      let fileToDealName = "";
+      if (model.optReceipt && model.optReceipt.status === "pending") {
         nextStep = "Waiting for HR to approve the OPT Receipt";
         action = "need review";
-      } else if (model[optEAD] && model[optEAD].status === "pending") {
+        fileToDeal = "optReceipt";
+        fileToDealName = "OPT Receipt";
+      } else if (model.optEAD && model.optEAD.status === "pending") {
         nextStep = "Waiting for HR to approve the OPT EAD";
         action = "need review";
-      } else if (model[I983] && model[I983].status === "pending") {
+        fileToDeal = "optEAD";
+        fileToDealName = "OPT EAD";
+      } else if (model.I983 && model.I983.status === "pending") {
         nextStep = "Waiting for HR to approve and sign the I983";
         action = "need review";
-      } else if (model[I20] && model[I20].status === "pending") {
+        fileToDeal = "I983";
+        fileToDealName = "I-983";
+      } else if (model.I20 && model.I20.status === "pending") {
         nextStep = "Waiting for HR to approve the I20";
         action = "need review";
-      } else if (model[optReceipt] === "approved" && !model[optEAD]) {
-        nextStep = "Please upload a copy of your OPT EAD";
+        fileToDeal = "I20";
+        fileToDealName = "I-20";
+      } else if (model.optReceipt === "approved" && !model.optEAD) {
+        nextStep = "Upload a copy of the OPT EAD";
         action = "send notification";
-      } else if (model[optEAD] === "approved" && !model[I983]) {
-        nextStep = "Please download and fill out the I-983 form";
+        fileToDeal = "optEAD";
+        fileToDealName = "OPT EAD";
+      } else if (model.optEAD === "approved" && !model.I983) {
+        nextStep = "Download and fill out the I-983 form";
         action = "send notification";
-      } else if (model[I983] === "approved" && !model[I20]) {
+        fileToDeal = "I983";
+        fileToDealName = "I983";
+      } else if (model.I983 === "approved" && !model.I20) {
         nextStep =
-          "Please send the I-983 along all necessary documents to your school and upload the new I-20";
+          "Send the I-983 along all necessary documents to the school and upload the new I-20";
         action = "send notification";
-      } else if (model[I20] === "approved") {
+        fileToDeal = "I20";
+        fileToDealName = "I-20";
+      } else if (model.I20 === "approved") {
         nextStep = "All documents have been approved";
         docStatus = "DONE";
+        action = "DONE";
       }
 
       if (profileData) {
         const { name, employment } = profileData;
         const data = {
+          id: id,
           firstName: name.firstName,
           lastName: name.lastName,
+          name: `${name.firstName} ${name.lastName}`,
           preferredName: name.preferredName,
-          Work_Authorization_title: employment.visaTitle,
-          Work_Authorization_start_data: employment.startDate,
-          Work_Authorization_end_data: employment.endDate,
-          Work_Authorization_remaining:
-            employment.startDate.getTime() - employment.endDate.getTime(),
-          optReceipt: model.optReceipt,
-          optEAD: model.optEAD,
-          I983: model.I983,
-          I20: model.I20,
-          nextStep: nextStep, // The NEXT STEP of action
+          Work_Authorization: {
+            title: employment.visaTitle,
+            start_date: employment.startDate,
+            end_date: employment.endDate,
+            remaining: 0,
+          },
+          // employment.endDate.getTime() - employment.startDate.getTime(),
+          Next_Step: nextStep, // The NEXT STEP of action
           docStatus: docStatus, // finish all or not; if finished: DONE; if not: IN PROGRESS
           action: action,
+          fileToDeal: fileToDeal,
+          fileToDealName: fileToDealName,
+          Documentation: {
+            optReceipt: model.optReceipt,
+            optEAD: model.optEAD,
+            I983: model.I983,
+            I20: model.I20,
+          },
         };
 
         arr.push(data);
       }
     }
-
     res.status(200).json(arr);
   } catch (err) {
     console.error(err); // Log the error for debugging purposes
@@ -145,4 +185,7 @@ module.exports = {
   addToVisaDocumentation,
   downloadEmptyAndSample,
   getAllVisa,
+  getHrSideData,
+  addHrFeedback,
+  approveFile,
 };
