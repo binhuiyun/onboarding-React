@@ -12,7 +12,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import FileUpload from "./FileUpload";
 import {
-  fetchPersonalInformation,
+  fetchPersonalInformationByUID,
   selectPersonalInformation,
 } from "../../redux/personalInformationSlice";
 import Header from "../layout/Header";
@@ -30,18 +30,50 @@ const PersonalInformationPage = () => {
   const dispatch = useDispatch();
   const personalInformation = useSelector(selectPersonalInformation);
   const { user } = useSelector((state) => state.user);
+  const [formData, setFormData] = useState({
+    name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
+    profilePicture: "",
+    address: {
+      aptNumber: "",
+      streetName: "",
+      city: "",
+      state: "",
+      zip: "",
+    },
+    phoneNumber: {
+      cellPhoneNumber: "",
+      workPhoneNumbe: "",
+    },
+    email: "",
+    ssn: "",
+    dateOfBirth: "",
+    gender: "",
+    workAuthorization: {
+      citizenship: "",
+      citizenType: "",
+      workAuthorizationType: "",
+    },
+    emergencyContact: [
+      {
+        firstName: "",
+        lastName: "",
+        middleName: "",
+        phone: "",
+        relationship: "",
+      },
+    ],
+  });
 
   // TODO: Fetch real userID from redux store
   useEffect(() => {
     console.log("Fetching personal information of:");
-    dispatch(fetchPersonalInformation(user.id)).then(
-      (response) => {
-        console.log(response.payload.name);
-        setFormData(response.payload);
-      }
-    );
+    dispatch(fetchPersonalInformationByUID(user.id)).then((response) => {
+      setFormData(response.payload);
+    });
   }, []);
 
+  console.log(formData);
+  
   const targetRef = useRef();
   useLayoutEffect(() => {
     console.log(targetRef);
@@ -84,34 +116,6 @@ const PersonalInformationPage = () => {
   };
 
   const [form] = Form.useForm();
-
-  const [formData, setFormData] = useState({
-    name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
-    profilePicture: {},
-    address: {
-      aptNumber: "",
-      streetName: "",
-      city: "",
-      state: "",
-      zip: "",
-    },
-    phoneNumber: {
-      cellPhoneNumber: "",
-      workPhoneNumbe: "",
-    },
-    email: "",
-    ssn: "",
-    dateOfBirth: "",
-    gender: "",
-    citizenship: "",
-    citizenType: "",
-
-    dob: {
-      day: "",
-      month: "",
-      year: "",
-    },
-  });
 
   const [employmentData, setEmploymentData] = useState({
     visatitle: "",
@@ -693,7 +697,7 @@ const PersonalInformationPage = () => {
                 />
               </div>
               <img
-                src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                src={personalInformation.profilePicture}
                 className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-[150px] h-[150px] p-1 rounded-full ring-2 ring-gray-300 object-cover"
               />
             </div>
