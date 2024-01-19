@@ -68,6 +68,7 @@ const approveFile = async (req, res) => {
     console.log(fileType);
     visaDoc[fileType].status = "approved";
     await visaDoc.save();
+    res.status(200).json("success");
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
   }
@@ -76,10 +77,12 @@ const approveFile = async (req, res) => {
 const addHrFeedback = async (req, res) => {
   try {
     const visaDoc = await visaModel.findOne({ user: req.params.id });
-    const { message } = req.body;
-    console.log(message);
-    visaDoc[fileType].feedback = message;
+    const { feedback } = req.body;
+    const { fileType } = req.params;
+    visaDoc[fileType].feedback = feedback;
+    visaDoc[fileType].status = "rejected";
     await visaDoc.save();
+    res.status(200).json("success");
   } catch (err) {
     res.status(500).json({ error: "Internal server error" });
   }
