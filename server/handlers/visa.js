@@ -126,8 +126,8 @@ const getHrSideData = async (req, res) => {
           Work_Authorization_title: employment.visaTitle,
           Work_Authorization_start_data: employment.startDate,
           Work_Authorization_end_data: employment.endDate,
-          Work_Authorization_remaining:
-            employment.endDate.getTime() - employment.startDate.getTime(),
+          Work_Authorization_remaining: 0,
+          // employment.endDate.getTime() - employment.startDate.getTime(),
           optReceipt: model.optReceipt,
           optEAD: model.optEAD,
           I983: model.I983,
@@ -141,7 +141,6 @@ const getHrSideData = async (req, res) => {
         arr.push(data);
       }
     }
-
     res.status(200).json(arr);
   } catch (err) {
     console.error(err); // Log the error for debugging purposes
