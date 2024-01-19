@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 const mockUser = {
-  _id: "qweasdzxc123321",
+  _id: "jdisjfidfjidfndi",
   firstName: "Ruike",
 };
 

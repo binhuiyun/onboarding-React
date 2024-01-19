@@ -31,7 +31,7 @@ const getVisaById = async (req, res) => {
 const addToVisaDocumentation = async (req, res) => {
   try {
     const fileType = req.params.fileType;
-    const visaDoc = await visaModel.findOne({ user: req.params.id });
+    let visaDoc = await visaModel.findOne({ user: req.params.id });
     if (!visaDoc) {
       visaDoc = await visaModel.create({ user: req.params.id });
     }
@@ -61,6 +61,17 @@ const downloadEmptyAndSample = async (req, res) => {
   }
 };
 // temp api for hr side table
+// POST /api/visa/feedback/:id/:fileType
+//
+const addHrFeedback = async (req, res) => {
+  try {
+    const visaDoc = await visaModel.findOne({ user: req.params.id });
+    visaDoc[fileType].feedback = req.params.feedback;
+    await visaDoc.save();
+  } catch (err) {
+    res.status(500).json({ error: "Internal server error" });
+  }
+};
 const getHrSideData = async (req, res) => {
   try {
     const arr = [];
