@@ -14,6 +14,7 @@ import OnboardingPage from "./pages/Onboarding/OnboardingPage";
 import ReviewTokenHistory from "./pages/HiringManagement/ReviewTokenHistory";
 import VisaHrPage from "./pages/VisaManagement/VisaHrPage";
 import NotFound from "./pages/NotFound";
+import ApplicationDetails from "./pages/HiringManagement/ReviewApplications/ApplicationView";
 
 const ApplicationStatusRouter = () => {
   return (
@@ -55,6 +56,10 @@ function App() {
         <Route
           path="/hiring-management/token"
           element={<ReviewTokenHistory />}
+        />
+        <Route
+          path="/applications/:id"
+          element={<ApplicationDetails />}  
         />
 
         <Route path="/visa" element={<VisaPage />} />
