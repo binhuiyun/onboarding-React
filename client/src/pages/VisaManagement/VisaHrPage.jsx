@@ -2,28 +2,42 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Space, Table, Tag } from "antd";
 import ReviewAction from "../../components/ReviewAction";
+
+// api : router.get("/hr", getHrSideData);
 const VisaHrPage = () => {
   const columns1 = [
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      render: (text) => <a>{text}</a>,
     },
     {
       title: "Work Authorization",
       dataIndex: "Work_Authorization",
       key: "Work Authorization",
+      render: (_, { Work_Authorization }) => (
+        <>
+          <Tag color="geekblue">{`Title : ${Work_Authorization.title}`}</Tag>
+          <Tag color="geekblue">{`Start Date : ${Work_Authorization.start_date}`}</Tag>
+          <Tag color="geekblue">{`End Date : ${Work_Authorization.end_date}`}</Tag>
+          <Tag color="geekblue">{`Remaining : ${Work_Authorization.remaining} days`}</Tag>
+        </>
+      ),
     },
     {
       title: "Next Step",
       dataIndex: "Next_Step",
-      key: "Next Step",
+      key: "Next_Step",
     },
     {
       title: "Action",
-      dataIndex: "Action",
-      key: "Action",
+      dataIndex: "action",
+      key: "action",
+      // render: (_, { action }) => {
+      //   // Documentation.map((doc) => {
+      //   return <ReviewAction doc={Documentation} filter={status} />;
+      //   // });
+      // },
     },
   ];
   const columns2 = [
@@ -31,7 +45,6 @@ const VisaHrPage = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      render: (text) => <a>{text}</a>,
     },
     {
       title: "Work Authorization",
@@ -39,7 +52,7 @@ const VisaHrPage = () => {
       key: "Work_Authorization",
       render: (_, { Work_Authorization }) => (
         <>
-          <Tag color="geekblue">{Work_Authorization.title}</Tag>
+          <Tag color="geekblue">{`Title : ${Work_Authorization.title}`}</Tag>
           <Tag color="geekblue">{`Start Date : ${Work_Authorization.start_date}`}</Tag>
           <Tag color="geekblue">{`End Date : ${Work_Authorization.end_date}`}</Tag>
           <Tag color="geekblue">{`Remaining : ${Work_Authorization.remaining} days`}</Tag>
@@ -62,45 +75,42 @@ const VisaHrPage = () => {
       },
     },
   ];
-  const [info, setInfo] = useState({});
+  const [info, setInfo] = useState([]);
   const [status, setStatus] = useState("IN PROGRESS");
   const mockUser = {
     _id: "qweasdzxc123321",
     firstName: "Ruike",
   };
+
   useEffect(() => {
     const fetchDocs = async () => {
-      const response = await axios.get(
-        `http://localhost:4000/api/visa/${mockUser._id}`,
-        {
-          headers: {
-            Accept: "application/json",
-          },
-        }
-      );
-      console.log(response.data);
+      const response = await axios.get("http://localhost:4000/api/visa/hr");
       setInfo(response.data);
     };
     fetchDocs();
   }, []);
-  // mock data //
-
-  const mockData = [
-    {
-      key: "1",
-      name: "Ruike Qiu",
-      Work_Authorization: {
-        title: "F1(CPT/OPT)",
-        start_date: "Jan 1st",
-        end_date: "Sept 1st",
-        remaining: 25,
-      },
-      Next_Step: "ead",
-      Documentation: info,
-    },
-  ];
-
-  // end of mock data //
+  const dataSourceAll = info.map(
+    ({ name, Work_Authorization, Next_Step, Documentation }, index) => {
+      return {
+        key: index + 1,
+        name,
+        Work_Authorization,
+        Next_Step,
+        Documentation,
+      };
+    }
+  );
+  const dataSourceInProgress = info.map(
+    ({ name, Work_Authorization, Next_Step, action, fileToDeal }, index) => {
+      return {
+        key: index + 1,
+        name,
+        Work_Authorization,
+        Next_Step,
+        action,
+      };
+    }
+  );
 
   const handleStatusChange = (e) => {
     setStatus(e.target.value);
@@ -128,9 +138,17 @@ const VisaHrPage = () => {
       </div>
       <div className=" flex items-center justify-center">
         {status === "IN PROGRESS" ? (
-          <Table columns={columns1} dataSource={mockData} className="w-[80%]" />
+          <Table
+            columns={columns1}
+            dataSource={dataSourceInProgress}
+            className="w-[80%]"
+          />
         ) : (
-          <Table columns={columns2} dataSource={mockData} className="w-[80%]" />
+          <Table
+            columns={columns2}
+            dataSource={dataSourceAll}
+            className="w-[80%]"
+          />
         )}
       </div>
     </div>

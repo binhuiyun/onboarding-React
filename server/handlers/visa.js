@@ -122,20 +122,25 @@ const getHrSideData = async (req, res) => {
         const data = {
           firstName: name.firstName,
           lastName: name.lastName,
+          name: `${name.firstName} ${name.lastName}`,
           preferredName: name.preferredName,
-          Work_Authorization_title: employment.visaTitle,
-          Work_Authorization_start_data: employment.startDate,
-          Work_Authorization_end_data: employment.endDate,
-          Work_Authorization_remaining: 0,
+          Work_Authorization: {
+            title: employment.visaTitle,
+            start_date: employment.startDate,
+            end_date: employment.endDate,
+            remaining: 0,
+          },
           // employment.endDate.getTime() - employment.startDate.getTime(),
-          optReceipt: model.optReceipt,
-          optEAD: model.optEAD,
-          I983: model.I983,
-          I20: model.I20,
-          nextStep: nextStep, // The NEXT STEP of action
+          Next_Step: nextStep, // The NEXT STEP of action
           docStatus: docStatus, // finish all or not; if finished: DONE; if not: IN PROGRESS
           action: action,
           fileToDeal: fileToDeal,
+          Documentation: {
+            optReceipt: model.optReceipt,
+            optEAD: model.optEAD,
+            I983: model.I983,
+            I20: model.I20,
+          },
         };
 
         arr.push(data);
