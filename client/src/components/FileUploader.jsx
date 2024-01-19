@@ -11,7 +11,7 @@ import {
   FolderPlusIcon,
 } from "@heroicons/react/24/outline";
 import PopUp from "./PopUp";
-const FileUploader = ({ title, fileType, status, feedback, next }) => {
+const FileUploader = ({ title, fileType, status, feedback, next, prev }) => {
   const [isPopUp, setIsPopUp] = useState(false);
   const handleUpload = (e) => {
     e.preventDefault();
@@ -30,37 +30,57 @@ const FileUploader = ({ title, fileType, status, feedback, next }) => {
           <ClockIcon className="h-8 w-8 text-yellow-500" />
         )}
         {status === "approved" && (
-          <CheckCircleIcon className="h-8 w-8 text-blue-500" />
+          <CheckCircleIcon className="h-8 w-8 text-geekblue" />
         )}
         {status === "rejected" && (
           <ExclamationCircleIcon className="h-8 w-8 text-red-500" />
         )}
         <div className="px-1 text-xl my-auto">{title}</div>
         <div className="text-gray-500 text-sm grow my-auto text-center">
-          {status === "pending" &&
-            `Waiting for HR to approve your
-${title}`}
-          {status === "approved" &&
-            (next
-              ? `Please upload a copy of your
-${next}`
-              : "All documents have been approved")}
+          {/* TODO: add required message */}
+          {fileType === "optReceipt" &&
+            status === "pending" &&
+            "Waiting for HR to approve your OPT Receipt"}
+          {fileType === "optReceipt" &&
+            status === "approved" &&
+            "Please upload a copy of your OPT EAD"}
+          {fileType === "optEAD" &&
+            status === "pending" &&
+            "Waiting for HR to approve your OPT EAD"}
+          {fileType === "optEAD" &&
+            status === "approved" &&
+            "Please download and fill out the I-983 form"}
+          {fileType === "I983" &&
+            status === "pending" &&
+            "Waiting for HR to approve and sign your I-983"}
+          {fileType === "I983" &&
+            status === "approved" &&
+            "Please send the I-983 along with all necessary documents to your school and upload the new I-20"}
+          {fileType === "I20" &&
+            status === "pending" &&
+            "Waiting for HR to approve your I-20"}
+          {fileType === "I20" &&
+            status === "approved" &&
+            "All documents have been approved"}
+
           {status === "rejected" && `${feedback}`}
         </div>
         <div className="flex">
           {title === "I-983" && (
             <Popover content="Download Empty Template and Sample Template">
               <a href="http://localhost:4000/api/visa/sample">
-                <FolderArrowDownIcon className="h-8 w-8 text-blue-500 mr-1" />
+                <FolderArrowDownIcon className="h-8 w-8 text-black-100 mr-1" />
               </a>
             </Popover>
           )}
-          <Popover content="Upload File">
-            <FolderPlusIcon
-              className="h-8 w-8 text-blue-500"
-              onClick={handleUpload}
-            />
-          </Popover>
+          {prev === "approved" && (
+            <Popover content="Upload File">
+              <FolderPlusIcon
+                className="h-8 w-8 text-geekblue"
+                onClick={handleUpload}
+              />
+            </Popover>
+          )}
         </div>
       </div>
     </>

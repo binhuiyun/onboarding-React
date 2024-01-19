@@ -13,11 +13,12 @@ export default {
     extend: {
       colors: {
         "chuwa-blue": "#5048e5",
+        geekblue: "#597ef7",
       },
       screens: {
         xs: "320px",
         ...defaultTheme.screens,
-        '3xl': '1920px',
+        "3xl": "1920px",
       },
     },
   },

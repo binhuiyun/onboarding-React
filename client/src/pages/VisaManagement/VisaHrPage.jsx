@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Space, Table, Tag } from "antd";
+import ReviewAction from "../../components/ReviewAction";
 const VisaHrPage = () => {
   const columns1 = [
     {
@@ -38,9 +40,9 @@ const VisaHrPage = () => {
       render: (_, { Work_Authorization }) => (
         <>
           <Tag color="geekblue">{Work_Authorization.title}</Tag>
-          <Tag color="green">{`Start Date : ${Work_Authorization.start_date}`}</Tag>
-          <Tag color="yellow">{`End Date : ${Work_Authorization.end_date}`}</Tag>
-          <Tag color="volcano">{`Remaining : ${Work_Authorization.remaining} days`}</Tag>
+          <Tag color="geekblue">{`Start Date : ${Work_Authorization.start_date}`}</Tag>
+          <Tag color="geekblue">{`End Date : ${Work_Authorization.end_date}`}</Tag>
+          <Tag color="geekblue">{`Remaining : ${Work_Authorization.remaining} days`}</Tag>
         </>
       ),
     },
@@ -53,13 +55,36 @@ const VisaHrPage = () => {
       title: "Documentation",
       dataIndex: "Documentation",
       key: "Documentation",
+      render: (_, { Documentation }) => {
+        // Documentation.map((doc) => {
+        return <ReviewAction doc={Documentation} filter={status} />;
+        // });
+      },
     },
   ];
-  const data = async () => {
-    const doc = await axios.get("http://localhost:4000/api/visa");
-    console.log(doc);
+  const [info, setInfo] = useState({});
+  const [status, setStatus] = useState("IN PROGRESS");
+  const mockUser = {
+    _id: "qweasdzxc123321",
+    firstName: "Ruike",
   };
-  data();
+  useEffect(() => {
+    const fetchDocs = async () => {
+      const response = await axios.get(
+        `http://localhost:4000/api/visa/${mockUser._id}`,
+        {
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+      console.log(response.data);
+      setInfo(response.data);
+    };
+    fetchDocs();
+  }, []);
+  // mock data //
+
   const mockData = [
     {
       key: "1",
@@ -71,16 +96,18 @@ const VisaHrPage = () => {
         remaining: 25,
       },
       Next_Step: "ead",
-      Documentation: "abc",
+      Documentation: info,
     },
   ];
-  const [status, setStatus] = useState("IN PROGRESS");
+
+  // end of mock data //
+
   const handleStatusChange = (e) => {
     setStatus(e.target.value);
   };
   return (
     <div className="mx-10 ">
-      <p className="text-3xl text-chuwa-blue my-10">Visa Status Management</p>
+      <p className="text-3xl text-geekblue my-10">Visa Status Management</p>
       <div className="">
         <input
           type="text"
@@ -93,7 +120,7 @@ const VisaHrPage = () => {
           name="status"
           id="status"
           onChange={handleStatusChange}
-          className="py-3 px-2 bg-slate-200 text-chuwa-blue rounded-md shadow-md"
+          className="py-3 px-2 bg-slate-200 text-geekblue rounded-md shadow-md"
         >
           <option value="IN PROGRESS">IN PROGRESS</option>
           <option value="ALL">ALL</option>
@@ -101,9 +128,9 @@ const VisaHrPage = () => {
       </div>
       <div className=" flex items-center justify-center">
         {status === "IN PROGRESS" ? (
-          <Table columns={columns1} dataSource={mockData} className="w-[70%]" />
+          <Table columns={columns1} dataSource={mockData} className="w-[80%]" />
         ) : (
-          <Table columns={columns2} dataSource={mockData} className="w-[70%]" />
+          <Table columns={columns2} dataSource={mockData} className="w-[80%]" />
         )}
       </div>
     </div>

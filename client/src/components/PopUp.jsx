@@ -3,7 +3,7 @@ import { FolderPlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
 
 const mockUser = {
-  _id: "qweasdzxc123321",
+  _id: "jdisjfidfjidfndi",
   firstName: "Ruike",
 };
 const PopUp = (props) => {
