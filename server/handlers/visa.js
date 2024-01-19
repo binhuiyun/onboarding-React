@@ -155,4 +155,6 @@ module.exports = {
   addToVisaDocumentation,
   downloadEmptyAndSample,
   getAllVisa,
+  getHrSideData,
+  addHrFeedback,
 };
