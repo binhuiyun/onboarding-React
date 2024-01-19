@@ -1,13 +1,31 @@
+import React from "react";
+import { useNavigate } from "react-router";
+
 const Header = () => {
+  const navigate = useNavigate();
+  const handlePersonalInformationButtonClick = () => {
+    navigate("/personal-information");
+  };
+  const handleVisaStatusButtonClick = () => {
+    navigate("/visa-status");
+  };
   return (
     <>
-      <header className="flex items-center justify-between bg-[#F0F0F0] px-20 py-4">
+      <header className="flex items-center justify-between bg-[#F0F0F0] px-20 py-4 border-b-2">
         <div className="text-3xl flex items-center">Chuwa America</div>
         <div className="flex flex-row">
-          <button className="px-2 border-b-2 border-transparent transition duration-300 hover:border-black">
+          <button
+            type="button"
+            onClick={handlePersonalInformationButtonClick}
+            className="px-2 border-b-2 border-transparent transition duration-300 hover:border-black"
+          >
             Personal Information
           </button>
-          <button className="px-2 border-b-2 border-transparent transition duration-300 hover:border-black">
+          <button
+            type="button"
+            onClick={handleVisaStatusButtonClick}
+            className="px-2 border-b-2 border-transparent transition duration-300 hover:border-black"
+          >
             Visa Status
           </button>
           <div className="pl-14">

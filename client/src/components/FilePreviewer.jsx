@@ -9,7 +9,8 @@ const FilePreviewer = ({ addFile }) => {
     addFile(selectedFile);
   };
   
-  const openPreviewInNewWindow = () => {
+  const openPreviewInNewWindow = (e) => {
+    e.preventDefault();
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {

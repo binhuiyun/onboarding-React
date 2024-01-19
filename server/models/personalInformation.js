@@ -53,10 +53,6 @@ const personalInformationSchema = new Schema({
     citizenship: String,
     citizenType: String,
     workAuthorizationType: String,
-    files: {
-      type: Schema.Types.ObjectId,
-      ref: "DocumentCollection",
-    },
   },
   employment: [
     {
@@ -75,10 +71,6 @@ const personalInformationSchema = new Schema({
       relationship: String,
     },
   ],
-  documents: {
-    type: Schema.Types.ObjectId,
-    ref: "DocumentCollection",
-  },
   onboardingStatus: {
     type: String,
     default: "Pending",

@@ -1,11 +1,13 @@
 // UserProfileForm.js
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { createPersonalInformation } from "../../services/personalInformation-service";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { submitOnboarding } from "../../redux/onboardingSlice";
 import { Document, Page, pdfjs } from "react-pdf";
 import FilePreviewer from "../../components/FilePreviewer";
+import { fetchPersonalInformationByUID } from "../../redux/personalInformationSlice";
+
 import Header from "../layout/Header";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -14,14 +16,18 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 ).toString();
 
 const OnboardingPage = () => {
+  const fileInputRef = useRef(null);
+  const [onboardingStatus, setOnboardingStatus] = useState("Never Submitted");
   const [files, setFiles] = useState([]);
   const { user } = useSelector((state) => state.user);
   //const { user } = dispatch(fetchUserByID());
-  console.log("user:", user.id);
+  const u_id = user.id;
+  console.log("user:", u_id);
   const [formData, setFormData] = useState({
-    user: user.id,
+    user: u_id,
     name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
-    profilePicture: "", // You can use this to store the image URL or a base64-encoded string
+    profilePicture:
+      "https://as2.ftcdn.net/v2/jpg/05/49/98/39/1000_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.webp",
     address: {
       aptNumber: "",
       streetName: "",
@@ -34,12 +40,10 @@ const OnboardingPage = () => {
     ssn: "",
     dateOfBirth: "",
     gender: "",
-
     workAuthorization: {
       citizenship: "",
       citizenType: "",
       workAuthorizationType: "",
-      files: null,
     },
     reference: {
       firstName: "",
@@ -62,7 +66,21 @@ const OnboardingPage = () => {
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const formData2 = new FormData();
+  const document = new FormData();
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    const currentUser = dispatch(fetchPersonalInformationByUID(u_id)).then(
+      (res) => {
+        setOnboardingStatus(res.payload.onboardingStatus);
+        console.log(res.payload);
+        setData(res.payload);
+
+        setFormData(res.payload);
+      }
+    );
+  }, []);
+
+  console.log("formData data:", formData);
 
   const handleChange = (e) => {
     console.log(e.target);
@@ -82,6 +100,21 @@ const OnboardingPage = () => {
         [name]: value,
       },
     });
+  };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setFormData({
+      ...formData,
+      profilePicture: URL.createObjectURL(file),
+    });
+    addFile(file);
+    document.append("optReceipt", file, file.name);
+  };
+
+  const handleProfileUploadButtonClick = () => {
+    // Trigger the hidden file input using the ref
+    fileInputRef.current.click();
   };
 
   const handleNameChange = (e) => {
@@ -151,9 +184,15 @@ const OnboardingPage = () => {
   async function createInfo(e) {
     e.preventDefault();
     console.log("Form submitted:", formData);
-    //dispatch(submitOnboarding(formData, user.id, fileType));
-    dispatch(submitOnboarding(formData));
-    navigate("/personal-information");
+    const payload = {
+      formData,
+      u_id,
+      document,
+    };
+    dispatch(submitOnboarding(payload)).then((res) => {
+      navigate("/personal-information");
+    });
+
     // Handle form submission logic here
   }
 
@@ -164,7 +203,7 @@ const OnboardingPage = () => {
       <form className="max-w-md mx-auto mt-8" onSubmit={handleSubmit}>
         {/* First Name */}
         <div className="mb-4">
-          <label htmlFor="name.firstName" className="block text-gray-600">
+          <label htmlFor="firstName" className="block">
             First Name <span className="text-red-500">*</span>
           </label>
           <input
@@ -174,13 +213,20 @@ const OnboardingPage = () => {
             value={formData.name.firstName}
             onChange={handleNameChange}
             required
+            readOnly={onboardingStatus == "Pending"}
+            style={{
+              backgroundColor:
+                onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+              outline: "none",
+              cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+            }}
             className="mt-1 p-2 border rounded-md w-full"
           />
         </div>
 
         {/* Last Name */}
         <div className="mb-4">
-          <label htmlFor="lastName" className="block text-gray-600">
+          <label htmlFor="lastName" className="block  ">
             Last Name <span className="text-red-500">*</span>
           </label>
           <input
@@ -190,13 +236,20 @@ const OnboardingPage = () => {
             value={formData.name.lastName}
             onChange={handleNameChange}
             required
+            readOnly={onboardingStatus == "Pending"}
+            style={{
+              backgroundColor:
+                onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+              outline: "none",
+              cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+            }}
             className="mt-1 p-2 border rounded-md w-full"
           />
         </div>
 
         {/* Middle Name */}
         <div className="mb-4">
-          <label htmlFor="middleName" className="block text-gray-600">
+          <label htmlFor="middleName" className="block  ">
             Middle Name
           </label>
           <input
@@ -205,13 +258,20 @@ const OnboardingPage = () => {
             name="middleName"
             value={formData.name.middleName}
             onChange={handleNameChange}
+            readOnly={onboardingStatus == "Pending"}
+            style={{
+              backgroundColor:
+                onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+              outline: "none",
+              cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+            }}
             className="mt-1 p-2 border rounded-md w-full"
           />
         </div>
 
         {/* Preferred Name */}
         <div className="mb-4">
-          <label htmlFor="preferredName" className="block text-gray-600">
+          <label htmlFor="preferredName" className="block  ">
             Preferred Name
           </label>
           <input
@@ -220,36 +280,61 @@ const OnboardingPage = () => {
             name="preferredName"
             value={formData.name.preferredName}
             onChange={handleNameChange}
+            readOnly={onboardingStatus == "Pending"}
+            style={{
+              backgroundColor:
+                onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+              outline: "none",
+              cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+            }}
             className="mt-1 p-2 border rounded-md w-full"
           />
         </div>
 
         {/* Profile Picture */}
-        <div className="mb-4">
-          <label htmlFor="profilePicture" className="block text-gray-600">
-            Profile Picture
-          </label>
-          <input
-            type="text"
-            id="profilePicture"
-            name="profilePicture"
-            value={formData.profilePicture}
-            onChange={handleChange}
-            placeholder="URL or base64-encoded image"
-            className="mt-1 p-2 border rounded-md w-full"
-          />
-          {formData.profilePicture && (
+        <div className=" flex flex-col mb-4">
+          <div className="flex flew-row justify-between">
+            <label htmlFor="profilePicture" className="block  ">
+              Profile Picture
+            </label>
+          </div>
+          <div className="relative">
             <img
               src={formData.profilePicture}
               alt="Profile"
               className="mt-2 w-32 h-32 object-cover rounded-full mx-auto"
             />
-          )}
+            <input
+              type="file"
+              ref={fileInputRef}
+              accept="image/*"
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+            />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="#0373fc"
+              viewBox="0 0 24 24"
+              strokeWidth="2"
+              stroke="white"
+              className="absolute w-10 h-10 bottom-0 left-1/2 translate-x-7"
+              onClick={handleProfileUploadButtonClick}
+              style={{
+                display: onboardingStatus == "Pending" ? "none" : "block",
+              }}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M12 9v6m3-3H9m12 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+          </div>
         </div>
 
         {/* Current Address */}
         <div className="mb-4">
-          <label className="block text-gray-600">
+          <label className="block">
             Current Address <span className="text-red-500">*</span>
           </label>
           <div className="grid grid-cols-2 gap-4">
@@ -260,6 +345,13 @@ const OnboardingPage = () => {
               value={formData.address.aptNumber}
               onChange={handleAddressChange}
               placeholder="Apt Number"
+              readOnly={onboardingStatus == "Pending"}
+              style={{
+                backgroundColor:
+                  onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                outline: "none",
+                cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+              }}
               className="mt-1 p-2 border rounded-md"
             />
             <input
@@ -269,6 +361,13 @@ const OnboardingPage = () => {
               value={formData.address.streetName}
               onChange={handleAddressChange}
               placeholder="Street Name"
+              readOnly={onboardingStatus == "Pending"}
+              style={{
+                backgroundColor:
+                  onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                outline: "none",
+                cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+              }}
               className="mt-1 p-2 border rounded-md"
             />
             <input
@@ -278,6 +377,13 @@ const OnboardingPage = () => {
               value={formData.address.city}
               onChange={handleAddressChange}
               placeholder="City"
+              readOnly={onboardingStatus == "Pending"}
+              style={{
+                backgroundColor:
+                  onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                outline: "none",
+                cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+              }}
               className="mt-1 p-2 border rounded-md"
             />
             <input
@@ -287,6 +393,13 @@ const OnboardingPage = () => {
               value={formData.address.state}
               onChange={handleAddressChange}
               placeholder="State"
+              readOnly={onboardingStatus == "Pending"}
+              style={{
+                backgroundColor:
+                  onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                outline: "none",
+                cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+              }}
               className="mt-1 p-2 border rounded-md"
             />
             <input
@@ -296,6 +409,13 @@ const OnboardingPage = () => {
               value={formData.address.zip}
               onChange={handleAddressChange}
               placeholder="Zip"
+              readOnly={onboardingStatus == "Pending"}
+              style={{
+                backgroundColor:
+                  onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                outline: "none",
+                cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+              }}
               className="mt-1 p-2 border rounded-md"
             />
           </div>
@@ -303,7 +423,7 @@ const OnboardingPage = () => {
 
         {/* Cell Phone Number */}
         <div className="mb-4">
-          <label htmlFor="cellPhoneNumber" className="block text-gray-600">
+          <label htmlFor="cellPhoneNumber" className="block  ">
             Cell Phone Number <span className="text-red-500">*</span>
           </label>
           <input
@@ -313,13 +433,20 @@ const OnboardingPage = () => {
             value={formData.phoneNumber.cellPhoneNumber}
             onChange={handlePhoneNumberChange}
             required
+            readOnly={onboardingStatus == "Pending"}
+            style={{
+              backgroundColor:
+                onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+              outline: "none",
+              cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+            }}
             className="mt-1 p-2 border rounded-md w-full"
           />
         </div>
 
         {/* Work Phone Number */}
         <div className="mb-4">
-          <label htmlFor="workPhoneNumber" className="block text-gray-600">
+          <label htmlFor="workPhoneNumber" className="block  ">
             Work Phone Number
           </label>
           <input
@@ -328,13 +455,20 @@ const OnboardingPage = () => {
             name="workPhoneNumber"
             value={formData.phoneNumber.workPhoneNumber}
             onChange={handlePhoneNumberChange}
+            readOnly={onboardingStatus == "Pending"}
+            style={{
+              backgroundColor:
+                onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+              outline: "none",
+              cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+            }}
             className="mt-1 p-2 border rounded-md w-full"
           />
         </div>
 
         {/* Email */}
         <div className="mb-4">
-          <label htmlFor="email" className="block text-gray-600">
+          <label htmlFor="email" className="block  ">
             Email
           </label>
           <input
@@ -342,14 +476,14 @@ const OnboardingPage = () => {
             id="email"
             name="email"
             value={formData.email}
-            readOnly={user.isHR == "hr"}
-            className="mt-1 p-2 border rounded-md w-full bg-gray-100"
+            readOnly
+            className="mt-1 p-2 border rounded-md w-full bg-[#e9e9e9]"
           />
         </div>
 
         {/* SSN */}
         <div className="mb-4">
-          <label htmlFor="ssn" className="block text-gray-600">
+          <label htmlFor="ssn" className="block  ">
             SSN <span className="text-red-500">*</span>
           </label>
           <input
@@ -359,13 +493,20 @@ const OnboardingPage = () => {
             value={formData.ssn}
             onChange={handleChange}
             required
+            readOnly={onboardingStatus == "Pending"}
+            style={{
+              backgroundColor:
+                onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+              outline: "none",
+              cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+            }}
             className="mt-1 p-2 border rounded-md w-full"
           />
         </div>
 
         {/* Date of Birth */}
         <div className="mb-4">
-          <label htmlFor="dateOfBirth" className="block text-gray-600">
+          <label htmlFor="dateOfBirth" className="block  ">
             Date of Birth <span className="text-red-500">*</span>
           </label>
           <input
@@ -375,13 +516,20 @@ const OnboardingPage = () => {
             value={formData.dateOfBirth}
             onChange={handleChange}
             required
+            readOnly={onboardingStatus == "Pending"}
+            style={{
+              backgroundColor:
+                onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+              outline: "none",
+              cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+            }}
             className="mt-1 p-2 border rounded-md w-full"
           />
         </div>
 
         {/* Gender */}
         <div className="mb-4">
-          <label htmlFor="gender" className="block  text-gray-600">
+          <label htmlFor="gender" className="block   ">
             Gender <span className="text-red-500">*</span>
           </label>
           <select
@@ -390,6 +538,13 @@ const OnboardingPage = () => {
             value={formData.gender}
             onChange={handleChange}
             required
+            disabled={onboardingStatus == "Pending"}
+            style={{
+              backgroundColor:
+                onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+              outline: "none",
+              cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+            }}
             className="mt-1 p-2 border rounded-md w-full"
           >
             <option value="" disabled>
@@ -403,7 +558,7 @@ const OnboardingPage = () => {
 
         {/* Citizenship Status */}
         <div className="mb-4">
-          <label htmlFor="citizenship" className="block text-gray-600">
+          <label htmlFor="citizenship" className="block  ">
             Permanent resident or citizen of the U.S.?{" "}
             <span className="text-red-500">*</span>
           </label>
@@ -413,6 +568,13 @@ const OnboardingPage = () => {
             value={formData.workAuthorization.citizenship}
             onChange={handleWorkAuthorizationChange}
             required
+            disabled={onboardingStatus == "Pending"}
+            style={{
+              backgroundColor:
+                onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+              outline: "none",
+              cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+            }}
             className="mt-1 p-2 border rounded-md w-full"
           >
             <option value="" disabled>
@@ -426,7 +588,7 @@ const OnboardingPage = () => {
         {/* Conditional Rendering based on Citizenship Status */}
         {formData.workAuthorization.citizenship === "yes" && (
           <div className="mb-4">
-            <label htmlFor="citizenType" className="block text-gray-600">
+            <label htmlFor="citizenType" className="block  ">
               Choose your status:
             </label>
             <select
@@ -434,6 +596,13 @@ const OnboardingPage = () => {
               name="citizenType"
               value={formData.workAuthorization.citizenType}
               onChange={handleWorkAuthorizationChange}
+              disabled={onboardingStatus == "Pending"}
+              style={{
+                backgroundColor:
+                  onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                outline: "none",
+                cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+              }}
               className="mt-1 p-2 border rounded-md w-full"
             >
               <option value="" disabled>
@@ -449,10 +618,7 @@ const OnboardingPage = () => {
           <div>
             {/* Work Authorization */}
             <div className="mb-4">
-              <label
-                htmlFor="workAuthorizationType"
-                className="block text-gray-600"
-              >
+              <label htmlFor="workAuthorizationType" className="block">
                 What is your work authorization?{" "}
                 <span className="text-red-500">*</span>
               </label>
@@ -461,6 +627,14 @@ const OnboardingPage = () => {
                 name="workAuthorizationType"
                 value={formData.workAuthorization.workAuthorizationType}
                 onChange={handleWorkAuthorizationChange}
+                disabled={onboardingStatus == "Pending"}
+                style={{
+                  backgroundColor:
+                    onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                  outline: "none",
+                  cursor:
+                    onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                }}
                 className="mt-1 p-2 border rounded-md w-full"
               >
                 <option value="" disabled>
@@ -477,10 +651,7 @@ const OnboardingPage = () => {
               "F1(CPT/OPT)" && (
               <>
                 <div className="mb-4">
-                  <label
-                    htmlFor="workAuthorizationFiles"
-                    className="block text-gray-600"
-                  >
+                  <label htmlFor="workAuthorizationFiles" className="block">
                     Upload a file for work authorization:
                   </label>
                   <FilePreviewer addFile={addFile} />
@@ -490,10 +661,7 @@ const OnboardingPage = () => {
             {formData.workAuthorization.workAuthorizationType === "Other" && (
               <>
                 <div className="mb-4">
-                  <label
-                    htmlFor="cellPhoneNumber"
-                    className="block text-gray-600"
-                  >
+                  <label htmlFor="cellPhoneNumber" className="block  ">
                     Visa Title <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -512,8 +680,8 @@ const OnboardingPage = () => {
         )}
 
         {/* Reference */}
-        <div className="mb-4">
-          <label className="block text-gray-600">Reference</label>
+        {/* <div className="mb-4">
+          <label className="block  ">Reference</label>
           <div className="grid grid-cols-2 gap-4">
             <input
               type="text"
@@ -570,16 +738,16 @@ const OnboardingPage = () => {
               className="mt-1 p-2 border rounded-md"
             />
           </div>
-        </div>
+        </div> */}
 
         {/* Emergency Contact */}
         <div className="mb-4">
-          <label className="block text-gray-600">Emergency Contact</label>
+          <label className="block">Emergency Contact</label>
           <div className="grid grid-cols-2 gap-4">
             <input
               type="text"
-              id="emergencyContactFirstName"
-              name="emergencyContact.firstName"
+              id="firstName"
+              name="firstName"
               value={formData.emergencyContact.firstName}
               onChange={handleEmergencyContactChange}
               placeholder="First Name"
@@ -587,8 +755,8 @@ const OnboardingPage = () => {
             />
             <input
               type="text"
-              id="emergencyContactLastName"
-              name="emergencyContact.lastName"
+              id="lastName"
+              name="lastName"
               value={formData.emergencyContact.lastName}
               onChange={handleEmergencyContactChange}
               placeholder="Last Name"
@@ -596,8 +764,8 @@ const OnboardingPage = () => {
             />
             <input
               type="text"
-              id="emergencyContactMiddleName"
-              name="emergencyContact.middleName"
+              id="middleName"
+              name="middleName"
               value={formData.emergencyContact.middleName}
               onChange={handleEmergencyContactChange}
               placeholder="Middle Name"
@@ -605,8 +773,8 @@ const OnboardingPage = () => {
             />
             <input
               type="tel"
-              id="emergencyContactPhone"
-              name="emergencyContact.phone"
+              id="phone"
+              name="phone"
               value={formData.emergencyContact.phone}
               onChange={handleEmergencyContactChange}
               placeholder="Phone"
@@ -614,8 +782,8 @@ const OnboardingPage = () => {
             />
             <input
               type="email"
-              id="emergencyContactEmail"
-              name="emergencyContact.email"
+              id="email"
+              name="email"
               value={formData.emergencyContact.email}
               onChange={handleEmergencyContactChange}
               placeholder="Email"
@@ -623,8 +791,8 @@ const OnboardingPage = () => {
             />
             <input
               type="text"
-              id="emergencyContactRelationship"
-              name="emergencyContact.relationship"
+              id="relationship"
+              name="relationship"
               value={formData.emergencyContact.relationship}
               onChange={handleEmergencyContactChange}
               placeholder="Relationship"
@@ -636,10 +804,7 @@ const OnboardingPage = () => {
         {/* Summary of Uploaded Files */}
         {files != "" && (
           <div className="mb-4">
-            <label
-              htmlFor="summaryOfUploadedFiles"
-              className="block text-gray-600"
-            >
+            <label htmlFor="summaryOfUploadedFiles" className="block  ">
               Summary of Uploaded Files
               <div className="flex flex-row items-center justify-between mt-1 p-2 border rounded-md w-full">
                 {files.map((i) => {
@@ -664,7 +829,7 @@ const OnboardingPage = () => {
         {/* <div className="mb-4">
           <label
             htmlFor="summaryOfUploadedFiles"
-            className="block *:text-gray-600"
+            className="block *: "
           >
             Feedback
           </label>

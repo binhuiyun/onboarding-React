@@ -1,32 +1,19 @@
 const PersonalInformation = require("../models/personalInformation");
 
 const createPersonalInformation = async (req, res) => {
+  const u_id = req.params.id;
+  console.log(u_id, req.body);
   try {
-    const {
-      firstName,
-      lastName,
-      middleName,
-      preferredName,
-      profilePicture,
-      currentAddress,
-      cellPhoneNumber,
-      workPhoneNumber,
-      email,
-      ssn,
-      dateOfBirth,
-      gender,
-      citizenshipStatus,
-      citizenshipType,
-      workAuthorization,
-      fileUpload,
-      reference,
-      emergencyContact,
-      summaryOfUploadedFiles,
-    } = req.body;
-    console.log(req.body);
-    const personalInformation = new PersonalInformation(req.body);
-    await personalInformation.save();
-    res.status(201).json(personalInformation);
+    const personalInformation = await PersonalInformation.findOne({
+      user: u_id,
+    });
+    if (!personalInformation) {
+      const newPersonalInformation = new PersonalInformation(req.body);
+      await newPersonalInformation.save();
+      res.status(201).json(newPersonalInformation);
+    } else {
+      res.status(409).json({ message: "Personal Information already exists" });
+    }
   } catch (error) {
     res.status(409).json({ message: error.message });
   }
@@ -36,7 +23,9 @@ const createPersonalInformation = async (req, res) => {
 const getPersonalInformation = async (req, res) => {
   const u_id = req.params.id;
   try {
-    const personalInformation = await PersonalInformation.findOne({ user: u_id });
+    const personalInformation = await PersonalInformation.findOne({
+      user: u_id,
+    });
     res.status(200).json(personalInformation);
   } catch (error) {
     res.status(404).json({ message: error.message });

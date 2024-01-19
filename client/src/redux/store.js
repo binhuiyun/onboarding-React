@@ -4,6 +4,8 @@ import userReducer from "./userSlice";
 import personalInformationReducer from "./personalInformationSlice";
 import tokenHistoryReducer from "./tokenHistorySlice";
 import errorReducer from "./errorSlice";
+import employeeProfileReducer from "./employeeProfileSlice";
+import onboardingReducer from "./onboardingSlice";
 
 export default configureStore({
   reducer: {
@@ -11,6 +13,8 @@ export default configureStore({
     personalInformation: personalInformationReducer,
     tokenHistory: tokenHistoryReducer,
     error: errorReducer,
+    employeeProfile: employeeProfileReducer,
+    onboarding: onboardingReducer,
   },
   devTools: true,
 });
