@@ -142,15 +142,16 @@ const getHrSideData = async (req, res) => {
       }
 
       if (profileData) {
-        const { name, employment } = profileData;
+        const { name, employment, workAuthorization } = profileData;
         const data = {
           id: id,
           firstName: name.firstName,
           lastName: name.lastName,
           name: `${name.firstName} ${name.lastName}`,
           preferredName: name.preferredName,
+          middleName: name.middleName,
           Work_Authorization: {
-            title: employment.visaTitle,
+            title: workAuthorization.workAuthorizationType,
             start_date: employment.startDate,
             end_date: employment.endDate,
             remaining: 0,
