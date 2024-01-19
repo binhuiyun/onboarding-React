@@ -9,11 +9,17 @@ const {
   addToVisaDocumentation,
   downloadEmptyAndSample,
   getAllVisa,
+  getHrSideData,
+  addHrFeedback,
+  approveFile,
 } = require("../handlers/visa");
 
-router.post("/", createVisaModel);
 router.get("/", getAllVisa);
+router.get("/hr", getHrSideData);
 router.get("/sample", downloadEmptyAndSample);
 router.get("/:id", getVisaById);
+router.post("/", createVisaModel);
 router.post("/:id/:fileType", upload.single("file"), addToVisaDocumentation);
+router.post("/feedback/:id/:fileType", addHrFeedback);
+router.post("/approve/:id/:fileType", approveFile);
 module.exports = router;

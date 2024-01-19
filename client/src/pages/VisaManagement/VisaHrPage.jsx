@@ -1,27 +1,56 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Space, Table, Tag } from "antd";
+import ReviewAction from "../../components/ReviewAction";
+import SendNotification from "../../components/SendNotification";
+
+// api : router.get("/hr", getHrSideData);
+
 const VisaHrPage = () => {
+  // Table for IN PROGRESS
   const columns1 = [
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      render: (text) => <a>{text}</a>,
     },
     {
       title: "Work Authorization",
       dataIndex: "Work_Authorization",
       key: "Work Authorization",
+      render: (_, { Work_Authorization }) => (
+        <>
+          <Tag color="geekblue">{`Title : ${Work_Authorization.title}`}</Tag>
+          <Tag color="geekblue">{`Start Date : ${Work_Authorization.start_date}`}</Tag>
+          <Tag color="geekblue">{`End Date : ${Work_Authorization.end_date}`}</Tag>
+          <Tag color="geekblue">{`Remaining : ${Work_Authorization.remaining} days`}</Tag>
+        </>
+      ),
     },
     {
       title: "Next Step",
       dataIndex: "Next_Step",
-      key: "Next Step",
+      key: "Next_Step",
     },
     {
       title: "Action",
-      dataIndex: "Action",
-      key: "Action",
+      dataIndex: "action",
+      key: "newAction",
+      render: (_, { newAction }) => (
+        <>
+          {newAction.message === "need review" ? (
+            <ReviewAction
+              file={newAction.fileToDeal}
+              fileTitle={newAction.fileToDealName}
+              filter={filter}
+              id={newAction.id}
+              fileType={newAction.fileType}
+            />
+          ) : (
+            <SendNotification />
+          )}
+        </>
+      ),
     },
   ];
   const columns2 = [
@@ -29,7 +58,6 @@ const VisaHrPage = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
-      render: (text) => <a>{text}</a>,
     },
     {
       title: "Work Authorization",
@@ -37,10 +65,10 @@ const VisaHrPage = () => {
       key: "Work_Authorization",
       render: (_, { Work_Authorization }) => (
         <>
-          <Tag color="geekblue">{Work_Authorization.title}</Tag>
-          <Tag color="green">{`Start Date : ${Work_Authorization.start_date}`}</Tag>
-          <Tag color="yellow">{`End Date : ${Work_Authorization.end_date}`}</Tag>
-          <Tag color="volcano">{`Remaining : ${Work_Authorization.remaining} days`}</Tag>
+          <Tag color="geekblue">{`Title : ${Work_Authorization.title}`}</Tag>
+          <Tag color="geekblue">{`Start Date : ${Work_Authorization.start_date}`}</Tag>
+          <Tag color="geekblue">{`End Date : ${Work_Authorization.end_date}`}</Tag>
+          <Tag color="geekblue">{`Remaining : ${Work_Authorization.remaining} days`}</Tag>
         </>
       ),
     },
@@ -53,34 +81,113 @@ const VisaHrPage = () => {
       title: "Documentation",
       dataIndex: "Documentation",
       key: "Documentation",
+
+      render: (_, { Documentation }) => (
+        <>
+          {Documentation.optReceipt.fileDoc && (
+            <ReviewAction
+              file={Documentation.optReceipt}
+              fileTitle="OPT Receipt"
+              filter={filter}
+            />
+          )}
+          {Documentation.optEAD.fileDoc && (
+            <ReviewAction
+              file={Documentation.optEAD}
+              fileTitle="OPT EAD"
+              filter={filter}
+            />
+          )}
+          {Documentation.I983.fileDoc && (
+            <ReviewAction
+              file={Documentation.I983}
+              fileTitle="I-983"
+              filter={filter}
+            />
+          )}
+          {Documentation.I20.fileDoc && (
+            <ReviewAction
+              file={Documentation.I20}
+              fileTitle="I-20"
+              filter={filter}
+            />
+          )}
+        </>
+      ),
     },
   ];
-  const data = async () => {
-    const doc = await axios.get("http://localhost:4000/api/visa");
-    console.log(doc);
-  };
-  data();
-  const mockData = [
-    {
-      key: "1",
-      name: "Ruike Qiu",
-      Work_Authorization: {
-        title: "F1(CPT/OPT)",
-        start_date: "Jan 1st",
-        end_date: "Sept 1st",
-        remaining: 25,
+  const [info, setInfo] = useState([]);
+  const [filter, setFilter] = useState("IN PROGRESS");
+  useEffect(() => {
+    const fetchDocs = async () => {
+      const response = await axios.get("http://localhost:4000/api/visa/hr");
+      setInfo(response.data);
+    };
+    fetchDocs();
+  }, []);
+
+  console.log(info);
+  const infoInProgress = info.filter(
+    (user) => user.docStatus === "IN PROGRESS"
+  );
+  const dataSourceAll = info.map(
+    ({ name, Work_Authorization, Next_Step, Documentation }, index) => {
+      return {
+        key: index + 1,
+        name,
+        Work_Authorization,
+        Next_Step,
+        Documentation,
+      };
+    }
+  );
+  const dataSourceInProgress = infoInProgress.map(
+    (
+      {
+        id,
+        name,
+        Work_Authorization,
+        Next_Step,
+        action,
+        fileToDeal,
+        Documentation,
+        fileToDealName,
       },
-      Next_Step: "ead",
-      Documentation: "abc",
-    },
-  ];
-  const [status, setStatus] = useState("IN PROGRESS");
-  const handleStatusChange = (e) => {
-    setStatus(e.target.value);
+      index
+    ) => {
+      let newAction = {};
+      if (action === "need review") {
+        newAction = {
+          message: "need review",
+          id: id,
+          fileType: fileToDeal,
+          fileToDeal: Documentation[fileToDeal],
+          fileToDealName: fileToDealName,
+        };
+      } else if (action === "send notification") {
+        newAction = {
+          message: "send notification",
+          id: id,
+          notification: Next_Step,
+        };
+      }
+      return {
+        key: index + 1,
+        name,
+        Work_Authorization,
+        Next_Step,
+        newAction,
+      };
+    }
+  );
+  console.log(dataSourceInProgress);
+
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
   };
   return (
     <div className="mx-10 ">
-      <p className="text-3xl text-chuwa-blue my-10">Visa Status Management</p>
+      <p className="text-3xl text-geekblue my-10">Visa Status Management</p>
       <div className="">
         <input
           type="text"
@@ -90,20 +197,28 @@ const VisaHrPage = () => {
       </div>
       <div className="">
         <select
-          name="status"
-          id="status"
-          onChange={handleStatusChange}
-          className="py-3 px-2 bg-slate-200 text-chuwa-blue rounded-md shadow-md"
+          name="filter"
+          id="filter"
+          onChange={handleFilterChange}
+          className="py-3 px-2 bg-slate-200 text-geekblue rounded-md shadow-md"
         >
           <option value="IN PROGRESS">IN PROGRESS</option>
           <option value="ALL">ALL</option>
         </select>
       </div>
       <div className=" flex items-center justify-center">
-        {status === "IN PROGRESS" ? (
-          <Table columns={columns1} dataSource={mockData} className="w-[70%]" />
+        {filter === "IN PROGRESS" ? (
+          <Table
+            columns={columns1}
+            dataSource={dataSourceInProgress}
+            className="w-[80%]"
+          />
         ) : (
-          <Table columns={columns2} dataSource={mockData} className="w-[70%]" />
+          <Table
+            columns={columns2}
+            dataSource={dataSourceAll}
+            className="w-[80%]"
+          />
         )}
       </div>
     </div>

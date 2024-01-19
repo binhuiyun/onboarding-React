@@ -2,8 +2,8 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
 //u_id
-const fetchPersonalInformation = createAsyncThunk(
-  "personalInformation/fetchPersonalInformation",
+const fetchPersonalInformationByUID = createAsyncThunk(
+  "personalInformation/fetchPersonalInformationByUID",
   async (id) => {
     console.log(id);
     try {
@@ -51,21 +51,21 @@ const personalInformationSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchPersonalInformation.pending, (state) => {
+    builder.addCase(fetchPersonalInformationByUID.pending, (state) => {
       state.status = "pending";
     });
-    builder.addCase(fetchPersonalInformation.fulfilled, (state, action) => {
+    builder.addCase(fetchPersonalInformationByUID.fulfilled, (state, action) => {
       state.status = "fulfilled";
       state.personalInformation = action.payload;
     });
-    builder.addCase(fetchPersonalInformation.rejected, (state) => {
+    builder.addCase(fetchPersonalInformationByUID.rejected, (state) => {
       state.status = "failed";
     });
   },
 });
 
 const { reducer, actions } = personalInformationSlice;
-export { fetchPersonalInformation };
+export { fetchPersonalInformationByUID };
 export const selectPersonalInformation = (state) =>
   state.personalInformation.personalInformation;
 export const { setPersonalInformation } = actions;

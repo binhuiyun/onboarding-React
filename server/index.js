@@ -12,6 +12,8 @@ const visaRouter = require("./routes/visa");
 const personalInformationRouter = require("./routes/personalInformation");
 const userRouter = require("./routes/user");
 const applicationRouter = require("./routes/application");
+const employeeProfileRouter = require("./routes/employeeProfile");
+const bodyParser = require("body-parser");
 const path = require("path");
 const PORT = 4000;
 
@@ -25,6 +27,7 @@ const connectDB = async () => {
 };
 
 connectDB();
+app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
 app.use("/api/auth", authRouter);
@@ -33,6 +36,7 @@ app.use("/api/personalInformation", personalInformationRouter);
 app.use("/api/visa", visaRouter);
 app.use("/api/user", userRouter);
 app.use("/api/application", applicationRouter);
+app.use("/api/employeeProfile", employeeProfileRouter);
 app.use(errorHandler);
 app.use((req, res, next) => {
   const err = new Error("Not Found");

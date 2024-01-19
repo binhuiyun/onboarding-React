@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { FolderPlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
+import { useSelector } from "react-redux";
 
-const mockUser = {
-  _id: "qweasdzxc123321",
-  firstName: "Ruike",
-};
 const PopUp = (props) => {
   const [selectedFile, setSelectedFile] = useState(null);
+  const { user } = useSelector((state) => state.user);
+  console.log("here is popup user", user.id);
 
   const onFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
@@ -19,7 +18,7 @@ const PopUp = (props) => {
     formData.append("file", selectedFile, selectedFile.name);
     const storeFile = async () => {
       const response = await axios.post(
-        `http://localhost:4000/api/visa/${mockUser._id}/${props.fileType}`,
+        `http://localhost:4000/api/visa/${user.id}/${props.fileType}`,
         formData,
         {
           headers: {
