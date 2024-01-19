@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Space, Table, Tag } from "antd";
+import { Space, Table, Tag, Input } from "antd";
 import ReviewAction from "../../components/ReviewAction";
 import SendNotification from "../../components/SendNotification";
 
@@ -8,11 +8,16 @@ import SendNotification from "../../components/SendNotification";
 
 const VisaHrPage = () => {
   // Table for IN PROGRESS
+  const [searchText, setSearchText] = useState("");
   const columns1 = [
     {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      filteredValue: [searchText],
+      onFilter: (value, record) => {
+        return String(record.name).toLowerCase().includes(value.toLowerCase());
+      },
     },
     {
       title: "Work Authorization",
@@ -58,6 +63,10 @@ const VisaHrPage = () => {
       title: "Name",
       dataIndex: "name",
       key: "name",
+      filteredValue: [searchText],
+      onFilter: (value, record) => {
+        return String(record.name).toLowerCase().includes(value.toLowerCase());
+      },
     },
     {
       title: "Work Authorization",
@@ -189,10 +198,13 @@ const VisaHrPage = () => {
     <div className="mx-10 ">
       <p className="text-3xl text-geekblue my-10">Visa Status Management</p>
       <div className="">
-        <input
+        <Input.Search
           type="text"
           placeholder="  Search Employee  "
-          className="h-[5vh] w-[40%] mb-8 border-2 rounded-md text-xl text-gray-600"
+          className="w-[40%] mb-8 border-2 rounded-md text-xl text-gray-600"
+          onSearch={(value) => {
+            setSearchText(value);
+          }}
         />
       </div>
       <div className="">
