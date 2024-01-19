@@ -68,20 +68,35 @@ const VisaHrPage = () => {
       title: "Documentation",
       dataIndex: "Documentation",
       key: "Documentation",
-      render: (_, { Documentation }) => {
-        // Documentation.map((doc) => {
-        return <ReviewAction doc={Documentation} filter={status} />;
-        // });
-      },
+
+      render: (_, { Documentation }) => (
+        <>
+          <ReviewAction
+            file={Documentation.optReceipt}
+            fileTitle="OPT Receipt"
+            filter={filter}
+          />
+          <ReviewAction
+            file={Documentation.optEAD}
+            fileTitle="OPT EAD"
+            filter={filter}
+          />
+          <ReviewAction
+            file={Documentation.I983}
+            fileTitle="I-983"
+            filter={filter}
+          />
+          <ReviewAction
+            file={Documentation.I20}
+            fileTitle="I-20"
+            filter={filter}
+          />
+        </>
+      ),
     },
   ];
   const [info, setInfo] = useState([]);
-  const [status, setStatus] = useState("IN PROGRESS");
-  const mockUser = {
-    _id: "qweasdzxc123321",
-    firstName: "Ruike",
-  };
-
+  const [filter, setFilter] = useState("IN PROGRESS");
   useEffect(() => {
     const fetchDocs = async () => {
       const response = await axios.get("http://localhost:4000/api/visa/hr");
@@ -100,6 +115,7 @@ const VisaHrPage = () => {
       };
     }
   );
+  console.log(dataSourceAll);
   const dataSourceInProgress = info.map(
     ({ name, Work_Authorization, Next_Step, action, fileToDeal }, index) => {
       return {
@@ -112,8 +128,8 @@ const VisaHrPage = () => {
     }
   );
 
-  const handleStatusChange = (e) => {
-    setStatus(e.target.value);
+  const handleFilterChange = (e) => {
+    setFilter(e.target.value);
   };
   return (
     <div className="mx-10 ">
@@ -127,9 +143,9 @@ const VisaHrPage = () => {
       </div>
       <div className="">
         <select
-          name="status"
-          id="status"
-          onChange={handleStatusChange}
+          name="filter"
+          id="filter"
+          onChange={handleFilterChange}
           className="py-3 px-2 bg-slate-200 text-geekblue rounded-md shadow-md"
         >
           <option value="IN PROGRESS">IN PROGRESS</option>
@@ -137,7 +153,7 @@ const VisaHrPage = () => {
         </select>
       </div>
       <div className=" flex items-center justify-center">
-        {status === "IN PROGRESS" ? (
+        {filter === "IN PROGRESS" ? (
           <Table
             columns={columns1}
             dataSource={dataSourceInProgress}

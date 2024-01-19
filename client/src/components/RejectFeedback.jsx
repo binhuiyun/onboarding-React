@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Button, Modal } from "antd";
+import { Button, Modal, Popover } from "antd";
 import { Input } from "antd";
 
 const { TextArea } = Input;
@@ -23,15 +23,17 @@ const RejectFeedback = () => {
 
   return (
     <>
-      <Button
-        type="primary"
-        onClick={showModal}
-        className="h-10 w-20"
-        danger
-        ghost
-      >
-        Reject
-      </Button>
+      <Popover content="Reject And Send Feedback">
+        <Button
+          type="primary"
+          onClick={showModal}
+          className="h-8 w-20"
+          danger
+          ghost
+        >
+          Reject
+        </Button>
+      </Popover>
       <Modal
         title="Feedback"
         open={open}
