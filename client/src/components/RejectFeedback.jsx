@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Button, Modal, Popover } from "antd";
 import { Input, Form } from "antd";
+import axios from "axios";
 const { TextArea } = Input;
 
 const RejectFeedback = (props) => {
@@ -11,6 +12,7 @@ const RejectFeedback = (props) => {
     setIsModalOpen(true);
   };
   console.log(fileType);
+  // TODO : figure out why the api doesn't work
   const handleOk = () => {
     axios
       .post(`http://localhost:4000/api/visa/feedback/${id}/${fileType}`, {
