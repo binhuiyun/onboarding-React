@@ -1,5 +1,13 @@
 const { visaModel } = require("../models/visaDocuments");
 const PersonalInformation = require("../models/personalInformation");
+const nodemailer = require("nodemailer");
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: "rachelqiu0428@gmail.com",
+    pass: "Jinan123!",
+  },
+});
 const getAllVisa = async (req, res) => {
   try {
     const visaDoc = await visaModel.find();
@@ -192,6 +200,24 @@ const getHrSideData = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+const sendNotification = async (req, res) => {
+  const { to, subject, text } = req.body;
+  const mailOptions = {
+    from: "rachelqiu0428@gmail.com",
+    to: to,
+    subject: subject,
+    text: text,
+  };
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error("Error sending email:", error);
+      res.status(500).json({ error: "Error sending email" });
+    } else {
+      console.log("Email sent:", info.response);
+      res.json({ message: "Email sent successfully" });
+    }
+  });
+};
 
 module.exports = {
   createVisaModel,
@@ -202,4 +228,5 @@ module.exports = {
   getHrSideData,
   addHrFeedback,
   approveFile,
+  sendNotification,
 };

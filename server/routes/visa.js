@@ -12,6 +12,7 @@ const {
   getHrSideData,
   addHrFeedback,
   approveFile,
+  sendNotification,
 } = require("../handlers/visa");
 
 router.get("/", getAllVisa);
@@ -22,4 +23,5 @@ router.post("/", createVisaModel);
 router.post("/:id/:fileType", upload.single("file"), addToVisaDocumentation);
 router.post("/feedback/:id/:fileType", addHrFeedback);
 router.post("/approve/:id/:fileType", approveFile);
+router.post("/send-mail", sendNotification);
 module.exports = router;
