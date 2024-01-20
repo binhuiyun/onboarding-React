@@ -6,6 +6,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { submitOnboarding } from "../../redux/onboardingSlice";
 import { Document, Page, pdfjs } from "react-pdf";
 import FilePreviewer from "../../components/FilePreviewer";
+import { fetchUserByIdThunk } from "../../thunks/auth-thunk";
+import { updateTokenStatusThunk } from "../../thunks/token-thunk";
 import { fetchPersonalInformationByUID } from "../../redux/personalInformationSlice";
 
 import Header from "../layout/Header";
@@ -179,6 +181,7 @@ const OnboardingPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     createInfo(e);
+    dispatch(updateTokenStatusThunk(user.email));
   };
 
   async function createInfo(e) {

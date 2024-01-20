@@ -11,9 +11,10 @@ export const fetchTokenHistory = async () => {
     }
 }
 
-export const updateTokenStatus = async (id) => {
+
+export const updateTokenStatus = async (email) => {
     try{
-        const res = await axios.put(`${TOKEN_API}/${id}`, {status: "Submitted"});
+        const res = await axios.put(`${TOKEN_API}/${email}`, {status: "Submitted"});
         return res.data;
     }catch(err){
         return err.response.data;

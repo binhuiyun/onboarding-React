@@ -11,7 +11,7 @@ const Header = () => {
   };
   return (
     <>
-      <header className="flex items-center justify-between bg-[#F0F0F0] px-20 py-4 border-b-2">
+      <header className="flex items-center text-base justify-between bg-[#F0F0F0] px-20 py-4 border-b-2">
         <div className="text-3xl flex items-center">Chuwa America</div>
         <div className="flex flex-row">
           <button

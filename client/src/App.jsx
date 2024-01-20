@@ -15,6 +15,8 @@ import ReviewTokenHistory from "./pages/HiringManagement/ReviewTokenHistory";
 import VisaHrPage from "./pages/VisaManagement/VisaHrPage";
 import NotFound from "./pages/NotFound";
 import EmployeeProfilePage from "./pages/EmployeeProfile/EmployeeProfilePage";
+import EmployeeProfileDetailsPage from "./pages/EmployeeProfile/EmployeeProfileDetailsPage";
+import ApplicationFeedback from "./pages/HiringManagement/ReviewApplications/ApplicationFeedback";
 
 const ApplicationStatusRouter = () => {
   return (
@@ -57,6 +59,10 @@ function App() {
           path="/hiring-management/token"
           element={<ReviewTokenHistory />}
         />
+        <Route
+          path="/applications/:id"
+          element={<ApplicationFeedback />}  
+        />
 
         <Route path="/visa" element={<VisaPage />} />
         <Route path="/visa-hr" element={<VisaHrPage />} />
@@ -67,6 +73,7 @@ function App() {
         />
         <Route path="/onboarding" element={<OnboardingPage />} />
         <Route path="/employee-profile" element={<EmployeeProfilePage />} />
+        <Route path="/employee-profile/details" element={<EmployeeProfileDetailsPage />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

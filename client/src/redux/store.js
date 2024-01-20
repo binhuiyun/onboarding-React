@@ -6,6 +6,7 @@ import tokenHistoryReducer from "./tokenHistorySlice";
 import errorReducer from "./errorSlice";
 import employeeProfileReducer from "./employeeProfileSlice";
 import onboardingReducer from "./onboardingSlice";
+import applicationReducer from "./applicationSlice";
 
 export default configureStore({
   reducer: {
@@ -15,6 +16,7 @@ export default configureStore({
     error: errorReducer,
     employeeProfile: employeeProfileReducer,
     onboarding: onboardingReducer,
+    application: applicationReducer,
   },
   devTools: true,
 });

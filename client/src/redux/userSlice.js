@@ -36,17 +36,17 @@ const currentUserSlice = createSlice({
       state.isAutenicated = false;
       state.user = {};
     });
-    builder.addCase(registerThunk.pending, (state) => {
-      state.status = "pending";
-    });
+ 
     builder.addCase(registerThunk.fulfilled, (state) => {
       state.status = "success";
     });
-    builder.addCase(registerThunk.rejected, (state) => {
-      state.status = "idle";
-    });
+  
     builder.addCase(fetchUserByIdThunk.fulfilled, (state, action) => {
       state.user = action.payload;
+      state.status = "success";
+    });
+    builder.addCase(fetchUserByIdThunk.pending, (state) => {
+      state.status = "pending";
     });
   },
 });
