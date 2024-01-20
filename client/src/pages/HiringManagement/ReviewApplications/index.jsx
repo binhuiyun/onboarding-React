@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Col, Row , Button} from "antd";
 import { useNavigate } from "react-router-dom";
+import  Header from "../../../components/Header";
 
 const ReviewApplications = () => {
   const navigate = useNavigate();
@@ -14,7 +15,8 @@ const ReviewApplications = () => {
     navigate("approved");
   }
   return (
-    <div>
+    <>
+      <Header />
       <h1>ReviewApplications</h1>
       <Row gutter={16}>
         <Col span={8}>
@@ -33,7 +35,7 @@ const ReviewApplications = () => {
           </Card>
         </Col>
       </Row>
-    </div>
+    </>
   );
 };
 

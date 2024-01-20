@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Space, Table, Tag } from "antd";
+import { Space, Table, Tag, Input } from "antd";
 import ReviewAction from "../../components/ReviewAction";
 import SendNotification from "../../components/SendNotification";
 
@@ -8,11 +8,28 @@ import SendNotification from "../../components/SendNotification";
 
 const VisaHrPage = () => {
   // Table for IN PROGRESS
+  const [searchText, setSearchText] = useState("");
+
   const columns1 = [
     {
       title: "Name",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "allName",
+      key: "allName",
+      filteredValue: [searchText],
+      render: (_, { allName }) => <p>{allName.name}</p>,
+      onFilter: (value, record) => {
+        return (
+          String(record.allName.name)
+            .toLowerCase()
+            .includes(value.toLowerCase()) ||
+          String(record.allName.preferredName)
+            .toLowerCase()
+            .includes(value.toLowerCase()) ||
+          String(record.allName.middleName)
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        );
+      },
     },
     {
       title: "Work Authorization",
@@ -56,8 +73,23 @@ const VisaHrPage = () => {
   const columns2 = [
     {
       title: "Name",
-      dataIndex: "name",
-      key: "name",
+      dataIndex: "allName",
+      key: "allName",
+      filteredValue: [searchText],
+      render: (_, { allName }) => <p>{allName.name}</p>,
+      onFilter: (value, record) => {
+        return (
+          String(record.allName.name)
+            .toLowerCase()
+            .includes(value.toLowerCase()) ||
+          String(record.allName.preferredName)
+            .toLowerCase()
+            .includes(value.toLowerCase()) ||
+          String(record.allName.middleName)
+            .toLowerCase()
+            .includes(value.toLowerCase())
+        );
+      },
     },
     {
       title: "Work Authorization",
@@ -131,10 +163,25 @@ const VisaHrPage = () => {
     (user) => user.docStatus === "IN PROGRESS"
   );
   const dataSourceAll = info.map(
-    ({ name, Work_Authorization, Next_Step, Documentation }, index) => {
+    (
+      {
+        name,
+        Work_Authorization,
+        Next_Step,
+        Documentation,
+        preferredName,
+        middleName,
+      },
+      index
+    ) => {
+      let allName = {
+        name: name,
+        preferredName: preferredName,
+        middleName: middleName,
+      };
       return {
         key: index + 1,
-        name,
+        allName,
         Work_Authorization,
         Next_Step,
         Documentation,
@@ -152,10 +199,17 @@ const VisaHrPage = () => {
         fileToDeal,
         Documentation,
         fileToDealName,
+        preferredName,
+        middleName,
       },
       index
     ) => {
       let newAction = {};
+      let allName = {
+        name: name,
+        preferredName: preferredName,
+        middleName: middleName,
+      };
       if (action === "need review") {
         newAction = {
           message: "need review",
@@ -173,7 +227,7 @@ const VisaHrPage = () => {
       }
       return {
         key: index + 1,
-        name,
+        allName,
         Work_Authorization,
         Next_Step,
         newAction,
@@ -189,10 +243,14 @@ const VisaHrPage = () => {
     <div className="mx-10 ">
       <p className="text-3xl text-geekblue my-10">Visa Status Management</p>
       <div className="">
-        <input
+        <Input.Search
           type="text"
           placeholder="  Search Employee  "
-          className="h-[5vh] w-[40%] mb-8 border-2 rounded-md text-xl text-gray-600"
+          className="w-[40%] mb-8 border-2 rounded-md text-xl text-gray-600"
+          onSearch={(value) => {
+            setSearchText(value);
+          }}
+          onChange={(e) => setSearchText(e.target.value)}
         />
       </div>
       <div className="">

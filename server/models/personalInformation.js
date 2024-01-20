@@ -81,7 +81,7 @@ const personalInformationSchema = new Schema({
   ],
   onboardingStatus: {
     type: String,
-    default: "Pending",
+    default: "pending",
   },
   HRfeedback: {
     type: String,

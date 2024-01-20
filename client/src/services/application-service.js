@@ -9,3 +9,12 @@ export const getAppByStatus = async (status) => {
         return err.response.data;
     }
 }
+
+export const updateApplicationStatus = async (id, payload) => {
+    try {
+        const res = await axios.put(`${APPLICATION_URL}/apps/${id}`, payload);
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
+}
