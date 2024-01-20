@@ -19,8 +19,8 @@ import {
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
-const ProfileForm = (props) => {
-  const employeeProfile = props.employeeProfile;
+const ProfileForm = ({employeeProfile}) => {
+
   return (
     <>
       <div className="flex flex-col items-center">
