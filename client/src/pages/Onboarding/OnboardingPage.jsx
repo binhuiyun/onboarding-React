@@ -21,9 +21,8 @@ const OnboardingPage = () => {
   const fileInputRef = useRef(null);
   const [onboardingStatus, setOnboardingStatus] = useState("Never Submitted");
   const [files, setFiles] = useState([]);
-  const { user } = useSelector((state) => state.user);
-  //const { user } = dispatch(fetchUserByID());
-  const u_id = user.id;
+  const u_id = localStorage.getItem("userID");
+  const user = useSelector((state) => state.user.user);
   const [formData, setFormData] = useState({
     user: u_id,
     name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
@@ -51,7 +50,7 @@ const OnboardingPage = () => {
       lastName: "",
       middleName: "",
       phone: "",
-      email: "",
+      email: user.email,
       relationship: "",
     },
     emergencyContact: [
@@ -193,6 +192,7 @@ const OnboardingPage = () => {
       u_id,
       document,
     };
+    console.log("document:", document);
     dispatch(submitOnboarding(payload)).then((res) => {
       navigate("/personal-information");
     });
@@ -479,7 +479,7 @@ const OnboardingPage = () => {
             type="email"
             id="email"
             name="email"
-            value={formData.email}
+            value={user.email}
             readOnly
             className="mt-1 p-2 border rounded-md w-full bg-[#e9e9e9]"
           />
@@ -684,7 +684,7 @@ const OnboardingPage = () => {
         )}
 
         {/* Reference */}
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label className="block">Reference</label>
           <div className="grid grid-cols-2 gap-4">
             <input
@@ -742,7 +742,7 @@ const OnboardingPage = () => {
               className="mt-1 p-2 border rounded-md"
             />
           </div>
-        </div>
+        </div> */}
 
         {/* Emergency Contact */}
         <div className="mb-4">
