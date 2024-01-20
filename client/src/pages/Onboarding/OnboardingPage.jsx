@@ -22,7 +22,6 @@ const OnboardingPage = () => {
   const { user } = useSelector((state) => state.user);
   //const { user } = dispatch(fetchUserByID());
   const u_id = user.id;
-  console.log("user:", u_id);
   const [formData, setFormData] = useState({
     user: u_id,
     name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
@@ -68,19 +67,21 @@ const OnboardingPage = () => {
   const dispatch = useDispatch();
   const document = new FormData();
   const [data, setData] = useState(null);
-  useEffect(() => {
-    const currentUser = dispatch(fetchPersonalInformationByUID(u_id)).then(
-      (res) => {
-        setOnboardingStatus(res.payload.onboardingStatus);
-        console.log(res.payload);
-        setData(res.payload);
 
+  useEffect(() => {
+    console.log("Current user: ", u_id);
+    setFormData({ ...formData, user: u_id });
+    dispatch(fetchPersonalInformationByUID(u_id)).then((res) => {
+      if (res.payload == null) {
+        console.log("No record found");
+      } else {
+        console.log("Fetched user:", res.payload);
+        setOnboardingStatus(res.payload.onboardingStatus);
+        setData(res.payload);
         setFormData(res.payload);
       }
-    );
+    });
   }, []);
-
-  console.log("formData data:", formData);
 
   const handleChange = (e) => {
     console.log(e.target);
@@ -680,13 +681,13 @@ const OnboardingPage = () => {
         )}
 
         {/* Reference */}
-        {/* <div className="mb-4">
-          <label className="block  ">Reference</label>
+        <div className="mb-4">
+          <label className="block">Reference</label>
           <div className="grid grid-cols-2 gap-4">
             <input
               type="text"
-              id="referenceFirstName"
-              name="reference.firstName"
+              id="firstName"
+              name="firstName"
               value={formData.reference.firstName}
               onChange={handleReferenceChange}
               placeholder="First Name"
@@ -694,8 +695,8 @@ const OnboardingPage = () => {
             />
             <input
               type="text"
-              id="referenceLastName"
-              name="reference.lastName"
+              id="lastName"
+              name="lastName"
               value={formData.reference.lastName}
               onChange={handleReferenceChange}
               placeholder="Last Name"
@@ -703,8 +704,8 @@ const OnboardingPage = () => {
             />
             <input
               type="text"
-              id="referenceMiddleName"
-              name="reference.middleName"
+              id="middleName"
+              name="middleName"
               value={formData.reference.middleName}
               onChange={handleReferenceChange}
               placeholder="Middle Name"
@@ -712,8 +713,8 @@ const OnboardingPage = () => {
             />
             <input
               type="tel"
-              id="referencePhone"
-              name="reference.phone"
+              id="phone"
+              name="phone"
               value={formData.reference.phone}
               onChange={handleReferenceChange}
               placeholder="Phone"
@@ -721,8 +722,8 @@ const OnboardingPage = () => {
             />
             <input
               type="email"
-              id="referenceEmail"
-              name="reference.email"
+              id="email"
+              name="email"
               value={formData.reference.email}
               onChange={handleReferenceChange}
               placeholder="Email"
@@ -730,15 +731,15 @@ const OnboardingPage = () => {
             />
             <input
               type="text"
-              id="referenceRelationship"
-              name="reference.relationship"
+              id="relationship"
+              name="relationship"
               value={formData.reference.relationship}
               onChange={handleReferenceChange}
               placeholder="Relationship"
               className="mt-1 p-2 border rounded-md"
             />
           </div>
-        </div> */}
+        </div>
 
         {/* Emergency Contact */}
         <div className="mb-4">

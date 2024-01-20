@@ -5,12 +5,11 @@ import axios from "axios";
 const fetchPersonalInformationByUID = createAsyncThunk(
   "personalInformation/fetchPersonalInformationByUID",
   async (id) => {
-    console.log(id);
     try {
+      console.log("Fetching user with id: ", id);
       const response = await axios.get(
         `http://localhost:4000/api/personalInformation/${id}`
       );
-      console.log(response.data);
       return response.data;
     } catch (error) {
       console.log(error);

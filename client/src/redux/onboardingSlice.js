@@ -7,10 +7,8 @@ const submitOnboarding = createAsyncThunk(
   "onboarding/submitOnboarding",
   async (payload) => {
     const { formData, u_id, document } = payload;
-    console.log(formData, u_id, document);
     const res = await createPersonalInformation(formData, u_id);
     //const res2 = await addToVisaDocumentation(document, u_id, "optReceipt");
-    console.log(res);
   }
 );
 

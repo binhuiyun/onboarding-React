@@ -19,14 +19,18 @@ const createPersonalInformation = async (req, res) => {
   }
 };
 
-// p_id
+// u_id
 const getPersonalInformation = async (req, res) => {
   const u_id = req.params.id;
   try {
     const personalInformation = await PersonalInformation.findOne({
       user: u_id,
     });
-    res.status(200).json(personalInformation);
+    if (!personalInformation) {
+      res.status(404).json({ message: "Personal Information not found" });
+    }
+    else
+      res.status(200).json(personalInformation);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
