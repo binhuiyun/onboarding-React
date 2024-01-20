@@ -99,6 +99,16 @@ const getHrSideData = async (req, res) => {
       let docStatus = "IN PROGRESS";
       let fileToDeal = "";
       let fileToDealName = "";
+      if (
+        model["optReceipt"].status === "rejected" ||
+        model["optEAD"].status === "rejected" ||
+        model["I983"].status === "rejected" ||
+        model["I20"].status === "rejected"
+      ) {
+        nextStep = "Reupload the rejected file";
+        action = "send notification";
+      }
+
       if (model.optReceipt && model.optReceipt.status === "pending") {
         nextStep = "Waiting for HR to approve the OPT Receipt";
         action = "need review";
