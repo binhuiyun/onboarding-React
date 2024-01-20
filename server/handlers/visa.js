@@ -99,6 +99,16 @@ const getHrSideData = async (req, res) => {
       let docStatus = "IN PROGRESS";
       let fileToDeal = "";
       let fileToDealName = "";
+      if (
+        model["optReceipt"].status === "rejected" ||
+        model["optEAD"].status === "rejected" ||
+        model["I983"].status === "rejected" ||
+        model["I20"].status === "rejected"
+      ) {
+        nextStep = "Reupload the rejected file";
+        action = "send notification";
+      }
+
       if (model.optReceipt && model.optReceipt.status === "pending") {
         nextStep = "Waiting for HR to approve the OPT Receipt";
         action = "need review";
@@ -119,30 +129,33 @@ const getHrSideData = async (req, res) => {
         action = "need review";
         fileToDeal = "I20";
         fileToDealName = "I-20";
-      } else if (model.optReceipt === "approved" && !model.optEAD) {
+      } else if (
+        model.optReceipt.status === "approved" &&
+        !model.optEAD.fileDoc
+      ) {
         nextStep = "Upload a copy of the OPT EAD";
         action = "send notification";
         fileToDeal = "optEAD";
         fileToDealName = "OPT EAD";
-      } else if (model.optEAD === "approved" && !model.I983) {
+      } else if (model.optEAD.status === "approved" && !model.I983.fileDoc) {
         nextStep = "Download and fill out the I-983 form";
         action = "send notification";
         fileToDeal = "I983";
         fileToDealName = "I983";
-      } else if (model.I983 === "approved" && !model.I20) {
+      } else if (model.I983.status === "approved" && !model.I20.fileDoc) {
         nextStep =
           "Send the I-983 along all necessary documents to the school and upload the new I-20";
         action = "send notification";
         fileToDeal = "I20";
         fileToDealName = "I-20";
-      } else if (model.I20 === "approved") {
+      } else if (model.I20.status === "approved") {
         nextStep = "All documents have been approved";
         docStatus = "DONE";
         action = "DONE";
       }
 
       if (profileData) {
-        const { name, employment, workAuthorization } = profileData;
+        const { name, workAuthorization } = profileData;
         const data = {
           id: id,
           firstName: name.firstName,
@@ -152,8 +165,8 @@ const getHrSideData = async (req, res) => {
           middleName: name.middleName,
           Work_Authorization: {
             title: workAuthorization.workAuthorizationType,
-            start_date: employment.startDate,
-            end_date: employment.endDate,
+            start_date: workAuthorization.startDate,
+            end_date: workAuthorization.endDate,
             remaining: 0,
           },
           // employment.endDate.getTime() - employment.startDate.getTime(),
