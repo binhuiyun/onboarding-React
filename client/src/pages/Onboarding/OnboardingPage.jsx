@@ -24,6 +24,7 @@ const OnboardingPage = () => {
   const [onboardingStatus, setOnboardingStatus] = useState("");
   const [files, setFiles] = useState([]);
   const u_id = localStorage.getItem("userID");
+  const {user }= useSelector((state) => state.user);
   const [newEmergencyContact, setNewEmergencyContact] = useState({
     firstName: "",
     lastName: "",

@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
 import {
   Row,
@@ -23,6 +24,8 @@ const { TextArea } = Input;
 
 const ProfileForm = ({employeeProfile}) => {
 
+
+  console.log(employeeProfile.name);
   return (
     <>
       <div className="flex flex-col items-center mt-6">

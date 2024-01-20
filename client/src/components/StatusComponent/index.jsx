@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { getAppByStatus } from "../../services/application-service";
+import { Link } from "react-router-dom";
 
 const columns = [
   {
@@ -17,12 +18,14 @@ const columns = [
   {
     title: "Action",
     dataIndex: "action",
-    render: () => <a>View Application</a>,
+    render: (text, record) => (
+      <Link to={`/applications/${record.key}`}>View Application</Link>
+    ),
 
     align: "center",
   },
 ];
-const StatusComponent =({status}) => {
+const StatusComponent = ({ status }) => {
   const [applications, setApplications] = useState([]);
 
   useEffect(() => {
@@ -34,22 +37,17 @@ const StatusComponent =({status}) => {
 
   return (
     <>
-
       <Table
         columns={columns}
         dataSource={applications.map((app) => ({
           key: app._id,
           name: app.name.firstName,
           email: app.email,
-          action: (
-            <a href={`/hiring-management/applications/${app._id}`}>
-              View Application
-            </a>
-          ),
+    
         }))}
       />
     </>
   );
-}
+};
 
 export default StatusComponent;

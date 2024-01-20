@@ -3,6 +3,7 @@ import { updateApplicationStatusThunk, fetchApplicationByIdThunk } from "../thun
 
 const initialState = {
     application:{}, 
+    status: "idle",
 };
 
 const applicationSlice = createSlice({
@@ -15,6 +16,10 @@ const applicationSlice = createSlice({
         });
         builder.addCase(fetchApplicationByIdThunk.fulfilled, (state, action) => {
             state.application = action.payload;
+            state.status = "succeeded";
+        });
+        builder.addCase(fetchApplicationByIdThunk.pending, (state, action) => {
+            state.status = "loading";
         });
     },
 });
