@@ -26,31 +26,55 @@ const getPersonalInformation = async (req, res) => {
     const personalInformation = await PersonalInformation.findOne({
       user: u_id,
     });
-    res.status(200).json(personalInformation);
+    if (!personalInformation) {
+      res.status(404).json({ message: "Personal Information not found" });
+    } else res.status(200).json(personalInformation);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
 
+// u_id
 const updatePersonalInformation = async (req, res) => {
-  const { id: _id } = req.params;
+  const u_id = req.params.id;
   const personalInformation = req.body;
+  console.log(u_id, personalInformation);
 
-  if (!mongoose.Types.ObjectId.isValid(_id))
-    return res.status(404).send(`No personalInformation with id: ${_id}`);
+  const record = await PersonalInformation.findOne({ user: u_id });
+  if (!record) {
+    res.status(404).json({ message: "Personal Information not found" });
+  } else {
+    const updatedPersonalInformation =
+      await PersonalInformation.findOneAndUpdate(
+        { user: u_id },
+        personalInformation
+      );
 
-  const updatedPersonalInformation =
-    await PersonalInformation.findByIdAndUpdate(
-      _id,
-      { ...personalInformation, _id },
-      { new: true }
-    );
+    res.status(200).json(updatedPersonalInformation);
+  }
+};
 
-  res.json(updatedPersonalInformation);
+const addProfilePicture = async (req, res) => {
+  const u_id = req.params.id;
+  console.log(u_id, req.file);
+  const imageUrl = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+  const personalInformation = await PersonalInformation.findOne({ user: u_id });
+  if (!personalInformation) {
+    res.status(404).json({ message: "Personal Information not found" });
+  } else {
+    const updatedPersonalInformation =
+      await PersonalInformation.findOneAndUpdate(
+        { user: u_id },
+        { profilePicture: imageUrl }
+      );
+
+    res.status(200).json(updatedPersonalInformation);
+  }
 };
 
 module.exports = {
   createPersonalInformation,
   getPersonalInformation,
   updatePersonalInformation,
+  addProfilePicture,
 };

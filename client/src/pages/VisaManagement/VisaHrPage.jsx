@@ -3,6 +3,7 @@ import axios from "axios";
 import { Space, Table, Tag, Input } from "antd";
 import ReviewAction from "../../components/ReviewAction";
 import SendNotification from "../../components/SendNotification";
+import Header from "../layout/Header";
 
 // api : router.get("/hr", getHrSideData);
 
@@ -64,7 +65,7 @@ const VisaHrPage = () => {
               fileType={newAction.fileType}
             />
           ) : (
-            <SendNotification />
+            <SendNotification notification={newAction.Next_Step} />
           )}
         </>
       ),
@@ -240,46 +241,49 @@ const VisaHrPage = () => {
     setFilter(e.target.value);
   };
   return (
-    <div className="mx-10 ">
-      <p className="text-3xl text-geekblue my-10">Visa Status Management</p>
-      <div className="">
-        <Input.Search
-          type="text"
-          placeholder="  Search Employee  "
-          className="w-[40%] mb-8 border-2 rounded-md text-xl text-gray-600"
-          onSearch={(value) => {
-            setSearchText(value);
-          }}
-          onChange={(e) => setSearchText(e.target.value)}
-        />
-      </div>
-      <div className="">
-        <select
-          name="filter"
-          id="filter"
-          onChange={handleFilterChange}
-          className="py-3 px-2 bg-slate-200 text-geekblue rounded-md shadow-md"
-        >
-          <option value="IN PROGRESS">IN PROGRESS</option>
-          <option value="ALL">ALL</option>
-        </select>
-      </div>
-      <div className=" flex items-center justify-center">
-        {filter === "IN PROGRESS" ? (
-          <Table
-            columns={columns1}
-            dataSource={dataSourceInProgress}
-            className="w-[80%]"
+    <>
+      <Header />
+      <div className="mx-10 ">
+        <p className="text-3xl text-geekblue my-10">Visa Status Management</p>
+        <div className="">
+          <Input.Search
+            type="text"
+            placeholder="  Search Employee  "
+            className="w-[40%] mb-8 border-2 rounded-md text-xl text-gray-600"
+            onSearch={(value) => {
+              setSearchText(value);
+            }}
+            onChange={(e) => setSearchText(e.target.value)}
           />
-        ) : (
-          <Table
-            columns={columns2}
-            dataSource={dataSourceAll}
-            className="w-[80%]"
-          />
-        )}
+        </div>
+        <div className="">
+          <select
+            name="filter"
+            id="filter"
+            onChange={handleFilterChange}
+            className="py-3 px-2 bg-slate-200 text-geekblue rounded-md shadow-md"
+          >
+            <option value="IN PROGRESS">IN PROGRESS</option>
+            <option value="ALL">ALL</option>
+          </select>
+        </div>
+        <div className=" flex items-center justify-center">
+          {filter === "IN PROGRESS" ? (
+            <Table
+              columns={columns1}
+              dataSource={dataSourceInProgress}
+              className="w-[80%]"
+            />
+          ) : (
+            <Table
+              columns={columns2}
+              dataSource={dataSourceAll}
+              className="w-[80%]"
+            />
+          )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

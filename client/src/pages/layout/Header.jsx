@@ -1,14 +1,52 @@
 import React from "react";
 import { useNavigate } from "react-router";
+import { fetchPersonalInformationByUID } from "../../redux/personalInformationSlice";
+import { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { Avatar, Menu, Dropdown,Space } from "antd";
+import {
+  UserOutlined,
+  SolutionOutlined,
+  LockOutlined,
+  TranslationOutlined,
+  PoweroffOutlined,
+} from "@ant-design/icons";
 
 const Header = () => {
+  const u_id = localStorage.getItem("userID");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [avatar, setAvatar] = useState(
+    "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  );
+
+  useEffect(() => {
+    dispatch(fetchPersonalInformationByUID(u_id)).then((res) => {
+      setAvatar(res.payload.profilePicture);
+    });
+  }, []);
+
   const handlePersonalInformationButtonClick = () => {
     navigate("/personal-information");
   };
+
   const handleVisaStatusButtonClick = () => {
     navigate("/visa");
   };
+
+  const items = [
+    {
+      key: "1",
+      label: (
+        <a
+          href=""
+        >
+          Log Out
+        </a>
+      ),
+    },
+  ];
+
   return (
     <>
       <header className="flex items-center text-base justify-between bg-[#F0F0F0] px-20 py-4 border-b-2">
@@ -29,10 +67,12 @@ const Header = () => {
             Visa Status
           </button>
           <div className="pl-14">
-            <img
-              className="p-0.5 w-[40px] h-[40px] rounded-full ring-2 ring-black object-cover"
-              src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-            />
+            <Dropdown menu={{ items }}  placement="bottom" arrow>
+              <img
+                className="p-0.5 w-[40px] h-[40px] rounded-full ring-1 ring-black object-cover"
+                src={avatar}
+              />
+            </Dropdown>
           </div>
         </div>
       </header>
