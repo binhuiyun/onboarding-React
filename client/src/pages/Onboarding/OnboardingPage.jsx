@@ -88,7 +88,7 @@ const OnboardingPage = () => {
       if (res.payload == null) {
         console.log("Failed: No personal information record found");
       } else {
-        console.log("Fetched user's personal information:", res.payload);
+        console.log("Fetched personal information:", res.payload);
         setOnboardingStatus(res.payload.onboardingStatus);
         setData(res.payload);
         setFormData(res.payload);

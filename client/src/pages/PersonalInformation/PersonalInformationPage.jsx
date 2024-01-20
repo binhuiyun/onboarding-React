@@ -14,11 +14,13 @@ import FileUpload from "./FileUpload";
 import {
   fetchPersonalInformationByUID,
   selectPersonalInformation,
+  savePersonalInformation,
 } from "../../redux/personalInformationSlice";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 
 const PersonalInformationPage = () => {
+  const u_id = localStorage.getItem("userID");
   const [height, setHeight] = useState();
   const [openPersonalInfoEditModal, setOpenPersonalInfoEditModal] =
     useState(false);
@@ -68,17 +70,21 @@ const PersonalInformationPage = () => {
 
   // TODO: Fetch real userID from redux store
   useEffect(() => {
-    console.log("Fetching personal information of:");
-    dispatch(fetchPersonalInformationByUID(user.id)).then((response) => {
-      setFormData(response.payload);
+    console.log("Current user: ", u_id);
+    dispatch(fetchPersonalInformationByUID(u_id)).then((res) => {
+      if (res.payload == null) {
+        // TODO: Handle error, shouldn't fetch nothing at this point
+        console.log("Failed: No personal information record found");
+      } else {
+        console.log("Fetched personal information:", res.payload);
+        setFormData(res.payload);
+      }
     });
   }, []);
 
-  console.log(formData);
-  
   const targetRef = useRef();
   useLayoutEffect(() => {
-    console.log(targetRef);
+    //console.log(targetRef);
   }, []);
 
   const handleOk = () => {
@@ -103,7 +109,6 @@ const PersonalInformationPage = () => {
 
   const handlePersonalInfoEditButtonClick = () => {
     console.log("PersonalInfoEditButton clicked");
-    console.log(formData);
     setOpenPersonalInfoEditModal(true);
   };
 
@@ -136,6 +141,19 @@ const PersonalInformationPage = () => {
   const handleSave = (e) => {
     console.log(e);
     setOpenEmploymentEditModal(false);
+  };
+
+  const handleEditInformationSaveButtonClick = (e) => {
+    console.log("EditInformationSaveButton Clicked");
+    const payload = {
+      u_id,
+      formData,
+    };
+    dispatch(savePersonalInformation(payload)).then((res) => {
+      console.log("Saved personal information:", res.payload);
+      //setFormData(res.payload);
+    });
+    setOpenPersonalInfoEditModal(false);
   };
 
   const handleChange = (e) => {
@@ -408,7 +426,9 @@ const PersonalInformationPage = () => {
                 Cancel
               </Button>
             </Popconfirm>,
-            <Button key="save">Save</Button>,
+            <Button key="save" onClick={handleEditInformationSaveButtonClick}>
+              Save
+            </Button>,
           ]}
         >
           <form className="max-w-md mx-auto mt-8" onSubmit={handleSubmit}>
@@ -517,41 +537,21 @@ const PersonalInformationPage = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-600">
+              <label
+                htmlFor="pronoun"
+                className="block text-sm font-medium text-gray-600"
+              >
                 Date of Birth
               </label>
-              <div className="flex">
-                <select
-                  id="dobDay"
-                  name="dobDay"
-                  // value={formData.dob.day}
-                  onChange={handleChange}
-                  className="mr-2 p-2 border rounded-md"
-                >
-                  <option value="">Day</option>
-                  {generateDropdownOptions(1, 31)}
-                </select>
-                <select
-                  id="dobMonth"
-                  name="dobMonth"
-                  // value={formData.dob.month}
-                  onChange={handleChange}
-                  className="mr-2 p-2 border rounded-md"
-                >
-                  <option value="">Month</option>
-                  {generateDropdownOptions(1, 12)}
-                </select>
-                <select
-                  id="dobYear"
-                  name="dobYear"
-                  // value={formData.dob.year}
-                  onChange={handleChange}
-                  className="p-2 border rounded-md"
-                >
-                  <option value="">Year</option>
-                  {generateDropdownOptions(1900, new Date().getFullYear())}
-                </select>
-              </div>
+              <input
+                type="date"
+                id="dateOfBirth"
+                name="dateOfBirth"
+                value={formData.dateOfBirth}
+                onChange={handleChange}
+                required
+                className="mt-1 p-2 border rounded-md w-full"
+              />
             </div>
 
             <div className="mb-4">

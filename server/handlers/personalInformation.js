@@ -28,29 +28,30 @@ const getPersonalInformation = async (req, res) => {
     });
     if (!personalInformation) {
       res.status(404).json({ message: "Personal Information not found" });
-    }
-    else
-      res.status(200).json(personalInformation);
+    } else res.status(200).json(personalInformation);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
 };
 
+// u_id
 const updatePersonalInformation = async (req, res) => {
-  const { id: _id } = req.params;
+  const u_id = req.params.id;
   const personalInformation = req.body;
+  console.log(u_id, personalInformation);
 
-  if (!mongoose.Types.ObjectId.isValid(_id))
-    return res.status(404).send(`No personalInformation with id: ${_id}`);
+  const record = await PersonalInformation.findOne({ user: u_id });
+  if (!record) {
+    res.status(404).json({ message: "Personal Information not found" });
+  } else {
+    const updatedPersonalInformation =
+      await PersonalInformation.findOneAndUpdate(
+        { user: u_id },
+        personalInformation
+      );
 
-  const updatedPersonalInformation =
-    await PersonalInformation.findByIdAndUpdate(
-      _id,
-      { ...personalInformation, _id },
-      { new: true }
-    );
-
-  res.json(updatedPersonalInformation);
+    res.status(200).json(updatedPersonalInformation);
+  }
 };
 
 module.exports = {
