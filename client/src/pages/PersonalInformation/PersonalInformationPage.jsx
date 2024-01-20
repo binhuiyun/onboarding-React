@@ -18,6 +18,7 @@ import {
 } from "../../redux/personalInformationSlice";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
+import axios from "axios";
 
 const PersonalInformationPage = () => {
   const fileInputRef = useRef(null);
@@ -292,13 +293,28 @@ const PersonalInformationPage = () => {
     fileInputRef.current.click();
   };
 
-  const handleProfilePictureChange = (e) => {
+  const handleProfilePictureChange = async (e) => {
     const file = e.target.files[0];
     console.log(file);
-    setFormData({
-      ...formData,
-      profilePicture: file,
-    });
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      await axios
+        .post(
+          `http://localhost:4000/api/personalInformation/upload/profilePicture/${u_id}`,
+          formData
+        )
+        .then((res) => {
+          console.log("Uploaded profile picture:", res.data);
+        });
+    } catch (err) {
+      console.log(err);
+    }
+
+    // setFormData({
+    //   ...formData,
+    //   profilePicture: file,
+    // });
   };
 
   return (
