@@ -39,8 +39,8 @@ export const registerThunk = createAsyncThunk(
 export const fetchUserByIdThunk = createAsyncThunk(
   "auth/fetchUserById",
   async (id) => {
+      console.log("Fetching user: ", id);  
       const user = await fetchUserById(id);
-      console.log("fetch user by id", user.isHR);
       return user;
     }
 );

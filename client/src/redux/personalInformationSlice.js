@@ -6,7 +6,7 @@ const fetchPersonalInformationByUID = createAsyncThunk(
   "personalInformation/fetchPersonalInformationByUID",
   async (id) => {
     try {
-      console.log("Fetching user with id: ", id);
+      console.log("Fetching user's personal information with u_id: ", id);
       const response = await axios.get(
         `http://localhost:4000/api/personalInformation/${id}`
       );

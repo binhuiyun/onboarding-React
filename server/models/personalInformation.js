@@ -53,6 +53,8 @@ const personalInformationSchema = new Schema({
     citizenship: String,
     citizenType: String,
     workAuthorizationType: String,
+    startDate: String,
+    endDate: String,
   },
   employment: [
     {

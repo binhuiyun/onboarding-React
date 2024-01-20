@@ -9,7 +9,6 @@ import FilePreviewer from "../../components/FilePreviewer";
 import { fetchUserByIdThunk } from "../../thunks/auth-thunk";
 import { updateTokenStatusThunk } from "../../thunks/token-thunk";
 import { fetchPersonalInformationByUID } from "../../redux/personalInformationSlice";
-
 import Header from "../layout/Header";
 
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -22,7 +21,14 @@ const OnboardingPage = () => {
   const [onboardingStatus, setOnboardingStatus] = useState("Never Submitted");
   const [files, setFiles] = useState([]);
   const u_id = localStorage.getItem("userID");
-  const user = useSelector((state) => state.user.user);
+  const [newEmergencyContact, setNewEmergencyContact] = useState({
+    firstName: "",
+    lastName: "",
+    middleName: "",
+    phone: "",
+    email: "",
+    relationship: "",
+  });
   const [formData, setFormData] = useState({
     user: u_id,
     name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
@@ -36,7 +42,7 @@ const OnboardingPage = () => {
       zip: "",
     },
     phoneNumber: { cellPhoneNumber: "", workPhoneNumber: "" },
-    email: "user@example.com", // Assuming email is pre-filled and cannot be edited
+    email: "example@example.com", // Assuming email is pre-filled and cannot be edited
     ssn: "",
     dateOfBirth: "",
     gender: "",
@@ -44,13 +50,15 @@ const OnboardingPage = () => {
       citizenship: "",
       citizenType: "",
       workAuthorizationType: "",
+      startDate: "",
+      endDate: "",
     },
     reference: {
       firstName: "",
       lastName: "",
       middleName: "",
       phone: "",
-      email: user.email,
+      email: "",
       relationship: "",
     },
     emergencyContact: [
@@ -71,12 +79,16 @@ const OnboardingPage = () => {
 
   useEffect(() => {
     console.log("Current user: ", u_id);
+    dispatch(fetchUserByIdThunk(u_id)).then((res) => {
+      console.log("Fetched user:", res.payload);
+      setFormData({ ...formData, email: res.payload.email });
+    });
     setFormData({ ...formData, user: u_id });
     dispatch(fetchPersonalInformationByUID(u_id)).then((res) => {
       if (res.payload == null) {
-        console.log("No record found");
+        console.log("Failed: No personal information record found");
       } else {
-        console.log("Fetched user:", res.payload);
+        console.log("Fetched user's personal information:", res.payload);
         setOnboardingStatus(res.payload.onboardingStatus);
         setData(res.payload);
         setFormData(res.payload);
@@ -85,7 +97,6 @@ const OnboardingPage = () => {
   }, []);
 
   const handleChange = (e) => {
-    console.log(e.target);
     const { name, value } = e.target;
     setFormData({
       ...formData,
@@ -169,16 +180,22 @@ const OnboardingPage = () => {
 
   const handleEmergencyContactChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      emergencyContact: {
-        ...formData.emergencyContact,
-        [name]: value,
-      },
+    setNewEmergencyContact({
+      ...newEmergencyContact,
+      [name]: value,
     });
   };
 
   const handleSubmit = (e) => {
+    console.log("Emergency contact:", newEmergencyContact);
+
+    setFormData({
+      ...formData,
+      emergencyContact: [
+        ...formData.emergencyContact,
+        { ...newEmergencyContact },
+      ],
+    });
     e.preventDefault();
     createInfo(e);
     dispatch(updateTokenStatusThunk(user.email));
@@ -192,7 +209,6 @@ const OnboardingPage = () => {
       u_id,
       document,
     };
-    console.log("document:", document);
     dispatch(submitOnboarding(payload)).then((res) => {
       navigate("/personal-information");
     });
@@ -479,7 +495,7 @@ const OnboardingPage = () => {
             type="email"
             id="email"
             name="email"
-            value={user.email}
+            value={formData.email}
             readOnly
             className="mt-1 p-2 border rounded-md w-full bg-[#e9e9e9]"
           />
@@ -510,7 +526,7 @@ const OnboardingPage = () => {
 
         {/* Date of Birth */}
         <div className="mb-4">
-          <label htmlFor="dateOfBirth" className="block  ">
+          <label htmlFor="dateOfBirth" className="block">
             Date of Birth <span className="text-red-500">*</span>
           </label>
           <input
@@ -621,6 +637,7 @@ const OnboardingPage = () => {
         {formData.workAuthorization.citizenship === "no" && (
           <div>
             {/* Work Authorization */}
+
             <div className="mb-4">
               <label htmlFor="workAuthorizationType" className="block">
                 What is your work authorization?{" "}
@@ -651,6 +668,51 @@ const OnboardingPage = () => {
                 <option value="Other">Other</option>
               </select>
             </div>
+            <div className="mb-4">
+              <label htmlFor="startDate" className="block">
+                Start Date <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="date"
+                id="startDate"
+                name="startDate"
+                value={formData.workAuthorization.startDate}
+                onChange={handleWorkAuthorizationChange}
+                required
+                readOnly={onboardingStatus == "Pending"}
+                style={{
+                  backgroundColor:
+                    onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                  outline: "none",
+                  cursor:
+                    onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                }}
+                className="mt-1 p-2 border rounded-md w-full"
+              />
+            </div>
+            <div className="mb-4">
+              <label htmlFor="endDate" className="block">
+                End Date <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="date"
+                id="endDate"
+                name="endDate"
+                value={formData.workAuthorization.endDate}
+                onChange={handleWorkAuthorizationChange}
+                required
+                readOnly={onboardingStatus == "Pending"}
+                style={{
+                  backgroundColor:
+                    onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                  outline: "none",
+                  cursor:
+                    onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                }}
+                className="mt-1 p-2 border rounded-md w-full"
+              />
+            </div>
+
             {formData.workAuthorization.workAuthorizationType ===
               "F1(CPT/OPT)" && (
               <>
@@ -659,6 +721,28 @@ const OnboardingPage = () => {
                     Upload a file for work authorization:
                   </label>
                   <FilePreviewer addFile={addFile} />
+                </div>
+                <div className="mb-4">
+                  <label htmlFor="dateOfBirth" className="block">
+                    Date of Birth <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="date"
+                    id="dateOfBirth"
+                    name="dateOfBirth"
+                    value={formData.dateOfBirth}
+                    onChange={handleChange}
+                    required
+                    readOnly={onboardingStatus == "Pending"}
+                    style={{
+                      backgroundColor:
+                        onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                      outline: "none",
+                      cursor:
+                        onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                    }}
+                    className="mt-1 p-2 border rounded-md w-full"
+                  />
                 </div>
               </>
             )}
@@ -684,7 +768,7 @@ const OnboardingPage = () => {
         )}
 
         {/* Reference */}
-        {/* <div className="mb-4">
+        <div className="mb-4">
           <label className="block">Reference</label>
           <div className="grid grid-cols-2 gap-4">
             <input
@@ -742,7 +826,7 @@ const OnboardingPage = () => {
               className="mt-1 p-2 border rounded-md"
             />
           </div>
-        </div> */}
+        </div>
 
         {/* Emergency Contact */}
         <div className="mb-4">
@@ -752,7 +836,7 @@ const OnboardingPage = () => {
               type="text"
               id="firstName"
               name="firstName"
-              value={formData.emergencyContact.firstName}
+              value={newEmergencyContact.firstName}
               onChange={handleEmergencyContactChange}
               placeholder="First Name"
               className="mt-1 p-2 border rounded-md"
@@ -761,7 +845,7 @@ const OnboardingPage = () => {
               type="text"
               id="lastName"
               name="lastName"
-              value={formData.emergencyContact.lastName}
+              value={newEmergencyContact.lastName}
               onChange={handleEmergencyContactChange}
               placeholder="Last Name"
               className="mt-1 p-2 border rounded-md"
@@ -770,7 +854,7 @@ const OnboardingPage = () => {
               type="text"
               id="middleName"
               name="middleName"
-              value={formData.emergencyContact.middleName}
+              value={newEmergencyContact.middleName}
               onChange={handleEmergencyContactChange}
               placeholder="Middle Name"
               className="mt-1 p-2 border rounded-md"
@@ -779,7 +863,7 @@ const OnboardingPage = () => {
               type="tel"
               id="phone"
               name="phone"
-              value={formData.emergencyContact.phone}
+              value={newEmergencyContact.phone}
               onChange={handleEmergencyContactChange}
               placeholder="Phone"
               className="mt-1 p-2 border rounded-md"
@@ -788,7 +872,7 @@ const OnboardingPage = () => {
               type="email"
               id="email"
               name="email"
-              value={formData.emergencyContact.email}
+              value={newEmergencyContact.email}
               onChange={handleEmergencyContactChange}
               placeholder="Email"
               className="mt-1 p-2 border rounded-md"
@@ -797,7 +881,7 @@ const OnboardingPage = () => {
               type="text"
               id="relationship"
               name="relationship"
-              value={formData.emergencyContact.relationship}
+              value={newEmergencyContact.relationship}
               onChange={handleEmergencyContactChange}
               placeholder="Relationship"
               className="mt-1 p-2 border rounded-md"

@@ -52,6 +52,8 @@ const PersonalInformationPage = () => {
       citizenship: "",
       citizenType: "",
       workAuthorizationType: "",
+      startDate: "",
+      endDate: "",
     },
     emergencyContact: [
       {
