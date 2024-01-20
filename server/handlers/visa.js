@@ -145,7 +145,7 @@ const getHrSideData = async (req, res) => {
       }
 
       if (profileData) {
-        const { name, employment, workAuthorization } = profileData;
+        const { name, workAuthorization } = profileData;
         const data = {
           id: id,
           firstName: name.firstName,
@@ -155,8 +155,8 @@ const getHrSideData = async (req, res) => {
           middleName: name.middleName,
           Work_Authorization: {
             title: workAuthorization.workAuthorizationType,
-            start_date: employment.startDate,
-            end_date: employment.endDate,
+            start_date: workAuthorization.startDate,
+            end_date: workAuthorization.endDate,
             remaining: 0,
           },
           // employment.endDate.getTime() - employment.startDate.getTime(),
