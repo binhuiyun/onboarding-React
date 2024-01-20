@@ -37,13 +37,15 @@ export default function LogIn() {
   };
 
   return (
-    <div>
+    <div className="flex flex-col h-screen">
+      
       <AuthForm
         buttonText="Log in"
         onSubmit={onSubmit}
         title="Please log in first"
         fields={fields}
       />
+      
     </div>
   );
 }

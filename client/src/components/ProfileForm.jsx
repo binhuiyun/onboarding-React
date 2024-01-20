@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import {
+  Row,
+  Col,
   Button,
   Cascader,
   Checkbox,
@@ -20,10 +22,11 @@ const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
 const ProfileForm = (props) => {
-  const employeeProfile = props.employeeProfile;
+  console.log(props);
+  const employeeProfile = props.personalInformation;
   return (
     <>
-      <div className="flex flex-col items-center">
+      <div className="flex flex-col items-center mt-6">
         <Form
           labelCol={{
             span: 8,
@@ -61,22 +64,6 @@ const ProfileForm = (props) => {
               value={employeeProfile.name.preferredName}
             />
           </Form.Item>
-
-          <Form.Item label="Social Security Number">
-            <Input value={employeeProfile.ssn} />
-          </Form.Item>
-          <Form.Item label="Gender">
-            <Input
-              style={{ textTransform: "capitalize" }}
-              value={employeeProfile.gender}
-            />
-          </Form.Item>
-          <Form.Item label="Phone Number">
-            <Input value={employeeProfile.phoneNumber.cellPhoneNumber} />
-          </Form.Item>
-          <Form.Item label="Email">
-            <Input value={employeeProfile.email} />
-          </Form.Item>
           <Form.Item label="Address">
             <TextArea
               value={[
@@ -86,8 +73,50 @@ const ProfileForm = (props) => {
               ]}
             />
           </Form.Item>
+          <Form.Item label="Cell Phone Number">
+            <Input value={employeeProfile.phoneNumber.cellPhoneNumber} />
+          </Form.Item>
+          <Form.Item label="Work Phone Number">
+            <Input value={employeeProfile.phoneNumber.workPhoneNumber} />
+          </Form.Item>
+          <Form.Item label="Email">
+            <Input value={employeeProfile.email} />
+          </Form.Item>
+          <Form.Item label="Social Security Number">
+            <Input value={employeeProfile.ssn} />
+          </Form.Item>
           <Form.Item label="Date of Birth">
             <Input value={employeeProfile.dateOfBirth} />
+          </Form.Item>
+          <Form.Item label="Gender">
+            <Input
+              style={{ textTransform: "capitalize" }}
+              value={employeeProfile.gender}
+            />
+          </Form.Item>
+          <Form.Item label="Permanent resident or citizen of the U.S">
+            <Input
+              style={{ textTransform: "capitalize" }}
+              value={employeeProfile.workAuthorization.citizenship}
+            />
+          </Form.Item>
+          <Form.Item label="Work Authorization">
+            <Input
+              style={{ textTransform: "capitalize" }}
+              value={employeeProfile.workAuthorization.workAuthorizationType}
+            />
+          </Form.Item>
+          <Form.Item label="Start Date">
+            <Input
+              style={{ textTransform: "capitalize" }}
+              value={employeeProfile.workAuthorization.startDate}
+            />
+          </Form.Item>
+          <Form.Item label="End Date">
+            <Input
+              style={{ textTransform: "capitalize" }}
+              value={employeeProfile.workAuthorization.endDate}
+            />
           </Form.Item>
         </Form>
       </div>

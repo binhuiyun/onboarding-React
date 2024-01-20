@@ -10,7 +10,7 @@ import {
   UserOutlined,
   VideoCameraOutlined,
 } from "@ant-design/icons";
-import { Layout, Menu, Button, theme } from "antd";
+import { Layout, Menu, Button, theme, ConfigProvider } from "antd";
 const { Sider, Content } = Layout;
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
@@ -97,7 +97,7 @@ const EmployeeProfilePage = () => {
   return (
     <Layout className="w-screen h-screen overflow-auto">
       <Header />
-      <Layout>
+      <Layout className="bg-white">
         <Sider
           trigger={triggerIcon}
           collapsible
@@ -150,7 +150,6 @@ const EmployeeProfilePage = () => {
             </div>
           )}
         </Sider>
-
         <Content
           style={{
             margin: "24px 48px",
@@ -170,7 +169,7 @@ const EmployeeProfilePage = () => {
                 </div>
                 <div className="flex flex-row w-full space-x-10">
                   <div className="flex flex-col w-full text-base space-y-2">
-                    <label className="text-2xl capitalize">
+                    <label className="text-2xl font-semibold capitalize">
                       {employee.name.firstName} {employee.name.lastName}
                     </label>
                     <label className="">
@@ -188,7 +187,7 @@ const EmployeeProfilePage = () => {
                     <div className="flex justify-end">
                       <button
                         type="button"
-                        className="rounded-3xl bg-blue-500 text-white px-20 py-4"
+                        className="rounded-3xl bg-blue-500 text-white px-14 py-2"
                         onClick={(e) =>
                           handleViewProfileButtonClick(employee._id)
                         }
