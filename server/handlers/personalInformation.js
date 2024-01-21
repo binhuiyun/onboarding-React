@@ -55,22 +55,12 @@ const updatePersonalInformation = async (req, res) => {
 const createProfilePictureURL = async (req, res) => {
   const u_id = req.params.id;
   console.log(u_id, req.file);
-  const URL = `data:${req.file.mimetype};base64,${req.file.buffer.toString(
-    "base64"
-  )}`;
-  res.status(200).json({ URL });
-
-  // const personalInformation = await PersonalInformation.findOne({ user: u_id });
-  // if (!personalInformation) {
-  //   res.status(404).json({ message: "Personal Information not found" });
-  // } else {
-  //   const updatedPersonalInformation =
-  //     await PersonalInformation.findOneAndUpdate(
-  //       { user: u_id },
-  //       { profilePicture: imageUrl }
-  //     );
-  //   res.status(200).json(updatedPersonalInformation);
-  // }
+  // const URL = `data:${req.file.mimetype};base64,${req.file.buffer.toString(
+  //   "base64"
+  // )}`;
+  const buffer = req.file.buffer;
+  console.log(buffer);
+  res.status(200).json({ buffer });
 };
 
 const addProfilePicture = async (req, res) => {
