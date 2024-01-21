@@ -36,7 +36,7 @@ app.use("/api/tokenHistory", loginRequired, tokenHistoryRouter);
 app.use("/api/personalInformation", personalInformationRouter);
 app.use("/api/visa", visaRouter);
 app.use("/api/user", userRouter);
-app.use("/api/application", applicationRouter);
+app.use("/api/application", loginRequired, applicationRouter);
 app.use("/api/employeeProfile", employeeProfileRouter);
 app.use(errorHandler);
 app.use((req, res, next) => {

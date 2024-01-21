@@ -109,7 +109,7 @@ const getHrSideData = async (req, res) => {
         model["I983"].status === "rejected" ||
         model["I20"].status === "rejected"
       ) {
-        nextStep = "Reupload the rejected file";
+        nextStep = "Re-Upload the rejected file";
         action = "send notification";
       }
 
@@ -172,7 +172,13 @@ const getHrSideData = async (req, res) => {
             title: workAuthorization.workAuthorizationType,
             start_date: workAuthorization.startDate,
             end_date: workAuthorization.endDate,
-            remaining: 0,
+            remaining: Math.round(
+              Math.max(
+                new Date(workAuthorization.endDate).getTime() - Date.now(),
+                0
+              ) /
+                (1000 * 3600 * 24)
+            ),
           },
           // employment.endDate.getTime() - employment.startDate.getTime(),
           Next_Step: nextStep, // The NEXT STEP of action
@@ -187,7 +193,39 @@ const getHrSideData = async (req, res) => {
             I20: model.I20,
           },
         };
-
+        console.log("first push ", name);
+        arr.push(data);
+      }
+    }
+    const profiles = await PersonalInformation.find({});
+    for (const profile of profiles) {
+      if (
+        profile.workAuthorization.citizenship === "no" &&
+        profile.workAuthorization.workAuthorizationType !== "F1(CPT/OPT)"
+      ) {
+        const { id, name, workAuthorization, email } = profile;
+        const data = {
+          id: id,
+          firstName: name.firstName,
+          lastName: name.lastName,
+          name: `${name.firstName} ${name.lastName}`,
+          email: email,
+          preferredName: name.preferredName,
+          middleName: name.middleName,
+          Work_Authorization: {
+            title: workAuthorization.workAuthorizationType,
+            start_date: workAuthorization.startDate,
+            end_date: workAuthorization.endDate,
+            remaining: Math.round(
+              Math.max(
+                new Date(workAuthorization.endDate).getTime() - Date.now(),
+                0
+              ) /
+                (1000 * 3600 * 24)
+            ),
+          },
+        };
+        console.log("pushing ", name);
         arr.push(data);
       }
     }

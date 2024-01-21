@@ -7,23 +7,27 @@ const submitOnboarding = createAsyncThunk(
   "onboarding/submitOnboarding",
   async (payload) => {
     const { formData, u_id, document } = payload;
-    console.log(document);
     const res = await createPersonalInformation(formData, u_id);
 
     // TODO: RUIKE
     //
     //const res2 = await addToVisaDocumentation(document, u_id, "optReceipt");
 
-    const response = await axios.post(
-      `http://localhost:4000/api/visa/${u_id}/optReceipt`,
-      document,
-      {
-        headers: {
-          Accept: "application/json",
-        },
-      }
-    );
-    console.log(response);
+    if (
+      formData.workAuthorization.citizenship === "no" &&
+      formData.workAuthorization.workAuthorizationType === "F1(CPT/OPT)"
+    ) {
+      const response = await axios.post(
+        `http://localhost:4000/api/visa/${u_id}/optReceipt`,
+        document,
+        {
+          headers: {
+            Accept: "application/json",
+          },
+        }
+      );
+      console.log(response);
+    }
   }
 );
 

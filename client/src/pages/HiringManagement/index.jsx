@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { Table, Button } from "antd";
 import { useNavigate } from "react-router-dom";
 import { createTokenThunk } from "../../thunks/token-thunk";
-import Header from "../layout/HRHeader";
-
+//import HRHeader from "../layout/HRHeader";
+import Navbar from "../../components/Navbar";
 const columns = [
   {
     title: "Name",
@@ -43,7 +43,7 @@ const data = [
 export default function HiringManagement() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {user} = useSelector((state) => state.user);
+  const {user, isAutenicated} = useSelector((state) => state.user);
   const [selectedRowKey, setSelectedRowKey] = useState(null);
   const [selectedEmail, setSelectedEmail] = useState("");
   const [selectedName, setSelectedName] = useState("");
@@ -55,7 +55,7 @@ export default function HiringManagement() {
   };
 
 
-  console.log("user", user.id);
+  console.log("user auth", isAutenicated);
   const rowSelection = {
     type: "radio",
     selectedRowKeys: selectedRowKey,
@@ -79,7 +79,7 @@ export default function HiringManagement() {
 
   return (
     <div>
-      <Header  user={user}/>
+      <Navbar />
       <h1>Hiring Management</h1>
       <Table
         rowSelection={rowSelection}

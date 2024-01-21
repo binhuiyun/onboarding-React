@@ -4,6 +4,7 @@ import { fetchPersonalInformationByUID } from "../../redux/personalInformationSl
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Avatar, Menu, Dropdown, Space } from "antd";
+import { Avatar, Menu, Dropdown, Space } from "antd";
 import {
   UserOutlined,
   SolutionOutlined,
@@ -52,6 +53,7 @@ const Header = (props) => {
   const items = [
     {
       key: "1",
+      label: <a href="">Log Out</a>,
       label: <a href="">Log Out</a>,
     },
   ];

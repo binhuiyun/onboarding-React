@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Space, Table, Tag, Input } from "antd";
+import { Space, Table, Tag, Input, Pagination } from "antd";
 import ReviewAction from "../../components/ReviewAction";
 import SendNotification from "../../components/SendNotification";
 import Header from "../layout/Header";
@@ -10,7 +10,9 @@ import Header from "../layout/Header";
 const VisaHrPage = () => {
   // Table for IN PROGRESS
   const [searchText, setSearchText] = useState("");
-
+  const pagination = {
+    pageSize: 5,
+  };
   const columns1 = [
     {
       title: "Name",
@@ -36,6 +38,7 @@ const VisaHrPage = () => {
       title: "Work Authorization",
       dataIndex: "Work_Authorization",
       key: "Work Authorization",
+      width: "40%",
       render: (_, { Work_Authorization }) => (
         <>
           <Tag color="geekblue">{`Title : ${Work_Authorization.title}`}</Tag>
@@ -99,6 +102,7 @@ const VisaHrPage = () => {
       title: "Work Authorization",
       dataIndex: "Work_Authorization",
       key: "Work_Authorization",
+      width: "40%",
       render: (_, { Work_Authorization }) => (
         <>
           <Tag color="geekblue">{`Title : ${Work_Authorization.title}`}</Tag>
@@ -120,28 +124,28 @@ const VisaHrPage = () => {
 
       render: (_, { Documentation }) => (
         <>
-          {Documentation.optReceipt.fileDoc && (
+          {Documentation && Documentation.optReceipt.fileDoc && (
             <ReviewAction
               file={Documentation.optReceipt}
               fileTitle="OPT Receipt"
               filter={filter}
             />
           )}
-          {Documentation.optEAD.fileDoc && (
+          {Documentation && Documentation.optEAD.fileDoc && (
             <ReviewAction
               file={Documentation.optEAD}
               fileTitle="OPT EAD"
               filter={filter}
             />
           )}
-          {Documentation.I983.fileDoc && (
+          {Documentation && Documentation.I983.fileDoc && (
             <ReviewAction
               file={Documentation.I983}
               fileTitle="I-983"
               filter={filter}
             />
           )}
-          {Documentation.I20.fileDoc && (
+          {Documentation && Documentation.I20.fileDoc && (
             <ReviewAction
               file={Documentation.I20}
               fileTitle="I-20"
@@ -163,9 +167,9 @@ const VisaHrPage = () => {
   }, []);
 
   console.log(info);
-  const infoInProgress = info.filter(
-    (user) => user.docStatus === "IN PROGRESS"
-  );
+  const infoInProgress = info
+    .filter((user) => user.Work_Authorization.title === "F1(CPT/OPT)")
+    .filter((user) => user.docStatus === "IN PROGRESS");
   const dataSourceAll = info.map(
     (
       {
@@ -240,7 +244,6 @@ const VisaHrPage = () => {
       };
     }
   );
-  console.log(dataSourceInProgress);
 
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
@@ -266,7 +269,7 @@ const VisaHrPage = () => {
             name="filter"
             id="filter"
             onChange={handleFilterChange}
-            className="py-3 px-2 bg-slate-200 text-geekblue rounded-md shadow-md"
+            className="py-3 px-2 bg-slate-200 text-geekblue rounded-md shadow-md mb-16"
           >
             <option value="IN PROGRESS">IN PROGRESS</option>
             <option value="ALL">ALL</option>
@@ -277,13 +280,15 @@ const VisaHrPage = () => {
             <Table
               columns={columns1}
               dataSource={dataSourceInProgress}
-              className="w-[80%]"
+              className="w-[90%]"
+              pagination={pagination}
             />
           ) : (
             <Table
               columns={columns2}
               dataSource={dataSourceAll}
-              className="w-[80%]"
+              className="w-[90%]"
+              pagination={pagination}
             />
           )}
         </div>
