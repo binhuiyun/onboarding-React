@@ -5,8 +5,12 @@ import { useSelector } from "react-redux";
 
 const PopUp = (props) => {
   const [selectedFile, setSelectedFile] = useState(null);
-  const { user } = useSelector((state) => state.user);
-  console.log("here is popup user", user.id);
+  // const { user } = useSelector((state) => state.user);
+  // console.log("here is popup user", user.id);
+  let user = {};
+  user = {
+    id: localStorage.getItem("userID"),
+  };
 
   const onFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
