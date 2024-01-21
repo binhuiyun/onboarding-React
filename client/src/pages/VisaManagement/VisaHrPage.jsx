@@ -38,6 +38,7 @@ const VisaHrPage = () => {
       title: "Work Authorization",
       dataIndex: "Work_Authorization",
       key: "Work Authorization",
+      width: "40%",
       render: (_, { Work_Authorization }) => (
         <>
           <Tag color="geekblue">{`Title : ${Work_Authorization.title}`}</Tag>
@@ -101,6 +102,7 @@ const VisaHrPage = () => {
       title: "Work Authorization",
       dataIndex: "Work_Authorization",
       key: "Work_Authorization",
+      width: "40%",
       render: (_, { Work_Authorization }) => (
         <>
           <Tag color="geekblue">{`Title : ${Work_Authorization.title}`}</Tag>
