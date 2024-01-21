@@ -43,22 +43,6 @@ const VisaPage = () => {
         if (optData.I20) {
           setI20Status(optData.I20.status);
         }
-      } else if (response.status === 204) {
-        const res = await axios.post(
-          "http://localhost:4000/api/visa",
-          {
-            user: user.id,
-          },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
-        if (res.status === 200) {
-          console.log(res.data);
-          setInfo(res.data);
-        }
       }
     };
     fetchDocs();
