@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { submitOnboarding } from "../../redux/onboardingSlice";
 import { Document, Page, pdfjs } from "react-pdf";
 import FilePreviewer from "../../components/FilePreviewer";
-import { fetchUserByIdThunk } from "../../thunks/auth-thunk";
+import { fetchUserByIdThunk, updateCurrentUserThunk } from "../../thunks/auth-thunk";
 import { updateTokenStatusThunk } from "../../thunks/token-thunk";
 import { fetchPersonalInformationByUID } from "../../redux/personalInformationSlice";
 import Header from "../layout/Header";
@@ -218,6 +218,7 @@ const OnboardingPage = () => {
     e.preventDefault();
     createInfo(e);
     dispatch(updateTokenStatusThunk(user.email));
+    dispatch(updateCurrentUserThunk(user.id, { onboardingStatus: "pending" }));
   
   };
 
@@ -274,12 +275,12 @@ const OnboardingPage = () => {
               value={formData.name.firstName}
               onChange={handleNameChange}
               required
-              readOnly={onboardingStatus == "Pending"}
+              readOnly={onboardingStatus == "pending"}
               style={{
                 backgroundColor:
-                  onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                  onboardingStatus == "pending" ? "#e9e9e9" : "white",
                 outline: "none",
-                cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                cursor: onboardingStatus == "pending" ? "not-allowed" : "auto",
               }}
               className="mt-1 p-2 border rounded-md w-full"
             />
@@ -297,12 +298,12 @@ const OnboardingPage = () => {
               value={formData.name.lastName}
               onChange={handleNameChange}
               required
-              readOnly={onboardingStatus == "Pending"}
+              readOnly={onboardingStatus == "pending"}
               style={{
                 backgroundColor:
-                  onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                  onboardingStatus == "pending" ? "#e9e9e9" : "white",
                 outline: "none",
-                cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                cursor: onboardingStatus == "pending" ? "not-allowed" : "auto",
               }}
               className="mt-1 p-2 border rounded-md w-full"
             />
@@ -319,12 +320,12 @@ const OnboardingPage = () => {
               name="middleName"
               value={formData.name.middleName}
               onChange={handleNameChange}
-              readOnly={onboardingStatus == "Pending"}
+              readOnly={onboardingStatus == "pending"}
               style={{
                 backgroundColor:
-                  onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                  onboardingStatus == "pending" ? "#e9e9e9" : "white",
                 outline: "none",
-                cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                cursor: onboardingStatus == "pending" ? "not-allowed" : "auto",
               }}
               className="mt-1 p-2 border rounded-md w-full"
             />
@@ -341,12 +342,12 @@ const OnboardingPage = () => {
               name="preferredName"
               value={formData.name.preferredName}
               onChange={handleNameChange}
-              readOnly={onboardingStatus == "Pending"}
+              readOnly={onboardingStatus == "pending"}
               style={{
                 backgroundColor:
-                  onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                  onboardingStatus == "pending" ? "#e9e9e9" : "white",
                 outline: "none",
-                cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                cursor: onboardingStatus == "pending" ? "not-allowed" : "auto",
               }}
               className="mt-1 p-2 border rounded-md w-full"
             />
@@ -393,7 +394,7 @@ const OnboardingPage = () => {
                 className="absolute w-10 h-10 bottom-0 left-1/2 translate-x-7"
                 onClick={handleProfileUploadButtonClick}
                 style={{
-                  display: onboardingStatus == "Pending" ? "none" : "block",
+                  display: onboardingStatus == "pending" ? "none" : "block",
                 }}
               >
                 <path
@@ -418,13 +419,13 @@ const OnboardingPage = () => {
                 value={formData.address.aptNumber}
                 onChange={handleAddressChange}
                 placeholder="Apt Number"
-                readOnly={onboardingStatus == "Pending"}
+                readOnly={onboardingStatus == "pending"}
                 style={{
                   backgroundColor:
-                    onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                    onboardingStatus == "pending" ? "#e9e9e9" : "white",
                   outline: "none",
                   cursor:
-                    onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                    onboardingStatus == "pending" ? "not-allowed" : "auto",
                 }}
                 className="mt-1 p-2 border rounded-md"
               />
@@ -435,13 +436,13 @@ const OnboardingPage = () => {
                 value={formData.address.streetName}
                 onChange={handleAddressChange}
                 placeholder="Street Name"
-                readOnly={onboardingStatus == "Pending"}
+                readOnly={onboardingStatus == "pending"}
                 style={{
                   backgroundColor:
-                    onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                    onboardingStatus == "pending" ? "#e9e9e9" : "white",
                   outline: "none",
                   cursor:
-                    onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                    onboardingStatus == "pending" ? "not-allowed" : "auto",
                 }}
                 className="mt-1 p-2 border rounded-md"
               />
@@ -452,13 +453,13 @@ const OnboardingPage = () => {
                 value={formData.address.city}
                 onChange={handleAddressChange}
                 placeholder="City"
-                readOnly={onboardingStatus == "Pending"}
+                readOnly={onboardingStatus == "pending"}
                 style={{
                   backgroundColor:
-                    onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                    onboardingStatus == "pending" ? "#e9e9e9" : "white",
                   outline: "none",
                   cursor:
-                    onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                    onboardingStatus == "pending" ? "not-allowed" : "auto",
                 }}
                 className="mt-1 p-2 border rounded-md"
               />
@@ -469,13 +470,13 @@ const OnboardingPage = () => {
                 value={formData.address.state}
                 onChange={handleAddressChange}
                 placeholder="State"
-                readOnly={onboardingStatus == "Pending"}
+                readOnly={onboardingStatus == "pending"}
                 style={{
                   backgroundColor:
-                    onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                    onboardingStatus == "pending" ? "#e9e9e9" : "white",
                   outline: "none",
                   cursor:
-                    onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                    onboardingStatus == "pending" ? "not-allowed" : "auto",
                 }}
                 className="mt-1 p-2 border rounded-md"
               />
@@ -486,13 +487,13 @@ const OnboardingPage = () => {
                 value={formData.address.zip}
                 onChange={handleAddressChange}
                 placeholder="Zip"
-                readOnly={onboardingStatus == "Pending"}
+                readOnly={onboardingStatus == "pending"}
                 style={{
                   backgroundColor:
-                    onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                    onboardingStatus == "pending" ? "#e9e9e9" : "white",
                   outline: "none",
                   cursor:
-                    onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                    onboardingStatus == "pending" ? "not-allowed" : "auto",
                 }}
                 className="mt-1 p-2 border rounded-md"
               />
@@ -511,12 +512,12 @@ const OnboardingPage = () => {
               value={formData.phoneNumber.cellPhoneNumber}
               onChange={handlePhoneNumberChange}
               required
-              readOnly={onboardingStatus == "Pending"}
+              readOnly={onboardingStatus == "pending"}
               style={{
                 backgroundColor:
-                  onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                  onboardingStatus == "pending" ? "#e9e9e9" : "white",
                 outline: "none",
-                cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                cursor: onboardingStatus == "pending" ? "not-allowed" : "auto",
               }}
               className="mt-1 p-2 border rounded-md w-full"
             />
@@ -533,12 +534,12 @@ const OnboardingPage = () => {
               name="workPhoneNumber"
               value={formData.phoneNumber.workPhoneNumber}
               onChange={handlePhoneNumberChange}
-              readOnly={onboardingStatus == "Pending"}
+              readOnly={onboardingStatus == "pending"}
               style={{
                 backgroundColor:
-                  onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                  onboardingStatus == "pending" ? "#e9e9e9" : "white",
                 outline: "none",
-                cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                cursor: onboardingStatus == "pending" ? "not-allowed" : "auto",
               }}
               className="mt-1 p-2 border rounded-md w-full"
             />
@@ -571,12 +572,12 @@ const OnboardingPage = () => {
               value={formData.ssn}
               onChange={handleChange}
               required
-              readOnly={onboardingStatus == "Pending"}
+              readOnly={onboardingStatus == "pending"}
               style={{
                 backgroundColor:
-                  onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                  onboardingStatus == "pending" ? "#e9e9e9" : "white",
                 outline: "none",
-                cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                cursor: onboardingStatus == "pending" ? "not-allowed" : "auto",
               }}
               className="mt-1 p-2 border rounded-md w-full"
             />
@@ -594,12 +595,12 @@ const OnboardingPage = () => {
               value={formData.dateOfBirth}
               onChange={handleChange}
               required
-              readOnly={onboardingStatus == "Pending"}
+              readOnly={onboardingStatus == "pending"}
               style={{
                 backgroundColor:
-                  onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                  onboardingStatus == "pending" ? "#e9e9e9" : "white",
                 outline: "none",
-                cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                cursor: onboardingStatus == "pending" ? "not-allowed" : "auto",
               }}
               className="mt-1 p-2 border rounded-md w-full"
             />
@@ -616,12 +617,12 @@ const OnboardingPage = () => {
               value={formData.gender}
               onChange={handleChange}
               required
-              disabled={onboardingStatus == "Pending"}
+              disabled={onboardingStatus == "pending"}
               style={{
                 backgroundColor:
-                  onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                  onboardingStatus == "pending" ? "#e9e9e9" : "white",
                 outline: "none",
-                cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                cursor: onboardingStatus == "pending" ? "not-allowed" : "auto",
               }}
               className="mt-1 p-2 border rounded-md w-full"
             >
@@ -646,12 +647,12 @@ const OnboardingPage = () => {
               value={formData.workAuthorization.citizenship}
               onChange={handleWorkAuthorizationChange}
               required
-              disabled={onboardingStatus == "Pending"}
+              disabled={onboardingStatus == "pending"}
               style={{
                 backgroundColor:
-                  onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                  onboardingStatus == "pending" ? "#e9e9e9" : "white",
                 outline: "none",
-                cursor: onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                cursor: onboardingStatus == "pending" ? "not-allowed" : "auto",
               }}
               className="mt-1 p-2 border rounded-md w-full"
             >
@@ -674,13 +675,13 @@ const OnboardingPage = () => {
                 name="citizenType"
                 value={formData.workAuthorization.citizenType}
                 onChange={handleWorkAuthorizationChange}
-                disabled={onboardingStatus == "Pending"}
+                disabled={onboardingStatus == "pending"}
                 style={{
                   backgroundColor:
-                    onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                    onboardingStatus == "pending" ? "#e9e9e9" : "white",
                   outline: "none",
                   cursor:
-                    onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                    onboardingStatus == "pending" ? "not-allowed" : "auto",
                 }}
                 className="mt-1 p-2 border rounded-md w-full"
               >
@@ -707,13 +708,13 @@ const OnboardingPage = () => {
                   name="workAuthorizationType"
                   value={formData.workAuthorization.workAuthorizationType}
                   onChange={handleWorkAuthorizationChange}
-                  disabled={onboardingStatus == "Pending"}
+                  disabled={onboardingStatus == "pending"}
                   style={{
                     backgroundColor:
-                      onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                      onboardingStatus == "pending" ? "#e9e9e9" : "white",
                     outline: "none",
                     cursor:
-                      onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                      onboardingStatus == "pending" ? "not-allowed" : "auto",
                   }}
                   className="mt-1 p-2 border rounded-md w-full"
                 >
@@ -738,13 +739,13 @@ const OnboardingPage = () => {
                   value={formData.workAuthorization.startDate}
                   onChange={handleWorkAuthorizationChange}
                   required
-                  readOnly={onboardingStatus == "Pending"}
+                  readOnly={onboardingStatus == "pending"}
                   style={{
                     backgroundColor:
-                      onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                      onboardingStatus == "pending" ? "#e9e9e9" : "white",
                     outline: "none",
                     cursor:
-                      onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                      onboardingStatus == "pending" ? "not-allowed" : "auto",
                   }}
                   className="mt-1 p-2 border rounded-md w-full"
                 />
@@ -760,13 +761,13 @@ const OnboardingPage = () => {
                   value={formData.workAuthorization.endDate}
                   onChange={handleWorkAuthorizationChange}
                   required
-                  readOnly={onboardingStatus == "Pending"}
+                  readOnly={onboardingStatus == "pending"}
                   style={{
                     backgroundColor:
-                      onboardingStatus == "Pending" ? "#e9e9e9" : "white",
+                      onboardingStatus == "pending" ? "#e9e9e9" : "white",
                     outline: "none",
                     cursor:
-                      onboardingStatus == "Pending" ? "not-allowed" : "auto",
+                      onboardingStatus == "pending" ? "not-allowed" : "auto",
                   }}
                   className="mt-1 p-2 border rounded-md w-full"
                 />

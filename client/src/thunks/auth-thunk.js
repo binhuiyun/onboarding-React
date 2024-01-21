@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { login, register } from "../services/auth-service";
 import { addError, removeError } from "../redux/errorSlice";
-import { fetchUserById } from "../services/user-service";
+import { fetchUserById, updateCurrentUser } from "../services/user-service";
 
 export const loginThunk = createAsyncThunk(
   "auth/login",
@@ -39,8 +39,17 @@ export const registerThunk = createAsyncThunk(
 export const fetchUserByIdThunk = createAsyncThunk(
   "auth/fetchUserById",
   async (id) => {
-      console.log("Fetching user: ", id);  
-      const user = await fetchUserById(id);
-      return user;
-    }
+    console.log("Fetching user: ", id);
+    const user = await fetchUserById(id);
+    return user;
+  }
+);
+
+export const updateCurrentUserThunk = createAsyncThunk(
+  "auth/updateCurrentUser",
+  async (id, data) => {
+    const user = await updateCurrentUser(id, data);
+    console.log("update current user", user.onboardingStatus);
+    return user;
+  }
 );

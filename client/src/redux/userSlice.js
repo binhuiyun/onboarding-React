@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginThunk, registerThunk, fetchUserByIdThunk } from "../thunks/auth-thunk";
+import { loginThunk, registerThunk, fetchUserByIdThunk, updateCurrentUserThunk} from "../thunks/auth-thunk";
 
 export const initialState = {
   isAutenicated: false,
@@ -48,6 +48,11 @@ const currentUserSlice = createSlice({
     builder.addCase(fetchUserByIdThunk.pending, (state) => {
       state.status = "pending";
     });
+    builder.addCase(updateCurrentUserThunk.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.status = "success";
+    });
+
   },
 });
 
