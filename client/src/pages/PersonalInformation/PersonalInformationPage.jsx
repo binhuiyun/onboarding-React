@@ -47,6 +47,7 @@ const PersonalInformationPage = () => {
   ] = useState();
   const [formData, setFormData] = useState({
     name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
+    defaultProfilePicture: "",
     profilePicture: "",
     address: {
       aptNumber: "",
@@ -82,6 +83,7 @@ const PersonalInformationPage = () => {
     employment: [],
   });
   const [clicked, setClicked] = useState(false);
+  const [beforeEditFormData, setBeforeEditFormData] = useState();
 
   useEffect(() => {
     console.log("Current user: ", u_id);
@@ -156,6 +158,7 @@ const PersonalInformationPage = () => {
 
   const handlePersonalInfoEditButtonClick = () => {
     console.log("PersonalInfoEditButton clicked");
+    setBeforeEditFormData(formData);
     setOpenPersonalInfoEditModal(true);
   };
 
@@ -303,12 +306,10 @@ const PersonalInformationPage = () => {
   };
 
   const confirm = (e) => {
-    console.log(e);
-    message.success("Click on Yes");
+    setFormData(beforeEditFormData);
   };
   const cancel = (e) => {
     console.log(e);
-    message.error("Click on No");
   };
 
   const handleProfilePictureClick = () => {
@@ -318,19 +319,19 @@ const PersonalInformationPage = () => {
 
   const handleProfilePictureChange = async (e) => {
     const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("file", file);
+    const data = new FormData();
+    data.append("file", file);
     try {
       await axios
         .post(
           `http://localhost:4000/api/personalInformation/upload/profilePicture/${u_id}`,
-          formData
+          data
         )
         .then((res) => {
-          console.log("Get uploaded picture URL:", res.data.URL);
+          console.log("Upload profile picture success:", res.data);
           setFormData({
             ...formData,
-            profilePicture: res.data.URL,
+            profilePicture: res.data.buffer,
           });
         });
     } catch (err) {
@@ -1029,9 +1030,22 @@ const PersonalInformationPage = () => {
                 />
               </div>
               <div>
+                {/* TODO: NEED TO REFRESH FOR UPLODED PICTURE */}
                 <img
-                  src={formData.profilePicture}
-                  className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-[150px] h-[150px] p-1 rounded-full ring-2 ring-gray-300 object-cover"
+                  src={
+                    formData.profilePicture &&
+                    formData.profilePicture.data.length > 0
+                      ? URL.createObjectURL(
+                          new Blob(
+                            [new Uint8Array(formData.profilePicture.data)],
+                            {
+                              type: "image/png",
+                            }
+                          )
+                        )
+                      : formData.defaultProfilePicture
+                  }
+                  className="hover:cursor-pointer absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 w-[150px] h-[150px] p-1 rounded-full ring-2 ring-gray-300 object-cover"
                   onClick={handleProfilePictureClick}
                 />
                 <input
@@ -1071,7 +1085,7 @@ const PersonalInformationPage = () => {
               </span>
             </div>
             <button
-              className="text-xl text-blue-500 bold"
+              className="text-xl text-blue-500 bold hover:underline"
               onClick={handleContactInfoButtonClick}
             >
               Contact Info
@@ -1095,7 +1109,7 @@ const PersonalInformationPage = () => {
                   viewBox="0 0 24 24"
                   strokeWidth="2"
                   stroke="currentColor"
-                  className="w-6 h-6"
+                  className="w-6 h-6 hover:cursor-pointer"
                   onClick={handleEmploymentEditButtonClick}
                 >
                   <path
@@ -1161,7 +1175,7 @@ const PersonalInformationPage = () => {
                   viewBox="0 0 24 24"
                   strokeWidth="1.5"
                   stroke="currentColor"
-                  className="w-6 h-6"
+                  className="w-6 h-6 hover:cursor-pointer"
                 >
                   <path
                     strokeLinecap="round"
@@ -1246,7 +1260,7 @@ const PersonalInformationPage = () => {
                           viewBox="0 0 24 24"
                           strokeWidth="1.5"
                           stroke="currentColor"
-                          className="w-6 h-6"
+                          className="w-6 h-6 hover:cursor-pointer"
                         >
                           <path
                             strokeLinecap="round"

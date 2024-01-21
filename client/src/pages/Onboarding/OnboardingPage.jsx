@@ -353,7 +353,8 @@ const OnboardingPage = () => {
             <div className="relative">
               <img
                 src={
-                  formData.profilePicture.data
+                  formData.profilePicture.data &&
+                  formData.profilePicture.data.length > 0
                     ? URL.createObjectURL(
                         new Blob(
                           [new Uint8Array(formData.profilePicture.data)],
@@ -770,30 +771,6 @@ const OnboardingPage = () => {
                       Upload a file for work authorization:
                     </label>
                     <FilePreviewer addFile={addFile} />
-                  </div>
-                  <div className="mb-4">
-                    <label htmlFor="dateOfBirth" className="block">
-                      Date of Birth <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="date"
-                      id="dateOfBirth"
-                      name="dateOfBirth"
-                      value={formData.dateOfBirth}
-                      onChange={handleChange}
-                      required
-                      readOnly={onboardingStatus == "Pending"}
-                      style={{
-                        backgroundColor:
-                          onboardingStatus == "Pending" ? "#e9e9e9" : "white",
-                        outline: "none",
-                        cursor:
-                          onboardingStatus == "Pending"
-                            ? "not-allowed"
-                            : "auto",
-                      }}
-                      className="mt-1 p-2 border rounded-md w-full"
-                    />
                   </div>
                 </>
               )}
