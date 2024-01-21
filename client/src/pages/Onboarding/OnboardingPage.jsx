@@ -97,6 +97,14 @@ const OnboardingPage = () => {
     if (onboardingStatus == "pending") setShowModal(true);
   }, [onboardingStatus]);
 
+  useEffect(() => {
+    console.log("New emergency contact:", newEmergencyContact);
+    setFormData({
+      ...formData,
+      emergencyContact: [newEmergencyContact],
+    });
+  }, [newEmergencyContact]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({

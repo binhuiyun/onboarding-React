@@ -16,6 +16,7 @@ import {
   selectPersonalInformation,
   savePersonalInformation,
   savePersonalInformationWithEmploymentInformation,
+  savePersonalInformationWithEmergencyContact,
 } from "../../redux/personalInformationSlice";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
@@ -24,6 +25,7 @@ import axios from "axios";
 const PersonalInformationPage = () => {
   const didMountRef = useRef(false);
   const fileInputRef = useRef(null);
+  const dispatch = useDispatch();
   const u_id = localStorage.getItem("userID");
   const [loading, setLoading] = useState(true);
   const [height, setHeight] = useState();
@@ -35,16 +37,27 @@ const PersonalInformationPage = () => {
     useState(false);
   const [openEmploymentAddModal, setOpenEmploymentAddModal] = useState(false);
   const [openAddFileModal, setOpenAddFileModal] = useState(false);
-  const dispatch = useDispatch();
+  const [openEmergencyContactAddModal, setOpenEmergencyContactAddModal] =
+    useState(false);
   const [employmentData, setEmploymentData] = useState({
     visaTitle: "",
     startDate: "",
     endDate: "",
   });
+  const [emergencyContactData, setEmergencyContactData] = useState({
+    firstName: "",
+    lastName: "",
+    middleName: "",
+    email: "",
+    phone: "",
+    relationship: "",
+  });
   const [
     formDataWithEmploymentInformation,
     setFormDataWithEmploymentInformation,
   ] = useState();
+  const [formDataWithEmergencyContact, setFormDataWithEmergencyContact] =
+    useState();
   const [formData, setFormData] = useState({
     name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
     defaultProfilePicture: "",
@@ -100,7 +113,6 @@ const PersonalInformationPage = () => {
     axios
       .get("http://localhost:4000/api/visa/65a4ad3fac4b38c860962852")
       .then((res) => {
-        console.log(res.data.optReceipt);
         setDocuments(res.data.optReceipt);
       })
       .then(() => {
@@ -112,21 +124,33 @@ const PersonalInformationPage = () => {
   }, []);
 
   useEffect(() => {
-    if (didMountRef.current) {
-      console.log("Clicked ");
-      console.log(formDataWithEmploymentInformation);
-      const payload = {
-        u_id,
-        formDataWithEmploymentInformation,
-      };
-      dispatch(savePersonalInformationWithEmploymentInformation(payload)).then(
-        (res) => {
-          console.log("Saved personal information:", res.payload);
-          setFormData(res.payload);
-        }
-      );
-    } else didMountRef.current = true;
+    if (formDataWithEmploymentInformation == undefined) return;
+    const payload = {
+      u_id,
+      formDataWithEmploymentInformation,
+    };
+    dispatch(savePersonalInformationWithEmploymentInformation(payload)).then(
+      (res) => {
+        console.log("Saved personal information:", res.payload);
+        setFormData(res.payload);
+      }
+    );
   }, [formDataWithEmploymentInformation]);
+
+  useEffect(() => {
+    console.log("formDataWithEmergencyContact", formDataWithEmergencyContact);
+    if (formDataWithEmergencyContact == undefined) return;
+    const payload = {
+      u_id,
+      formDataWithEmergencyContact,
+    };
+    dispatch(savePersonalInformationWithEmergencyContact(payload)).then(
+      (res) => {
+        console.log("Saved personal information:", res.payload);
+        setFormData(res.payload);
+      }
+    );
+  }, [formDataWithEmergencyContact]);
 
   const targetRef = useRef();
   useLayoutEffect(() => {
@@ -176,10 +200,14 @@ const PersonalInformationPage = () => {
       ...employmentData,
       [name]: value,
     });
-    // setFormData({
-    //   ...formData,
-    //   employment: [employmentData],
-    // });
+  };
+
+  const handleEmergencyContactDataChange = (e) => {
+    const { name, value } = e.target;
+    setEmergencyContactData({
+      ...emergencyContactData,
+      [name]: value,
+    });
   };
 
   const handleAddressChange = (e) => {
@@ -201,22 +229,16 @@ const PersonalInformationPage = () => {
       employment: [...formData.employment, employmentData],
     });
     console.log(formData);
-
-    // console.log(formData);
-    // dispatch(saveEmploymentInformation(formData)).then((res) => {
-    //   console.log("Saved employment information:", res.payload);
-    //   setFormData(res.payload);
-    // });
-
-    // const payload = {
-    //   u_id,
-    //   employmentData,
-    // };
-    // dispatch(savePersonalInformation(payload)).then((res) => {
-    //   console.log("Saved personal information:", res.payload);
-    //   setFormData(res.payload);
-    // });
     setOpenEmploymentAddModal(false);
+  };
+
+  const handleAddEmergencyContactSaveButtonClick = (e) => {
+    console.log("AddEmergencyContactSaveButton Clicked");
+    setFormDataWithEmergencyContact({
+      ...formData,
+      emergencyContact: [...formData.emergencyContact, emergencyContactData],
+    });
+    setOpenEmergencyContactAddModal(false);
   };
 
   const handleEditInformationSaveButtonClick = (e) => {
@@ -337,6 +359,11 @@ const PersonalInformationPage = () => {
     } catch (err) {
       console.log(err);
     }
+  };
+
+  const handleEmergencyContactAddButtonClick = async (e) => {
+    console.log("EmergencyContactAddButton Clicked");
+    setOpenEmergencyContactAddModal(true);
   };
 
   if (loading) {
@@ -487,9 +514,9 @@ const PersonalInformationPage = () => {
           </div>
         </Modal>
 
-        {/* Add File Modal*/}
+        {/* Add Document Modal*/}
         <Modal
-          title="Add File"
+          title="Add Document"
           onOk={handleOk}
           onCancel={handleCancel}
           maskClosable={false}
@@ -501,6 +528,126 @@ const PersonalInformationPage = () => {
         >
           <hr style={{ margin: "8px 0" }} />
           <FileUpload />
+        </Modal>
+
+        {/* Add Emergency Contact Modal*/}
+        <Modal
+          title="Add Emergency Contact"
+          onOk={handleOk}
+          onCancel={handleCancel}
+          maskClosable={false}
+          open={openEmergencyContactAddModal}
+          footer={[
+            <Button key="cancel">Cancel</Button>,
+            <Button
+              key="save"
+              name="employmentinfosave"
+              onClick={handleAddEmergencyContactSaveButtonClick}
+            >
+              Save
+            </Button>,
+          ]}
+        >
+          <hr style={{ margin: "8px 0" }} />
+          <form className="max-w-md mx-auto" onSubmit={handleSubmit}>
+            <div className="mb-2">
+              <div className="flex space-x-4">
+                <div className="mb-4 w-1/2">
+                  <label
+                    htmlFor="firstName"
+                    className="block text-sm font-medium"
+                  >
+                    First Name
+                  </label>
+                  <input
+                    type="text"
+                    id="firstName"
+                    name="firstName"
+                    value={emergencyContactData.firstName}
+                    onChange={handleEmergencyContactDataChange}
+                    className="mt-1 p-2 border rounded-md w-full"
+                  />
+                </div>
+                <div className="mb-4 w-1/2">
+                  <label
+                    htmlFor="lastName"
+                    className="block text-sm font-medium"
+                  >
+                    Last Name
+                  </label>
+                  <input
+                    type="text"
+                    id="lastName"
+                    name="lastName"
+                    value={emergencyContactData.lastName}
+                    onChange={handleEmergencyContactDataChange}
+                    className="mt-1 p-2 border rounded-md w-full"
+                  />
+                </div>
+              </div>
+              <div className="flex space-x-4">
+                <div className="mb-4 w-1/2">
+                  <label
+                    htmlFor="middleName"
+                    className="block text-sm font-medium"
+                  >
+                    Middle Name
+                  </label>
+                  <input
+                    type="text"
+                    id="middleName"
+                    name="middleName"
+                    value={emergencyContactData.middleName}
+                    onChange={handleEmergencyContactDataChange}
+                    className="mt-1 p-2 border rounded-md w-full"
+                  />
+                </div>
+                <div className="mb-4 w-1/2">
+                  <label
+                    htmlFor="relationship"
+                    className="block text-sm font-medium"
+                  >
+                    Relationship
+                  </label>
+                  <input
+                    type="text"
+                    id="relationship"
+                    name="relationship"
+                    value={emergencyContactData.relationship}
+                    onChange={handleEmergencyContactDataChange}
+                    className="mt-1 p-2 border rounded-md w-full"
+                  />
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <label htmlFor="phone" className="block text-sm font-medium">
+                  Phone Number
+                </label>
+                <input
+                  type="text"
+                  id="phone"
+                  name="phone"
+                  value={emergencyContactData.phone}
+                  onChange={handleEmergencyContactDataChange}
+                  className="mt-1 p-2 border rounded-md w-full"
+                />
+              </div>
+              <div className="mb-4">
+                <label htmlFor="email" className="block text-sm font-medium">
+                  Email
+                </label>
+                <input
+                  type="text"
+                  id="email"
+                  name="email"
+                  value={emergencyContactData.email}
+                  onChange={handleEmergencyContactDataChange}
+                  className="mt-1 p-2 border rounded-md w-full"
+                />
+              </div>
+            </div>
+          </form>
         </Modal>
 
         {/* Add Employment Information Modal*/}
@@ -1173,14 +1320,15 @@ const PersonalInformationPage = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  strokeWidth="1.5"
+                  strokeWidth="2"
                   stroke="currentColor"
                   className="w-6 h-6 hover:cursor-pointer"
+                  onClick={handleEmergencyContactAddButtonClick}
                 >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+                    d="M12 4.5v15m7.5-7.5h-15"
                   />
                 </svg>
               </div>
@@ -1200,22 +1348,38 @@ const PersonalInformationPage = () => {
                       Phone Number
                     </th>
                     <th scope="col" className="px-12 py-3">
+                      Email
+                    </th>
+                    <th scope="col" className="px-12 py-3">
                       Relationship
                     </th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="">
-                    <th
-                      scope="row"
-                      className="px-12 py-4 font-medium whitespace-nowrap"
-                    >
-                      Jane
-                    </th>
-                    <td className="px-12 py-4">Doe</td>
-                    <td className="px-12 py-4">281-455-9170</td>
-                    <td className="px-12 py-4">Friends</td>
-                  </tr>
+                  {formData.emergencyContact.map(
+                    (emergencyContactEntry, index) => (
+                      <tr key={index} className="border-b-2">
+                        <th
+                          scope="row"
+                          className="px-12 py-4 font-medium whitespace-nowrap"
+                        >
+                          {emergencyContactEntry.firstName}
+                        </th>
+                        <td className="px-12 py-4">
+                          {emergencyContactEntry.lastName}
+                        </td>
+                        <td className="px-12 py-4">
+                          {emergencyContactEntry.phone}
+                        </td>
+                        <td className="px-12 py-4">
+                          {emergencyContactEntry.email}
+                        </td>
+                        <td className="px-12 py-4">
+                          {emergencyContactEntry.relationship}
+                        </td>
+                      </tr>
+                    )
+                  )}
                 </tbody>
               </table>
             </div>
