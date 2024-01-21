@@ -14,7 +14,7 @@ const submitOnboarding = createAsyncThunk(
     //const res2 = await addToVisaDocumentation(document, u_id, "optReceipt");
 
     if (
-      formData.citizenship === "no" &&
+      formData.workAuthorization.citizenship === "no" &&
       formData.workAuthorization.workAuthorizationType === "F1(CPT/OPT)"
     ) {
       const response = await axios.post(

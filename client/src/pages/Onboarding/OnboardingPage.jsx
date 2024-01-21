@@ -228,7 +228,7 @@ const OnboardingPage = () => {
     e.preventDefault();
     // TODO: MAY NOT BE ANY FILES
     if (
-      formData.citizenship === "no" &&
+      formData.workAuthorization.citizenship === "no" &&
       formData.workAuthorization.workAuthorizationType === "F1(CPT/OPT)"
     )
       document.append("file", optReceipt, optReceipt.name);
