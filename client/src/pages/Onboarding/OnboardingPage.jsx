@@ -22,7 +22,7 @@ const OnboardingPage = () => {
   const [loading, setLoading] = useState(true);
   const fileInputRef = useRef(null);
   const [onboardingStatus, setOnboardingStatus] = useState(null);
-  const [files, setFiles] = useState([]);
+  const [optReceipt, setOptReceipt] = useState();
   const u_id = localStorage.getItem("userID");
   const [newEmergencyContact, setNewEmergencyContact] = useState({
     firstName: "",
@@ -35,8 +35,9 @@ const OnboardingPage = () => {
   const [formData, setFormData] = useState({
     user: u_id,
     name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
-    profilePicture:
+    defaultProfilePicture:
       "https://as2.ftcdn.net/v2/jpg/05/49/98/39/1000_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.webp",
+    profilePicture: "",
     address: {
       aptNumber: "",
       streetName: "",
@@ -116,28 +117,27 @@ const OnboardingPage = () => {
   };
 
   const handleProfilePictureChange = async (e) => {
+    e.preventDefault();
     const file = e.target.files[0];
-    const formData = new FormData();
-    formData.append("file", file);
+    const data = new FormData();
+    data.append("file", file);
     try {
       await axios
         .post(
           `http://localhost:4000/api/personalInformation/create/profilePicture/${u_id}`,
-          formData
+          data
         )
         .then((res) => {
-          console.log("Get uploaded picture URL:", res.data.URL);
+          console.log("Get uploaded picture buffer:", res.data.buffer);
           setFormData({
             ...formData,
-            profilePicture: res.data.URL,
+            profilePicture: res.data.buffer,
           });
         });
     } catch (err) {
       console.log(err);
     }
-    addFile(file);
-    // TODO: SHOULD NOT BE HERE
-    // document.append("optReceipt", file, file.name);
+    //addFile(file);
   };
 
   const handleProfileUploadButtonClick = () => {
@@ -179,7 +179,7 @@ const OnboardingPage = () => {
   };
 
   const addFile = (file) => {
-    setFiles([...files, file]);
+    setOptReceipt(file);
   };
 
   const handleReferenceChange = (e) => {
@@ -206,21 +206,18 @@ const OnboardingPage = () => {
   };
 
   const handleSubmit = (e) => {
-    console.log("Emergency contact:", newEmergencyContact);
-
-    setFormData({
-      ...formData,
-      emergencyContact: [...formData.emergencyContact, newEmergencyContact],
-    });
     e.preventDefault();
+    // TODO: user is not defined
+    // dispatch(updateTokenStatusThunk(user.email));
     createInfo(e);
-    dispatch(updateTokenStatusThunk(user.email));
   };
 
   async function createInfo(e) {
     e.preventDefault();
     console.log("Form submitted:", formData);
-    document.append("file", files[0], files[0].name);
+    console.log("File submitted:", optReceipt);
+    // TODO: MAY NOT BE ANY FILES
+    document.append("file", optReceipt, optReceipt.name);
     const payload = {
       formData,
       u_id,
@@ -229,8 +226,6 @@ const OnboardingPage = () => {
     dispatch(submitOnboarding(payload)).then((res) => {
       navigate("/personal-information");
     });
-
-    // Handle form submission logic here
   }
 
   if (loading) {
@@ -357,7 +352,18 @@ const OnboardingPage = () => {
             </div>
             <div className="relative">
               <img
-                src={formData.profilePicture}
+                src={
+                  formData.profilePicture.data
+                    ? URL.createObjectURL(
+                        new Blob(
+                          [new Uint8Array(formData.profilePicture.data)],
+                          {
+                            type: "image/png",
+                          }
+                        )
+                      )
+                    : formData.defaultProfilePicture
+                }
                 alt="Profile"
                 className="mt-2 w-32 h-32 object-cover rounded-full mx-auto"
               />

@@ -52,6 +52,23 @@ const savePersonalInformation = createAsyncThunk(
   }
 );
 
+const savePersonalInformationWithEmploymentInformation = createAsyncThunk(
+  "personalInformation/savePersonalInformationWithEmploymentInformation",
+  async (payload) => {
+    const { u_id, formDataWithEmploymentInformation } = payload;
+    try {
+      console.log("Saving personal information: ", u_id);
+      const response = await axios.put(
+        `http://localhost:4000/api/personalInformation/${u_id}`,
+        formDataWithEmploymentInformation
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
 const initialState = {
   personalInformation: {
     name: {},
@@ -89,6 +106,7 @@ export {
   fetchPersonalInformationByUID,
   fetchPersonalInformationByPID,
   savePersonalInformation,
+  savePersonalInformationWithEmploymentInformation,
 };
 export const selectPersonalInformation = (state) =>
   state.personalInformation.personalInformation;

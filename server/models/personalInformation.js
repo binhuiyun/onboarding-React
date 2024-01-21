@@ -18,9 +18,12 @@ const personalInformationSchema = new Schema({
     middleName: String,
     preferredName: String,
   },
-  profilePicture: {
+  defaultProfilePicture: {
     type: String,
-    default: "https://via.placeholder.com/150",
+    default: "https://as2.ftcdn.net/v2/jpg/05/49/98/39/1000_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.webp",
+  },
+  profilePicture: {
+    type: Buffer,
   },
   address: {
     aptNumber: String,
@@ -59,8 +62,8 @@ const personalInformationSchema = new Schema({
   employment: [
     {
       visaTitle: String,
-      startDate: Date,
-      endDate: Date,
+      startDate: String,
+      endDate: String,
     },
   ],
   reference:{
