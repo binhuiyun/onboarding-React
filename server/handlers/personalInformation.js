@@ -44,13 +44,11 @@ const updatePersonalInformation = async (req, res) => {
   if (!record) {
     res.status(404).json({ message: "Personal Information not found" });
   } else {
-    const updatedPersonalInformation =
-      await PersonalInformation.findOneAndUpdate(
-        { user: u_id },
-        personalInformation
-      );
-
-    res.status(200).json(updatedPersonalInformation);
+    await PersonalInformation.findOneAndUpdate(
+      { user: u_id },
+      personalInformation
+    );
+    res.status(200).json(personalInformation);
   }
 };
 
