@@ -58,6 +58,7 @@ exports.register = async function (req, res, next) {
   try {
     let user = await db.User.create(req.body);
     let { id, username } = user;
+    console.log("register", username);
     let token = jwt.sign(
       {
         id,

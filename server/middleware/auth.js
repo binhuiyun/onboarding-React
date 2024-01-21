@@ -3,28 +3,28 @@ const db = require('../models');
 const express = require('express');
 const router = express.Router();
 
-exports.tokenRequired =  async (req, res, next) => {
-  try {
-  const token = req.headers.authorization.split(' ')[1]; // Bearer token
-  console.log("token", token);
-  const decoded = await jwt.verify(token, process.env.JWT_SECRET_KEY);
-  if (decoded) {
-    req.user = decoded.user;
-    console.log("user found", req.user);
-    return next();
-  } else {
-    return next({
-      status: 401,
-      message: 'Token not found'
-    });
-  }
-}catch (err) {
-  return next({
-    status: 401,
-    message: 'Token not valid'
-  });
-}
-};
+// exports.tokenRequired =  async (req, res, next) => {
+//   try {
+//   const token = req.headers.authorization.split(' ')[1]; // Bearer token
+//   console.log("token", token);
+//   const decoded = await jwt.verify(token, process.env.JWT_SECRET_KEY);
+//   if (decoded) {
+//     req.user = decoded.user;
+//     console.log("user found", req.user);
+//     return next();
+//   } else {
+//     return next({
+//       status: 401,
+//       message: 'Token not found'
+//     });
+//   }
+// }catch (err) {
+//   return next({
+//     status: 401,
+//     message: 'Token not valid'
+//   });
+// }
+// };
 
 
 
@@ -32,6 +32,7 @@ exports.tokenRequired =  async (req, res, next) => {
 exports.loginRequired = async function (req, res, next) {
   try {
     const token = req.headers.authorization.split(' ')[1]; // Bearer token
+    console.log("login required", token);
     const decoded = await jwt.verify(token, process.env.JWT_SECRET_KEY);
     if (decoded) {
       return next();
