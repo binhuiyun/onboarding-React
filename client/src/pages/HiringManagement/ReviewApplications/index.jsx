@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, Col, Row , Button} from "antd";
 import { useNavigate } from "react-router-dom";
-import  Header from "../../../components/Header";
+import HRHeader from "../../layout/HRHeader";
 
 const ReviewApplications = () => {
   const navigate = useNavigate();
@@ -16,7 +16,7 @@ const ReviewApplications = () => {
   }
   return (
     <>
-      <Header />
+      <HRHeader />
       <h1>ReviewApplications</h1>
       <Row gutter={16}>
         <Col span={8}>
