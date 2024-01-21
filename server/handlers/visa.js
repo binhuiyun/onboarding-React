@@ -109,7 +109,7 @@ const getHrSideData = async (req, res) => {
         model["I983"].status === "rejected" ||
         model["I20"].status === "rejected"
       ) {
-        nextStep = "Reupload the rejected file";
+        nextStep = "Re-Upload the rejected file";
         action = "send notification";
       }
 

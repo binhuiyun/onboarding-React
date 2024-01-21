@@ -11,7 +11,7 @@ const VisaHrPage = () => {
   // Table for IN PROGRESS
   const [searchText, setSearchText] = useState("");
   const pagination = {
-    pageSize: 1,
+    pageSize: 5,
   };
   const columns1 = [
     {
@@ -244,7 +244,6 @@ const VisaHrPage = () => {
       };
     }
   );
-  console.log(dataSourceInProgress);
 
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
