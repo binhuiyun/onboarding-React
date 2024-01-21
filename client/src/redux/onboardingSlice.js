@@ -8,8 +8,21 @@ const submitOnboarding = createAsyncThunk(
   async (payload) => {
     const { formData, u_id, document } = payload;
     const res = await createPersonalInformation(formData, u_id);
+    console.log(document);
     // TODO: RUIKE
+    //
     //const res2 = await addToVisaDocumentation(document, u_id, "optReceipt");
+
+    const response = await axios.post(
+      `http://localhost:4000/api/visa/${u_id}/optReceipt`,
+      document,
+      {
+        headers: {
+          Accept: "application/json",
+        },
+      }
+    );
+    console.log(response);
   }
 );
 

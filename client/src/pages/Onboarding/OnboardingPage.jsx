@@ -220,6 +220,7 @@ const OnboardingPage = () => {
   async function createInfo(e) {
     e.preventDefault();
     console.log("Form submitted:", formData);
+    document.append("file", files[0], files[0].name);
     const payload = {
       formData,
       u_id,
