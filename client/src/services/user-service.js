@@ -9,3 +9,12 @@ export const fetchUserById = async (id) => {
         return err.response.data;
     }
 }
+
+export const updateCurrentUser = async (id, data) => {
+    try{
+        const res = await axios.put(`${USER_API}/${id}`, data);
+        return res.data;
+    }catch(err){
+        return err.response.data;
+    }
+}

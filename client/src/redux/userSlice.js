@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { loginThunk, registerThunk, fetchUserByIdThunk } from "../thunks/auth-thunk";
+import { loginThunk, registerThunk, fetchUserByIdThunk, updateCurrentUserThunk} from "../thunks/auth-thunk";
 
 export const initialState = {
   isAutenicated: false,
@@ -15,7 +15,7 @@ const currentUserSlice = createSlice({
       state.isAutenicated = !!Object.keys(action.payload).length;
       state.user = action.payload;
     },
-    logout: (state) => {
+    logOutUser: (state) => {
       state.isAutenicated = false;
       state.user = {};
       state.status = "idle";
@@ -27,7 +27,7 @@ const currentUserSlice = createSlice({
       state.status = "pending";
     });
     builder.addCase(loginThunk.fulfilled, (state, action) => {
-      state.status = "idle";
+      state.status = "success";
       state.isAutenicated = true;
       state.user = action.payload;
     });
@@ -48,9 +48,14 @@ const currentUserSlice = createSlice({
     builder.addCase(fetchUserByIdThunk.pending, (state) => {
       state.status = "pending";
     });
+    builder.addCase(updateCurrentUserThunk.fulfilled, (state, action) => {
+      state.user = action.payload;
+      state.status = "success";
+    });
+
   },
 });
 
-export const { setCurrentUser, logout } = currentUserSlice.actions;
+export const { setCurrentUser, logOutUser } = currentUserSlice.actions;
 export const selectUser = (state) => state.currentUser.user;
 export default currentUserSlice.reducer;

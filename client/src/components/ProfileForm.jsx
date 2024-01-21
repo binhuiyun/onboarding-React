@@ -25,8 +25,9 @@ const { TextArea } = Input;
 const ProfileForm = ({employeeProfile}) => {
 
 
-  console.log(employeeProfile.name);
+ // console.log(employeeProfile.name);
   return (
+    employeeProfile && (
     <>
       <div className="flex flex-col items-center mt-6">
         <Form
@@ -123,7 +124,7 @@ const ProfileForm = ({employeeProfile}) => {
         </Form>
       </div>
     </>
-  );
+  ));
 };
 
 export default ProfileForm;
