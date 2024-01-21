@@ -249,7 +249,7 @@ const OnboardingPage = () => {
         </p>
       </Modal>
 
-      <Header />
+      {/* <Header /> */}
       {onboardingStatus == "pending" && (
         <ProfileForm personalInformation={formData} />
       )}
