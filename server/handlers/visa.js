@@ -1,5 +1,9 @@
 const { visaModel } = require("../models/visaDocuments");
 const PersonalInformation = require("../models/personalInformation");
+const sendmail = require("sendmail")({
+  smtpPort: 465,
+});
+
 const getAllVisa = async (req, res) => {
   try {
     const visaDoc = await visaModel.find();
@@ -155,12 +159,13 @@ const getHrSideData = async (req, res) => {
       }
 
       if (profileData) {
-        const { name, workAuthorization } = profileData;
+        const { name, workAuthorization, email } = profileData;
         const data = {
           id: id,
           firstName: name.firstName,
           lastName: name.lastName,
           name: `${name.firstName} ${name.lastName}`,
+          email: email,
           preferredName: name.preferredName,
           middleName: name.middleName,
           Work_Authorization: {
@@ -192,6 +197,21 @@ const getHrSideData = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+const sendNotification = async (req, res) => {
+  const { to, subject, text } = req.body;
+  sendmail(
+    {
+      from: "no-reply@chuwaamerica.com",
+      to: to,
+      subject: subject,
+      html: text,
+    },
+    function (err, reply) {
+      if (err) console.log(err && err.stack);
+      else res.status(200);
+    }
+  );
+};
 
 module.exports = {
   createVisaModel,
@@ -202,4 +222,5 @@ module.exports = {
   getHrSideData,
   addHrFeedback,
   approveFile,
+  sendNotification,
 };

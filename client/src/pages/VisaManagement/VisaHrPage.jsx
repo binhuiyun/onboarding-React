@@ -65,7 +65,10 @@ const VisaHrPage = () => {
               fileType={newAction.fileType}
             />
           ) : (
-            <SendNotification notification={newAction.Next_Step} />
+            <SendNotification
+              email={newAction.email}
+              notification={newAction.notification}
+            />
           )}
         </>
       ),
@@ -202,6 +205,7 @@ const VisaHrPage = () => {
         fileToDealName,
         preferredName,
         middleName,
+        email,
       },
       index
     ) => {
@@ -224,6 +228,7 @@ const VisaHrPage = () => {
           message: "send notification",
           id: id,
           notification: Next_Step,
+          email: email,
         };
       }
       return {

@@ -132,8 +132,6 @@ const OnboardingPage = () => {
       ...formData,
       profilePicture: URL.createObjectURL(file),
     });
-    addFile(file);
-    document.append("optReceipt", file, file.name);
   };
 
   const handleProfileUploadButtonClick = () => {
@@ -218,6 +216,7 @@ const OnboardingPage = () => {
   async function createInfo(e) {
     e.preventDefault();
     console.log("Form submitted:", formData);
+    document.append("file", files[0], files[0].name);
     const payload = {
       formData,
       u_id,
