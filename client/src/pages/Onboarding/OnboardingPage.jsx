@@ -5,7 +5,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { submitOnboarding } from "../../redux/onboardingSlice";
 import { Document, Page, pdfjs } from "react-pdf";
 import FilePreviewer from "../../components/FilePreviewer";
-import { fetchUserByIdThunk, updateCurrentUserThunk } from "../../thunks/auth-thunk";
+import {
+  fetchUserByIdThunk,
+  updateCurrentUserThunk,
+} from "../../thunks/auth-thunk";
 import { updateTokenStatusThunk } from "../../thunks/token-thunk";
 import { fetchPersonalInformationByUID } from "../../redux/personalInformationSlice";
 import Header from "../layout/Header";
@@ -25,7 +28,7 @@ const OnboardingPage = () => {
  // const {application} = useSelector((state) => state.application);
   const [optReceipt, setOptReceipt] = useState();
   const u_id = localStorage.getItem("userID");
-  const {user }= useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const [newEmergencyContact, setNewEmergencyContact] = useState({
     firstName: "",
     lastName: "",
@@ -227,10 +230,12 @@ const OnboardingPage = () => {
 
   async function createInfo(e) {
     e.preventDefault();
-    console.log("Form submitted:", formData);
-    console.log("File submitted:", optReceipt);
     // TODO: MAY NOT BE ANY FILES
-    document.append("file", optReceipt, optReceipt.name);
+    if (
+      formData.workAuthorization.citizenship === "no" &&
+      formData.workAuthorization.workAuthorizationType === "F1(CPT/OPT)"
+    )
+      document.append("file", optReceipt, optReceipt.name);
     const payload = {
       formData,
       u_id,

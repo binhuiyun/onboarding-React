@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import { fetchPersonalInformationByUID } from "../../redux/personalInformationSlice";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
-import { Avatar, Menu, Dropdown,Space } from "antd";
+import { Avatar, Menu, Dropdown, Space } from "antd";
 import {
   UserOutlined,
   SolutionOutlined,
@@ -37,13 +37,7 @@ const Header = () => {
   const items = [
     {
       key: "1",
-      label: (
-        <a
-          href=""
-        >
-          Log Out
-        </a>
-      ),
+      label: <a href="">Log Out</a>,
     },
   ];
 
@@ -67,12 +61,12 @@ const Header = () => {
             Visa Status
           </button>
           <div className="pl-14">
-            <Dropdown menu={{ items }}  placement="bottom" arrow>
+            {/* <Dropdown menu={{ items }} placement="bottom" arrow>
               <img
                 className="p-0.5 w-[40px] h-[40px] rounded-full ring-1 ring-black object-cover"
                 src={avatar}
               />
-            </Dropdown>
+            </Dropdown> */}
           </div>
         </div>
       </header>

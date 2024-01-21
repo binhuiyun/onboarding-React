@@ -63,11 +63,11 @@ const ReviewAction = (props) => {
             </div>
           </Popover>
         )}
-        <div className="">
+        <div className="ml-8">
           {filter === "IN PROGRESS" && (
             <Button
               type="primary"
-              className="ml-8 mr-2 h-8 w-20 text-geekblue"
+              className="mr-2 h-8 w-20 sm:mb-2"
               style={{ color: "#597ef7" }}
               ghost
               onClick={handleApprove}
