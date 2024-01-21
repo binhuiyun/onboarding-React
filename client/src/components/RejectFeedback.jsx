@@ -37,7 +37,7 @@ const RejectFeedback = (props) => {
         <Button
           type="primary"
           onClick={showModal}
-          className="h-8 w-20"
+          className="h-8 w-18"
           danger
           ghost
         >

@@ -266,7 +266,7 @@ const VisaHrPage = () => {
             name="filter"
             id="filter"
             onChange={handleFilterChange}
-            className="py-3 px-2 bg-slate-200 text-geekblue rounded-md shadow-md"
+            className="py-3 px-2 bg-slate-200 text-geekblue rounded-md shadow-md mb-16"
           >
             <option value="IN PROGRESS">IN PROGRESS</option>
             <option value="ALL">ALL</option>
@@ -277,13 +277,13 @@ const VisaHrPage = () => {
             <Table
               columns={columns1}
               dataSource={dataSourceInProgress}
-              className="w-[80%]"
+              className="w-[90%]"
             />
           ) : (
             <Table
               columns={columns2}
               dataSource={dataSourceAll}
-              className="w-[80%]"
+              className="w-[90%]"
             />
           )}
         </div>

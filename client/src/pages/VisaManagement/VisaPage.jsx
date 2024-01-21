@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
 import FileUploader from "../../components/FileUploader";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
 
 const VisaPage = () => {
-  const { user } = useSelector((state) => state.user);
-  console.log("here is user", user.id);
+  let user = {};
+  user = {
+    id: localStorage.getItem("userID"),
+  };
+  console.log(user.id);
+  // const [userInfo, setUserInfo] = useState()
   const [info, setInfo] = useState({});
   const [optReceiptStatus, setOptReceiptStatus] = useState("never uploaded");
   const [optEADtStatus, setOptEADtStatus] = useState("never uploaded");
@@ -15,6 +19,7 @@ const VisaPage = () => {
   const [I20Status, setI20Status] = useState("never uploaded");
   useEffect(() => {
     const fetchDocs = async () => {
+      // dispatch(fetchUserByIdThunk(user.id)).then()
       const response = await axios.get(
         `http://localhost:4000/api/visa/${user.id}`,
         {
@@ -63,7 +68,7 @@ const VisaPage = () => {
     <>
       <Header />
       {/* TODO: change to real name */}
-      <div className="text-4xl text-slate-400 mx-20 my-5">{`Hi, alice`}</div>
+      <div className="text-4xl text-slate-400 mx-20 my-5">{`Hi, welcome to documents management`}</div>
       <div className="text-3xl text-geekblue mx-20 mb-10">
         Visa Management System
       </div>
