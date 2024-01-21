@@ -25,7 +25,11 @@ const FileUploader = ({ title, fileType, status, feedback, next, prev }) => {
     <>
       {isPopUp &&
         createPortal(
-          <PopUp handleUpload={handleUpload} fileType={fileType} />,
+          <PopUp
+            handleUpload={handleUpload}
+            fileType={fileType}
+            setIsPopUp={setIsPopUp}
+          />,
           document.body
         )}
       <div className="w-[60%] py-4 px-4 shadow-md my-4 flex rounded-lg hover:scale-[101%]">
