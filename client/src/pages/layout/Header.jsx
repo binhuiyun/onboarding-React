@@ -36,8 +36,9 @@ const Header = (props) => {
     navigate("/visa");
   };
 
+  //TODO: navigate to wrong route?
   const handleEmployeeProfilesButtonClick = () => {
-    navigate("/personal-information");
+    navigate("/employee-profile");
   };
 
   const handleVisaStatusManagementButtonClick = () => {
@@ -93,7 +94,7 @@ const Header = (props) => {
               onClick={handleEmployeeProfilesButtonClick}
               className="px-2 border-b-2 border-transparent transition duration-300 hover:border-black"
             >
-              Employee Profiles
+              Employee Profile
             </button>
             <button
               type="button"

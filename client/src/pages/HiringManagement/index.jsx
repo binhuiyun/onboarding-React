@@ -42,6 +42,7 @@ export default function HiringManagement() {
   const [selectedRowKey, setSelectedRowKey] = useState(null);
   const [selectedEmail, setSelectedEmail] = useState("");
   const [selectedName, setSelectedName] = useState("");
+  const { user } = useSelector((state) => state.user);
   const onRowClick = (record) => {
     setSelectedRowKey(record.key);
     setSelectedEmail(record.email);
@@ -71,7 +72,7 @@ export default function HiringManagement() {
 
   return (
     <div>
-      <Header />
+      <Header  user={user}/>
       <h1>Hiring Management</h1>
       <Table
         rowSelection={rowSelection}
