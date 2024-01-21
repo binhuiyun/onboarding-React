@@ -81,10 +81,46 @@ const uploadProfilePicture = async (req, res) => {
   }
 };
 
+const deleteEmploymentbyVisaTitle = async (req, res) => {
+  try {
+    const visaTitle = req.params.visaTitle;
+    const p_id = req.body._id;
+
+    const personalInformation = await PersonalInformation.findById(p_id);
+
+    if (!personalInformation) {
+      return res
+        .status(404)
+        .json({ message: "Personal Information not found" });
+    }
+
+    const updatedEmployment = personalInformation.employment.filter(
+      (employment) => employment.visaTitle !== visaTitle
+    );
+
+    console.log(updatedEmployment);
+
+    const updatedPersonalInformation =
+      await PersonalInformation.findOneAndUpdate(
+        { _id: p_id },
+        { employment: updatedEmployment },
+        { new: true } // Ensure you get the updated document in the response
+      );
+
+    console.log("updatedPersonalInformation", updatedPersonalInformation);
+
+    res.status(200).json(updatedPersonalInformation);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 module.exports = {
   createPersonalInformation,
   getPersonalInformation,
   updatePersonalInformation,
   uploadProfilePicture,
   createProfilePictureBuffer,
+  deleteEmploymentbyVisaTitle,
 };
