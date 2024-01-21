@@ -29,7 +29,6 @@ const OnboardingPage = () => {
  // const {application} = useSelector((state) => state.application);
   const [optReceipt, setOptReceipt] = useState();
   const u_id = localStorage.getItem("userID");
-  const { user } = useSelector((state) => state.user);
   const [newEmergencyContact, setNewEmergencyContact] = useState({
     firstName: "",
     lastName: "",

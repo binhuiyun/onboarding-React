@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate, createSearchParams, Link } from "react-router-dom";
-
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
@@ -28,7 +27,7 @@ const EmployeeProfilePage = () => {
   const [sortedEmployees, setSortedEmployees] = useState([]);
   const [employeeProfile, setEmployeeProfile] = useState();
   const navigate = useNavigate();
-
+  const {user} = useSelector((state) => state.user);
   const toggleSider = () => {
     setCollapsed(!collapsed);
   };
@@ -96,7 +95,7 @@ const EmployeeProfilePage = () => {
 
   return (
     <Layout className="w-screen h-screen overflow-auto">
-      <Header />
+      <Header user={user}/>
       <Layout className="bg-white">
         <Sider
           trigger={triggerIcon}

@@ -47,7 +47,6 @@ export default function HiringManagement() {
   const [selectedRowKey, setSelectedRowKey] = useState(null);
   const [selectedEmail, setSelectedEmail] = useState("");
   const [selectedName, setSelectedName] = useState("");
-  const { user } = useSelector((state) => state.user);
   const onRowClick = (record) => {
     setSelectedRowKey(record.key);
     setSelectedEmail(record.email);
