@@ -13,6 +13,7 @@ export const fetchUserById = async (id) => {
 export const updateCurrentUser = async (id, data) => {
     try{
         const res = await axios.put(`${USER_API}/${id}`, data);
+        console.log("update current user service", res.data.onboardingStatus);
         return res.data;
     }catch(err){
         return err.response.data;
