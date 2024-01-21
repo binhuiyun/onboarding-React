@@ -8,6 +8,7 @@ const {
   getPersonalInformation,
   createPersonalInformation,
   addProfilePicture,
+  createProfilePictureURL,
 } = require("../handlers/personalInformation");
 
 router.get("/:id", getPersonalInformation);
@@ -18,5 +19,9 @@ router.post(
   upload.single("file"),
   addProfilePicture
 );
-
+router.post(
+  "/create/profilePicture/:id",
+  upload.single("file"),
+  createProfilePictureURL
+);
 module.exports = router;

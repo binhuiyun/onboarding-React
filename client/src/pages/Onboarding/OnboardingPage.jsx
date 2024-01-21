@@ -1,6 +1,5 @@
 // UserProfileForm.js
 import React, { useState, useRef, useEffect } from "react";
-import { createPersonalInformation } from "../../services/personalInformation-service";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { submitOnboarding } from "../../redux/onboardingSlice";
@@ -12,6 +11,7 @@ import { fetchPersonalInformationByUID } from "../../redux/personalInformationSl
 import Header from "../layout/Header";
 import { Form, Input, Button, Select, Upload, message, Modal } from "antd";
 import ProfileForm from "../../components/ProfileForm";
+import axios from "axios";
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   "pdfjs-dist/build/pdf.worker.min.js",
   import.meta.url
@@ -21,7 +21,7 @@ const OnboardingPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const fileInputRef = useRef(null);
-  const [onboardingStatus, setOnboardingStatus] = useState("");
+  const [onboardingStatus, setOnboardingStatus] = useState(null);
   const [files, setFiles] = useState([]);
   const u_id = localStorage.getItem("userID");
   const [newEmergencyContact, setNewEmergencyContact] = useState({
@@ -64,21 +64,11 @@ const OnboardingPage = () => {
       email: "",
       relationship: "",
     },
-    emergencyContact: [
-      {
-        firstName: "",
-        lastName: "",
-        middleName: "",
-        phone: "",
-        email: "",
-        relationship: "",
-      },
-    ],
+    emergencyContact: [],
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const document = new FormData();
-  const [data, setData] = useState(null);
 
   useEffect(() => {
     console.log("Current user: ", u_id);
@@ -103,7 +93,7 @@ const OnboardingPage = () => {
   }, []);
 
   useEffect(() => {
-    setShowModal(true);
+    if (onboardingStatus == "pending") setShowModal(true);
   }, [onboardingStatus]);
 
   const handleChange = (e) => {
@@ -125,14 +115,29 @@ const OnboardingPage = () => {
     });
   };
 
-  const handleFileChange = (e) => {
+  const handleProfilePictureChange = async (e) => {
     const file = e.target.files[0];
-    setFormData({
-      ...formData,
-      profilePicture: URL.createObjectURL(file),
-    });
+    const formData = new FormData();
+    formData.append("file", file);
+    try {
+      await axios
+        .post(
+          `http://localhost:4000/api/personalInformation/create/profilePicture/${u_id}`,
+          formData
+        )
+        .then((res) => {
+          console.log("Get uploaded picture URL:", res.data.URL);
+          setFormData({
+            ...formData,
+            profilePicture: res.data.URL,
+          });
+        });
+    } catch (err) {
+      console.log(err);
+    }
     addFile(file);
-    document.append("optReceipt", file, file.name);
+    // TODO: SHOULD NOT BE HERE
+    // document.append("optReceipt", file, file.name);
   };
 
   const handleProfileUploadButtonClick = () => {
@@ -190,6 +195,7 @@ const OnboardingPage = () => {
 
   const handleEmergencyContactChange = (e) => {
     const { name, value } = e.target;
+    console.log("Emergency contact:", newEmergencyContact);
     setNewEmergencyContact({
       ...newEmergencyContact,
       [name]: value,
@@ -204,10 +210,7 @@ const OnboardingPage = () => {
 
     setFormData({
       ...formData,
-      emergencyContact: [
-        ...formData.emergencyContact,
-        { ...newEmergencyContact },
-      ],
+      emergencyContact: [...formData.emergencyContact, newEmergencyContact],
     });
     e.preventDefault();
     createInfo(e);
@@ -347,7 +350,7 @@ const OnboardingPage = () => {
           {/* Profile Picture */}
           <div className=" flex flex-col mb-4">
             <div className="flex flew-row justify-between">
-              <label htmlFor="profilePicture" className="block  ">
+              <label htmlFor="profilePicture" className="block">
                 Profile Picture
               </label>
             </div>
@@ -361,7 +364,7 @@ const OnboardingPage = () => {
                 type="file"
                 ref={fileInputRef}
                 accept="image/*"
-                onChange={handleFileChange}
+                onChange={handleProfilePictureChange}
                 style={{ display: "none" }}
               />
               <svg
@@ -820,6 +823,7 @@ const OnboardingPage = () => {
                 onChange={handleReferenceChange}
                 placeholder="First Name"
                 className="mt-1 p-2 border rounded-md"
+                required
               />
               <input
                 type="text"
@@ -829,6 +833,7 @@ const OnboardingPage = () => {
                 onChange={handleReferenceChange}
                 placeholder="Last Name"
                 className="mt-1 p-2 border rounded-md"
+                required
               />
               <input
                 type="text"
@@ -865,6 +870,7 @@ const OnboardingPage = () => {
                 onChange={handleReferenceChange}
                 placeholder="Relationship"
                 className="mt-1 p-2 border rounded-md"
+                required
               />
             </div>
           </div>
@@ -881,6 +887,7 @@ const OnboardingPage = () => {
                 onChange={handleEmergencyContactChange}
                 placeholder="First Name"
                 className="mt-1 p-2 border rounded-md"
+                required
               />
               <input
                 type="text"
@@ -890,6 +897,7 @@ const OnboardingPage = () => {
                 onChange={handleEmergencyContactChange}
                 placeholder="Last Name"
                 className="mt-1 p-2 border rounded-md"
+                required
               />
               <input
                 type="text"
@@ -926,23 +934,10 @@ const OnboardingPage = () => {
                 onChange={handleEmergencyContactChange}
                 placeholder="Relationship"
                 className="mt-1 p-2 border rounded-md"
+                required
               />
             </div>
           </div>
-
-          {/* Summary of Uploaded Files */}
-          {files != "" && (
-            <div className="mb-4">
-              <label htmlFor="summaryOfUploadedFiles" className="block  ">
-                Summary of Uploaded Files
-                <div className="flex flex-row items-center justify-between mt-1 p-2 border rounded-md w-full">
-                  {files.map((i) => {
-                    return <span>{i.name}</span>;
-                  })}
-                </div>
-              </label>
-            </div>
-          )}
 
           {/* Submit Button */}
           <div className="mt-4">

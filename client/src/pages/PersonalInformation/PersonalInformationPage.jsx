@@ -32,7 +32,6 @@ const PersonalInformationPage = () => {
   const [openEmploymentEditModal, setOpenEmploymentEditModal] = useState(false);
   const [openAddFileModal, setOpenAddFileModal] = useState(false);
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.user);
   const [formData, setFormData] = useState({
     name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
     profilePicture: "",
@@ -45,7 +44,7 @@ const PersonalInformationPage = () => {
     },
     phoneNumber: {
       cellPhoneNumber: "",
-      workPhoneNumbe: "",
+      workPhoneNumber: "",
     },
     email: "",
     ssn: "",
@@ -81,12 +80,6 @@ const PersonalInformationPage = () => {
       }
     });
   }, []);
-
-  useEffect(() => {
-    // Perform actions whenever formData changes
-    console.log("formData has changed:", formData);
-    // You can add more logic here
-  }, [formData]); // Dependency array with formData
 
   const targetRef = useRef();
   useLayoutEffect(() => {
@@ -160,7 +153,6 @@ const PersonalInformationPage = () => {
   };
 
   const handleSave = (e) => {
-    console.log(e);
     setOpenEmploymentEditModal(false);
   };
 
@@ -191,7 +183,6 @@ const PersonalInformationPage = () => {
   };
 
   const handleChange = (e) => {
-    console.log(e.target);
     const { name, value } = e.target;
 
     if (
@@ -207,7 +198,6 @@ const PersonalInformationPage = () => {
           [name]: value,
         },
       });
-      console.log(formData);
     } else if (name == "cellPhoneNumber" || name == "workPhoneNumber") {
       setFormData({
         ...formData,
@@ -295,7 +285,6 @@ const PersonalInformationPage = () => {
 
   const handleProfilePictureChange = async (e) => {
     const file = e.target.files[0];
-    console.log(file);
     const formData = new FormData();
     formData.append("file", file);
     try {
@@ -305,16 +294,15 @@ const PersonalInformationPage = () => {
           formData
         )
         .then((res) => {
-          console.log("Uploaded profile picture:", res.data);
+          console.log("Get uploaded picture URL:", res.data.URL);
+          setFormData({
+            ...formData,
+            profilePicture: res.data.URL,
+          });
         });
     } catch (err) {
       console.log(err);
     }
-
-    // setFormData({
-    //   ...formData,
-    //   profilePicture: file,
-    // });
   };
 
   return (

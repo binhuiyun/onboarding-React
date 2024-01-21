@@ -1,6 +1,6 @@
 import React from "react";
 import { fetchPersonalInformationByUID } from "../../redux/personalInformationSlice";
-import { useEffect } from "react";
+import { useEffect,useState } from "react";
 
 const Header = () => {
   const [avatar, setAvatar] = useState(
