@@ -9,6 +9,7 @@ const {
   createPersonalInformation,
   uploadProfilePicture,
   createProfilePictureBuffer,
+  deleteEmploymentbyVisaTitle,
 } = require("../handlers/personalInformation");
 
 router.get("/:id", getPersonalInformation);
@@ -24,4 +25,6 @@ router.post(
   upload.single("file"),
   createProfilePictureBuffer
 );
+router.put("/delete/employment/:visaTitle", deleteEmploymentbyVisaTitle);
+
 module.exports = router;
