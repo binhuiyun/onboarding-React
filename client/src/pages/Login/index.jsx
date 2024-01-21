@@ -27,16 +27,16 @@ export default function LogIn() {
 
   // TODO: REDIRECT TO ONBOARDING OR PERSONAL INFORMATION PAGE  
   const onSubmit = (data) => {
-    dispatch(loginThunk(data)).then(() => {
-   //   if (res.payload.token) {
+    dispatch(loginThunk(data)).then((res) => {
+     if (res.payload.token) {
       //  dispatch(fetchUserByIdThunk(res.payload.token));
-        if (user.username === "hr") {
+        if (res.payload.username === "hr") {
           navigate(location.state?.from || "/hiring-management");
         } else {
           navigate(location.state?.from || "/onboarding");
         }
       }
-    );
+    });
   };
 
   return (

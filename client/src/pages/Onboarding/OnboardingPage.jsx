@@ -216,9 +216,9 @@ const OnboardingPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // TODO: user is not defined
-    // dispatch(updateTokenStatusThunk(user.email));
     createInfo(e);
+    dispatch(updateTokenStatusThunk(user.email));
+  
   };
 
   async function createInfo(e) {
