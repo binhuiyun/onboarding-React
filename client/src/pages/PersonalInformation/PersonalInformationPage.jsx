@@ -23,16 +23,22 @@ import axios from "axios";
 const PersonalInformationPage = () => {
   const fileInputRef = useRef(null);
   const u_id = localStorage.getItem("userID");
+  const [loading, setLoading] = useState(true);
   const [height, setHeight] = useState();
+  const [documents, setDocuments] = useState();
   const [openPersonalInfoEditModal, setOpenPersonalInfoEditModal] =
     useState(false);
   const [openContactInfoModal, setOpenContactInfoModal] = useState(false);
   const [openContactInfoEditModal, setOpenContactInfoEditModal] =
     useState(false);
-  const [openEmploymentEditModal, setOpenEmploymentEditModal] = useState(false);
+  const [openEmploymentAddModal, setOpenEmploymentAddModal] = useState(false);
   const [openAddFileModal, setOpenAddFileModal] = useState(false);
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.user);
+  const [employmentData, setEmploymentData] = useState({
+    visaTitle: "",
+    startDate: "",
+    endDate: "",
+  });
   const [formData, setFormData] = useState({
     name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
     profilePicture: "",
@@ -45,7 +51,7 @@ const PersonalInformationPage = () => {
     },
     phoneNumber: {
       cellPhoneNumber: "",
-      workPhoneNumbe: "",
+      workPhoneNumber: "",
     },
     email: "",
     ssn: "",
@@ -67,7 +73,9 @@ const PersonalInformationPage = () => {
         relationship: "",
       },
     ],
+    employment: [],
   });
+const [clicked, setClicked] = useState(false);
 
   useEffect(() => {
     console.log("Current user: ", u_id);
@@ -80,13 +88,25 @@ const PersonalInformationPage = () => {
         setFormData(res.payload);
       }
     });
+    // TODO: handle more documents
+    axios
+      .get("http://localhost:4000/api/visa/65a4ad3fac4b38c860962852")
+      .then((res) => {
+        console.log(res.data.optReceipt);
+        setDocuments(res.data.optReceipt);
+      })
+      .then(() => {
+        setLoading(false);
+      });
   }, []);
 
   useEffect(() => {
-    // Perform actions whenever formData changes
-    console.log("formData has changed:", formData);
-    // You can add more logic here
-  }, [formData]); // Dependency array with formData
+    console.log("Clicked ");
+    setFormData({
+      ...formData,
+      employment: [...formData.employment, employmentData],
+    });
+  }, [clicked]);
 
   const targetRef = useRef();
   useLayoutEffect(() => {
@@ -102,13 +122,13 @@ const PersonalInformationPage = () => {
     setOpenPersonalInfoEditModal(false);
     setOpenContactInfoModal(false);
     setOpenContactInfoEditModal(false);
-    setOpenEmploymentEditModal(false);
+    setOpenEmploymentAddModal(false);
     setOpenAddFileModal(false);
   };
 
   const handleEmploymentEditButtonClick = () => {
-    console.log("EmploymentEditButton clicked");
-    setOpenEmploymentEditModal(true);
+    console.log("AddEmploymentButton clicked");
+    setOpenEmploymentAddModal(true);
   };
 
   const handleContactInfoButtonClick = () => {
@@ -134,19 +154,17 @@ const PersonalInformationPage = () => {
 
   const [form] = Form.useForm();
 
-  const [employmentData, setEmploymentData] = useState({
-    visatitle: "",
-    startdate: {
-      day: "",
-      month: "",
-      year: "",
-    },
-    enddate: {
-      day: "",
-      month: "",
-      year: "",
-    },
-  });
+  const handleEmployeeDataChange = (e) => {
+    const { name, value } = e.target;
+    setEmploymentData({
+      ...employmentData,
+      [name]: value,
+    });
+    // setFormData({
+    //   ...formData,
+    //   employment: [employmentData],
+    // });
+  };
 
   const handleAddressChange = (e) => {
     const { name, value } = e.target;
@@ -159,9 +177,21 @@ const PersonalInformationPage = () => {
     });
   };
 
-  const handleSave = (e) => {
-    console.log(e);
-    setOpenEmploymentEditModal(false);
+  const handleAddEmploymentInformationSaveButtonClick = (e) => {
+    setClicked(true);
+    console.log("AddEmploymentInformationSaveButton Clicked");
+    console.log(employmentData);
+    console.log(formData);
+
+    // const payload = {
+    //   u_id,
+    //   employmentData,
+    // };
+    // dispatch(savePersonalInformation(payload)).then((res) => {
+    //   console.log("Saved personal information:", res.payload);
+    //   setFormData(res.payload);
+    // });
+    setOpenEmploymentAddModal(false);
   };
 
   const handleEditInformationSaveButtonClick = (e) => {
@@ -190,8 +220,17 @@ const PersonalInformationPage = () => {
     setOpenContactInfoEditModal(false);
   };
 
+  const handleDocumentClick = (e) => {
+    console.log("Document Clicked");
+    console.log(e);
+    const blob = new Blob([new Uint8Array(documents.fileDoc.data)], {
+      type: "application/pdf",
+    });
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+  };
+
   const handleChange = (e) => {
-    console.log(e.target);
     const { name, value } = e.target;
 
     if (
@@ -207,50 +246,12 @@ const PersonalInformationPage = () => {
           [name]: value,
         },
       });
-      console.log(formData);
     } else if (name == "cellPhoneNumber" || name == "workPhoneNumber") {
       setFormData({
         ...formData,
         phoneNumber: {
           ...formData.phoneNumber,
           [name]: value,
-        },
-      });
-    } else if (name == "visatitle") {
-      setEmploymentData({
-        ...employmentData,
-        visatitle: value,
-      });
-    } else if (
-      name == "startdateday" ||
-      name == "startdatemonth" ||
-      name == "startdateyear"
-    ) {
-      setEmploymentData({
-        ...employmentData,
-        startdate: {
-          ...employmentData.startdate,
-          [name.slice(9).toLowerCase()]: value,
-        },
-      });
-    } else if (
-      name == "enddateday" ||
-      name == "enddatemonth" ||
-      name == "enddateyear"
-    ) {
-      setEmploymentData({
-        ...employmentData,
-        enddate: {
-          ...employmentData.enddate,
-          [name.slice(7).toLowerCase()]: value,
-        },
-      });
-    } else if (name === "dobDay" || name === "dobMonth" || name === "dobYear") {
-      setFormData({
-        ...formData,
-        dob: {
-          ...formData.dob,
-          [name.slice(3).toLowerCase()]: value,
         },
       });
     } else {
@@ -295,7 +296,6 @@ const PersonalInformationPage = () => {
 
   const handleProfilePictureChange = async (e) => {
     const file = e.target.files[0];
-    console.log(file);
     const formData = new FormData();
     formData.append("file", file);
     try {
@@ -305,17 +305,21 @@ const PersonalInformationPage = () => {
           formData
         )
         .then((res) => {
-          console.log("Uploaded profile picture:", res.data);
+          console.log("Get uploaded picture URL:", res.data.URL);
+          setFormData({
+            ...formData,
+            profilePicture: res.data.URL,
+          });
         });
     } catch (err) {
       console.log(err);
     }
-
-    // setFormData({
-    //   ...formData,
-    //   profilePicture: file,
-    // });
   };
+
+  if (loading) {
+    // Render loading state if data is still being fetched
+    return <div>Loading...</div>;
+  }
 
   return (
     <>
@@ -476,16 +480,20 @@ const PersonalInformationPage = () => {
           <FileUpload />
         </Modal>
 
-        {/* Edit Employment Modal*/}
+        {/* Add Employment Information Modal*/}
         <Modal
-          title="Edit Employment Info"
+          title="Add Employment Information"
           onOk={handleOk}
           onCancel={handleCancel}
           maskClosable={false}
-          open={openEmploymentEditModal}
+          open={openEmploymentAddModal}
           footer={[
             <Button key="cancel">Cancel</Button>,
-            <Button key="save" name="employmentinfosave" onClick={handleSave}>
+            <Button
+              key="save"
+              name="employmentinfosave"
+              onClick={handleAddEmploymentInformationSaveButtonClick}
+            >
               Save
             </Button>,
           ]}
@@ -493,88 +501,47 @@ const PersonalInformationPage = () => {
           <hr style={{ margin: "8px 0" }} />
           <form className="max-w-md mx-auto" onSubmit={handleSubmit}>
             <div className="mb-2">
-              <label htmlFor="visatitle" className="block text-sm font-medium">
+              <label htmlFor="visaTitle" className="block text-sm font-medium">
                 Visa Title
               </label>
               <input
                 type="text"
-                id="visatitle"
-                name="visatitle"
-                value={employmentData.visatitle}
-                onChange={handleChange}
+                id="visaTitle"
+                name="visaTitle"
+                value={employmentData.visaTitle}
+                onChange={handleEmployeeDataChange}
                 className="mt-1 p-2 border rounded-md w-full"
               />
             </div>
-            <div className="flex flex-row w-full space-x-2">
-              <div className="mb-4">
-                <label className="block text-sm font-medium">Start Date</label>
-                <div className="flex">
-                  <select
-                    id="startdateday"
-                    name="startdateday"
-                    value={employmentData.startdate.day}
-                    onChange={handleChange}
-                    className="mr-1 p-2 border rounded-md"
-                  >
-                    <option value="">Day</option>
-                    {generateDropdownOptions(1, 31)}
-                  </select>
-                  <select
-                    id="startdatemonth"
-                    name="startdatemonth"
-                    value={employmentData.startdate.month}
-                    onChange={handleChange}
-                    className="mr-1 p-2 border rounded-md"
-                  >
-                    <option value="">Month</option>
-                    {generateDropdownOptions(1, 12)}
-                  </select>
-                  <select
-                    id="startdateyear"
-                    name="startdateyear"
-                    value={employmentData.startdate.year}
-                    onChange={handleChange}
-                    className="p-2 border rounded-md"
-                  >
-                    <option value="">Year</option>
-                    {generateDropdownOptions(2000, 2030)}
-                  </select>
-                </div>
+            <div className="flex space-x-4">
+              <div className="mb-4 w-1/2">
+                <label
+                  htmlFor="startDate"
+                  className="block text-sm font-medium"
+                >
+                  Start Date
+                </label>
+                <input
+                  type="date"
+                  id="startDate"
+                  name="startDate"
+                  value={employmentData.startDate}
+                  onChange={handleEmployeeDataChange}
+                  className="mt-1 p-2 border rounded-md w-full"
+                />
               </div>
-              <div className="mb-4">
-                <label className="block text-sm font-medium">End Date</label>
-                <div className="flex">
-                  <select
-                    id="enddateday"
-                    name="enddateday"
-                    value={employmentData.enddate.day}
-                    onChange={handleChange}
-                    className="mr-1 p-2 border rounded-md"
-                  >
-                    <option value="">Day</option>
-                    {generateDropdownOptions(1, 31)}
-                  </select>
-                  <select
-                    id="enddatemonth"
-                    name="enddatemonth"
-                    value={employmentData.enddate.month}
-                    onChange={handleChange}
-                    className="mr-1 p-2 border rounded-md"
-                  >
-                    <option value="">Month</option>
-                    {generateDropdownOptions(1, 12)}
-                  </select>
-                  <select
-                    id="enddateyear"
-                    name="enddateyear"
-                    value={employmentData.enddate.year}
-                    onChange={handleChange}
-                    className="p-2 border rounded-md"
-                  >
-                    <option value="">Year</option>
-                    {generateDropdownOptions(2000, 2030)}
-                  </select>
-                </div>
+              <div className="mb-4 w-1/2">
+                <label htmlFor="endDate" className="block text-sm font-medium">
+                  End Date
+                </label>
+                <input
+                  type="date"
+                  id="endDate"
+                  name="endDate"
+                  value={employmentData.endDate}
+                  onChange={handleEmployeeDataChange}
+                  className="mt-1 p-2 border rounded-md w-full"
+                />
               </div>
             </div>
           </form>
@@ -1104,15 +1071,15 @@ const PersonalInformationPage = () => {
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
                   viewBox="0 0 24 24"
-                  strokeWidth="1.5"
+                  stroke-width="2"
                   stroke="currentColor"
-                  className="w-6 h-6"
+                  class="w-6 h-6"
                   onClick={handleEmploymentEditButtonClick}
                 >
                   <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M12 4.5v15m7.5-7.5h-15"
                   />
                 </svg>
               </div>
@@ -1122,13 +1089,13 @@ const PersonalInformationPage = () => {
               <table className="table-fixed w-full text-left">
                 <thead className="text-base uppercase bg-[#dedede]">
                   <tr>
-                    <th scope="col" className="px-6 py-3 w-1/2">
+                    <th scope="col" className="px-12 py-3 w-1/2">
                       Visa Title
                     </th>
-                    <th scope="col" className="px-6 py-3 w-1/4">
+                    <th scope="col" className="px-12 py-3 w-1/4">
                       Start Date
                     </th>
-                    <th scope="col" className="px-6 py-3 w-1/4">
+                    <th scope="col" className="px-12 py-3 w-1/4">
                       End Date
                     </th>
                   </tr>
@@ -1137,12 +1104,12 @@ const PersonalInformationPage = () => {
                   <tr className="">
                     <th
                       scope="row"
-                      className="px-6 py-4 font-medium whitespace-nowrap"
+                      className="px-12 py-4 font-medium whitespace-nowrap"
                     >
                       STEM OPT
                     </th>
-                    <td className="px-6 py-4">January 10, 2024</td>
-                    <td className="px-6 py-4">January 09, 2026</td>
+                    <td className="px-12 py-4">January 10, 2024</td>
+                    <td className="px-12 py-4">January 09, 2026</td>
                   </tr>
                 </tbody>
               </table>
@@ -1176,16 +1143,16 @@ const PersonalInformationPage = () => {
               <table className="table-fixed w-full text-left">
                 <thead className="text-base uppercase bg-[#dedede]">
                   <tr>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col" className="px-12 py-3">
                       First Name
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col" className="px-12 py-3">
                       Last Name
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col" className="px-12 py-3">
                       Phone Number
                     </th>
-                    <th scope="col" className="px-6 py-3">
+                    <th scope="col" className="px-12 py-3">
                       Relationship
                     </th>
                   </tr>
@@ -1194,13 +1161,13 @@ const PersonalInformationPage = () => {
                   <tr className="">
                     <th
                       scope="row"
-                      className="px-6 py-4 font-medium whitespace-nowrap"
+                      className="px-12 py-4 font-medium whitespace-nowrap"
                     >
                       Jane
                     </th>
-                    <td className="px-6 py-4">Doe</td>
-                    <td className="px-6 py-4">281-455-9170</td>
-                    <td className="px-6 py-4">Friends</td>
+                    <td className="px-12 py-4">Doe</td>
+                    <td className="px-12 py-4">281-455-9170</td>
+                    <td className="px-12 py-4">Friends</td>
                   </tr>
                 </tbody>
               </table>
@@ -1232,25 +1199,32 @@ const PersonalInformationPage = () => {
               <table className="table-fixed w-full text-left">
                 <thead className="text-base uppercase bg-[#dedede]">
                   <tr>
-                    <th scope="col" className="px-6 py-3 w-1/2">
+                    <th scope="col" className="px-12 py-3 w-1/2">
                       File Name
                     </th>
-                    <th scope="col" className="px-6 py-3">
-                      Date Uploaded
+                    <th scope="col" className="px-12 py-3">
+                      Status
                     </th>
-                    <th scope="col" className="px-6 py-3"></th>
+                    <th scope="col" className="px-12 py-3"></th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="">
                     <th
                       scope="row"
-                      className="px-6 py-4 font-medium whitespace-nowrap overflow-clip"
+                      className="px-12 py-4 font-medium whitespace-nowrap overflow-clip"
+                      onClick={handleDocumentClick}
                     >
-                      dsaddadsao9d89hsiadoMP4sdsaddadsao9d89hsiadoMP4s.jpg
+                      <span className=" hover:underline cursor-pointer">
+                        {documents.fileName}
+                      </span>
                     </th>
-                    <td className="px-6 py-4">January 10, 2024</td>
-                    <td className="px-6 py-4">
+                    <td className="px-12 py-4">
+                      <span className=" hover:underline cursor-pointer capitalize">
+                        {documents.status}
+                      </span>
+                    </td>
+                    <td className="px-12 py-4">
                       <div className="flex justify-end">
                         <svg
                           xmlns="http://www.w3.org/2000/svg"

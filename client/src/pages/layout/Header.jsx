@@ -1,9 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router";
 import { fetchPersonalInformationByUID } from "../../redux/personalInformationSlice";
-
 import { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { Avatar, Menu, Dropdown, Space } from "antd";
 import {
   UserOutlined,
@@ -12,17 +11,20 @@ import {
   TranslationOutlined,
   PoweroffOutlined,
 } from "@ant-design/icons";
-import { fetchApplicationByIdThunk } from "../../thunks/application-thunk";
 
-const Header = ({ user }) => {
-  // const u_id = localStorage.getItem("userID");
+const Header = () => {
+  const u_id = localStorage.getItem("userID");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { appliction } = useSelector((state) => state.application);
+  const [avatar, setAvatar] = useState(
+    "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  );
 
-  // useEffect(() => {
-  //   dispatch(fetchApplicationByIdThunk
-  // }, []);
+  useEffect(() => {
+    dispatch(fetchPersonalInformationByUID(u_id)).then((res) => {
+      setAvatar(res.payload.profilePicture);
+    });
+  }, []);
 
   const handlePersonalInformationButtonClick = () => {
     navigate("/personal-information");
