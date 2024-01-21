@@ -1,4 +1,4 @@
-import { Link, useNavigate } from "react-router-dom";
+import {  useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import AuthForm from "../../components/AuthForm";
 import { fetchUserByIdThunk, loginThunk } from "../../thunks/auth-thunk";
@@ -8,6 +8,7 @@ export default function LogIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { message } = useSelector((state) => state.error);
+  const {user} = useSelector((state)=> state.user);
 
   const fields = [
     {
@@ -27,12 +28,12 @@ export default function LogIn() {
   // TODO: REDIRECT TO ONBOARDING OR PERSONAL INFORMATION PAGE  
   const onSubmit = (data) => {
     dispatch(loginThunk(data)).then((res) => {
-      if (res.payload.token) {
+     if (res.payload.token) {
       //  dispatch(fetchUserByIdThunk(res.payload.token));
         if (res.payload.username === "hr") {
-          navigate("/hiring-management");
+          navigate(location.state?.from || "/hiring-management");
         } else {
-          navigate("/onboarding");
+          navigate(location.state?.from || "/onboarding");
         }
       }
     });

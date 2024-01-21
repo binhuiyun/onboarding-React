@@ -22,7 +22,7 @@ const EmployeeProfileDetailsPage = () => {
   return (
     <>
       <Header />
-      {employeeProfile && <ProfileForm personalInformation={employeeProfile}/>}
+      {employeeProfile && <ProfileForm employeeProfile={employeeProfile}/>}
     </>
   );
 };

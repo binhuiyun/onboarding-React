@@ -1,49 +1,21 @@
-import React from "react";
-import { useNavigate } from "react-router";
-import { fetchPersonalInformationByUID } from "../../redux/personalInformationSlice";
-import { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
-import { Avatar, Menu, Dropdown, Space } from "antd";
-import {
-  UserOutlined,
-  SolutionOutlined,
-  LockOutlined,
-  TranslationOutlined,
-  PoweroffOutlined,
-} from "@ant-design/icons";
 
-const HRHeader = () => {
-  const u_id = localStorage.getItem("userID");
+import UserMenu from "./UserMenu";
+import {useNavigate} from "react-router-dom";
+
+const Navbar = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [avatar, setAvatar] = useState(
-    "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-  );
-
-  useEffect(() => {
-    dispatch(fetchPersonalInformationByUID(u_id)).then((res) => {
-      setAvatar(res.payload.profilePicture);
-    });
-  }, []);
-
   const handleEmployeeProfilesButtonClick = () => {
     navigate("/employee-profile");
   };
-
+  
   const handleVisaStatusManagementButtonClick = () => {
     navigate("/visa-hr");
   };
-
+  
   const handleHiringManagementButtonClick = () => {
     navigate("/hiring-management");
   };
-
-  const items = [
-    {
-      key: "1",
-      label: <a href="">Log Out</a>,
-    },
-  ];
+  
 
   return (
     <>
@@ -72,16 +44,13 @@ const HRHeader = () => {
             Hiring Management
           </button>
           <div className="pl-14">
-            <Dropdown menu={{ items }} placement="bottom" arrow>
-              <img
-                className="p-0.5 w-[40px] h-[40px] rounded-full ring-1 ring-black object-cover"
-                src={avatar}
-              />
-            </Dropdown>
+            <UserMenu mode="horizontal" />
+      
           </div>
         </div>
       </header>
     </>
   );
 };
-export default HRHeader;
+export default Navbar;
+
