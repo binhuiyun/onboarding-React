@@ -47,9 +47,10 @@ export const fetchUserByIdThunk = createAsyncThunk(
 
 export const updateCurrentUserThunk = createAsyncThunk(
   "auth/updateCurrentUser",
-  async (id, data) => {
+  async ({id, data}) => {
+    
     const user = await updateCurrentUser(id, data);
-    console.log("update current user", user.onboardingStatus);
+    console.log("update current user", user.profile.email);
     return user;
   }
 );
