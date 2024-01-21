@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+import apiCall from "../services/api";
 
 //u_id
 const fetchPersonalInformationByUID = createAsyncThunk(
@@ -7,10 +8,11 @@ const fetchPersonalInformationByUID = createAsyncThunk(
   async (id) => {
     try {
       console.log("Fetching user's personal information with u_id: ", id);
-      const response = await axios.get(
-        `http://localhost:4000/api/personalInformation/${id}`
-      );
-      return response.data;
+      const response = await apiCall({
+        url: `/api/personalInformation/${id}`,
+        method: "get",
+      });
+      return response;
     } catch (error) {
       console.log(error);
     }
@@ -23,11 +25,11 @@ const fetchPersonalInformationByPID = createAsyncThunk(
   async (pid) => {
     console.log(pid);
     try {
-      const response = await axios.get(
-        `http://localhost:4000/api/personalInformationByPID/${pid}`
-      );
-      console.log(response.data);
-      return response.data;
+      const response = await apiCall({
+        url: `/api/personalInformationByPID/${pid}`,
+        method: "get",
+      });
+      return response;
     } catch (error) {
       console.log(error);
     }
@@ -44,6 +46,46 @@ const savePersonalInformation = createAsyncThunk(
       const response = await axios.put(
         `http://localhost:4000/api/personalInformation/${u_id}`,
         formData
+      );
+      // TODO - use apiCall instead of axios
+      // const response = await apiCall({
+      //   url: `/api/personalInformation/${u_id}`,
+      //   method: "put",
+      //   formData,
+      // });
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+const savePersonalInformationWithEmploymentInformation = createAsyncThunk(
+  "personalInformation/savePersonalInformationWithEmploymentInformation",
+  async (payload) => {
+    const { u_id, formDataWithEmploymentInformation } = payload;
+    try {
+      console.log("Saving personal information: ", u_id);
+      const response = await axios.put(
+        `http://localhost:4000/api/personalInformation/${u_id}`,
+        formDataWithEmploymentInformation
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
+
+const savePersonalInformationWithEmergencyContact = createAsyncThunk(
+  "personalInformation/savePersonalInformationWithEmergencyContact",
+  async (payload) => {
+    const { u_id, formDataWithEmergencyContact } = payload;
+    try {
+      console.log("Saving personal information: ", u_id);
+      const response = await axios.put(
+        `http://localhost:4000/api/personalInformation/${u_id}`,
+        formDataWithEmergencyContact
       );
       return response.data;
     } catch (error) {
@@ -89,6 +131,8 @@ export {
   fetchPersonalInformationByUID,
   fetchPersonalInformationByPID,
   savePersonalInformation,
+  savePersonalInformationWithEmploymentInformation,
+  savePersonalInformationWithEmergencyContact,
 };
 export const selectPersonalInformation = (state) =>
   state.personalInformation.personalInformation;

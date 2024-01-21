@@ -52,43 +52,67 @@ const updatePersonalInformation = async (req, res) => {
   }
 };
 
-const createProfilePictureURL = async (req, res) => {
+const createProfilePictureBuffer = async (req, res) => {
   const u_id = req.params.id;
   console.log(u_id, req.file);
-  const URL = `data:${req.file.mimetype};base64,${req.file.buffer.toString(
-    "base64"
-  )}`;
-  res.status(200).json({ URL });
-
-  // const personalInformation = await PersonalInformation.findOne({ user: u_id });
-  // if (!personalInformation) {
-  //   res.status(404).json({ message: "Personal Information not found" });
-  // } else {
-  //   const updatedPersonalInformation =
-  //     await PersonalInformation.findOneAndUpdate(
-  //       { user: u_id },
-  //       { profilePicture: imageUrl }
-  //     );
-  //   res.status(200).json(updatedPersonalInformation);
-  // }
+  // const URL = `data:${req.file.mimetype};base64,${req.file.buffer.toString(
+  //   "base64"
+  // )}`;
+  const buffer = req.file.buffer;
+  console.log(buffer);
+  res.status(200).json({ buffer });
 };
 
-const addProfilePicture = async (req, res) => {
+const uploadProfilePicture = async (req, res) => {
   const u_id = req.params.id;
   console.log(u_id, req.file);
-  const URL = `data:${req.file.mimetype};base64,${req.file.buffer.toString(
-    "base64"
-  )}`;
   const personalInformation = await PersonalInformation.findOne({ user: u_id });
   if (!personalInformation) {
     res.status(404).json({ message: "Personal Information not found" });
   } else {
+    const buffer = req.file.buffer;
+    console.log(buffer);
     const updatedPersonalInformation =
       await PersonalInformation.findOneAndUpdate(
         { user: u_id },
-        { profilePicture: URL }
+        { profilePicture: buffer }
       );
     res.status(200).json(updatedPersonalInformation);
+  }
+};
+
+const deleteEmploymentbyVisaTitle = async (req, res) => {
+  try {
+    const visaTitle = req.params.visaTitle;
+    const p_id = req.body._id;
+
+    const personalInformation = await PersonalInformation.findById(p_id);
+
+    if (!personalInformation) {
+      return res
+        .status(404)
+        .json({ message: "Personal Information not found" });
+    }
+
+    const updatedEmployment = personalInformation.employment.filter(
+      (employment) => employment.visaTitle !== visaTitle
+    );
+
+    console.log(updatedEmployment);
+
+    const updatedPersonalInformation =
+      await PersonalInformation.findOneAndUpdate(
+        { _id: p_id },
+        { employment: updatedEmployment },
+        { new: true } // Ensure you get the updated document in the response
+      );
+
+    console.log("updatedPersonalInformation", updatedPersonalInformation);
+
+    res.status(200).json(updatedPersonalInformation);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json({ message: "Internal Server Error" });
   }
 };
 
@@ -96,6 +120,7 @@ module.exports = {
   createPersonalInformation,
   getPersonalInformation,
   updatePersonalInformation,
-  addProfilePicture,
-  createProfilePictureURL,
+  uploadProfilePicture,
+  createProfilePictureBuffer,
+  deleteEmploymentbyVisaTitle,
 };
