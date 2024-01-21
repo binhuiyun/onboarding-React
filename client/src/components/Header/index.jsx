@@ -1,17 +1,18 @@
-import React from "react";
+import React,{useState} from "react";
 import { fetchPersonalInformationByUID } from "../../redux/personalInformationSlice";
 import { useEffect,useState } from "react";
 
 const Header = () => {
-  const [avatar, setAvatar] = useState(
-    "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-  );
-  useEffect(() => {
-    console.log("dsADADA...");
-    dispatch(fetchPersonalInformationByUID(id)).then((res) => {
-      setAvatar(res.payload.profilePicture);
-    });
-  },[]);
+  // const [avatar, setAvatar] = useState(
+  //   "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+  // );
+  // const dispatch = useDispatch();
+  // useEffect(() => {
+  //   console.log("dsADADA...");
+  //   dispatch(fetchPersonalInformationByUID(id)).then((res) => {
+  //     setAvatar(res.payload.profilePicture);
+  //   });
+  // },[]);
 
   return (
     <>
@@ -27,7 +28,7 @@ const Header = () => {
           <div className="pl-14">
             <img
               className="p-0.5 w-[40px] h-[40px] rounded-full ring-2 ring-black object-cover"
-              src={avatar}
+              // src={avatar}
             />
           </div>
         </div>

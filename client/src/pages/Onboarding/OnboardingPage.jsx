@@ -24,6 +24,7 @@ const OnboardingPage = () => {
   const [onboardingStatus, setOnboardingStatus] = useState(null);
   const [files, setFiles] = useState([]);
   const u_id = localStorage.getItem("userID");
+  const {user }= useSelector((state) => state.user);
   const [newEmergencyContact, setNewEmergencyContact] = useState({
     firstName: "",
     lastName: "",
@@ -252,7 +253,7 @@ const OnboardingPage = () => {
         </p>
       </Modal>
 
-      <Header />
+      {/* <Header /> */}
       {onboardingStatus == "pending" && (
         <ProfileForm personalInformation={formData} />
       )}

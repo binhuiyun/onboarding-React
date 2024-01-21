@@ -18,3 +18,12 @@ export const updateApplicationStatus = async (id, payload) => {
         return err.response.data;
     }
 }
+
+export const fetchAppById = async (id) => {
+    try {
+        const res = await axios.get(`${APPLICATION_URL}/apps/${id}`);
+        return res.data;
+    } catch (err) {
+        return err.response.data;
+    }
+}
