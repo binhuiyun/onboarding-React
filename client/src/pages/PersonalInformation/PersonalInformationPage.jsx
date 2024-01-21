@@ -110,19 +110,25 @@ const PersonalInformationPage = () => {
       }
     });
     // TODO: handle more documents
-    // hard coded for now
-    axios
-      .get("http://localhost:4000/api/visa/65a4ad3fac4b38c860962852")
-      .then((res) => {
-        console.log("Fetched documents:", res.data.optReceipt);
-        setDocuments(res.data.optReceipt);
-      })
-      .then(() => {
-        setTimeout(() => {
-          // Set loading to false after 1 second
-          setLoading(false);
-        }, 1000);
-      });
+
+    if (
+      formData.workAuthorization.citizenship === "no" &&
+      formData.workAuthorization.workAuthorizationType === "F1(CPT/OPT)"
+    ) {
+      axios
+        .get(`http://localhost:4000/api/visa/${u_id}`)
+        .then((res) => {
+          setDocuments(res.data.optReceipt);
+        })
+        .then(() => {
+          setTimeout(() => {
+            // Set loading to false after 1 second
+            setLoading(false);
+          }, 1000);
+        });
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
@@ -277,7 +283,9 @@ const PersonalInformationPage = () => {
   };
 
   async function handleDelete(employmentEntry) {
-    console.log(`Delete Clicked to delete employment ${employmentEntry.visaTitle}:`);
+    console.log(
+      `Delete Clicked to delete employment ${employmentEntry.visaTitle}:`
+    );
     await axios
       .put(
         `http://localhost:4000/api/personalInformation/delete/employment/${employmentEntry.visaTitle}`,
@@ -1441,11 +1449,13 @@ const PersonalInformationPage = () => {
                       onClick={handleDocumentClick}
                     >
                       <span className="cursor-pointer hover:text-blue-500 transition duration-300">
-                        {documents.fileName}
+                        {documents && documents.fileName}
                       </span>
                     </th>
                     <td className="px-12 py-4">
-                      <span className="capitalize">{documents.status}</span>
+                      <span className="capitalize">
+                        {documents && documents.status}
+                      </span>
                     </td>
                     <td className="px-12 py-4">
                       <div className="flex justify-end">
