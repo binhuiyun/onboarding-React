@@ -27,7 +27,7 @@ const EmployeeProfilePage = () => {
   const [sortedEmployees, setSortedEmployees] = useState([]);
   const [employeeProfile, setEmployeeProfile] = useState();
   const navigate = useNavigate();
-  const {user} = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const toggleSider = () => {
     setCollapsed(!collapsed);
   };
@@ -95,7 +95,7 @@ const EmployeeProfilePage = () => {
 
   return (
     <Layout className="w-screen h-screen overflow-auto">
-      <Header user={user}/>
+      <Header user={user} />
       <Layout className="bg-white">
         <Sider
           trigger={triggerIcon}

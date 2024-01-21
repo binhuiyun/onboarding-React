@@ -13,7 +13,6 @@ import {
 } from "@ant-design/icons";
 
 const Header = (props) => {
-  const [isHR, setIsHR] = useState(false);
   const u_id = localStorage.getItem("userID");
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -25,7 +24,6 @@ const Header = (props) => {
     dispatch(fetchPersonalInformationByUID(u_id)).then((res) => {
       setAvatar(res.payload.profilePicture);
     });
-    setIsHR(props.user.isHR);
   }, []);
 
   const handlePersonalInformationButtonClick = () => {
@@ -61,7 +59,7 @@ const Header = (props) => {
     <>
       <header className="flex items-center text-base justify-between bg-[#F0F0F0] px-20 py-4 border-b-2">
         <div className="text-3xl flex items-center">Chuwa America</div>
-        {!isHR && (
+        {!props.user.isHR && (
           <div className="flex flex-row">
             <button
               type="button"
@@ -88,7 +86,7 @@ const Header = (props) => {
           </div>
         )}
 
-        {isHR && (
+        {props.user.isHR && (
           <div className="flex flex-row">
             <button
               type="button"
