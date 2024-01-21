@@ -44,20 +44,41 @@ const updatePersonalInformation = async (req, res) => {
   if (!record) {
     res.status(404).json({ message: "Personal Information not found" });
   } else {
-    const updatedPersonalInformation =
-      await PersonalInformation.findOneAndUpdate(
-        { user: u_id },
-        personalInformation
-      );
-
-    res.status(200).json(updatedPersonalInformation);
+    await PersonalInformation.findOneAndUpdate(
+      { user: u_id },
+      personalInformation
+    );
+    res.status(200).json(personalInformation);
   }
+};
+
+const createProfilePictureURL = async (req, res) => {
+  const u_id = req.params.id;
+  console.log(u_id, req.file);
+  const URL = `data:${req.file.mimetype};base64,${req.file.buffer.toString(
+    "base64"
+  )}`;
+  res.status(200).json({ URL });
+
+  // const personalInformation = await PersonalInformation.findOne({ user: u_id });
+  // if (!personalInformation) {
+  //   res.status(404).json({ message: "Personal Information not found" });
+  // } else {
+  //   const updatedPersonalInformation =
+  //     await PersonalInformation.findOneAndUpdate(
+  //       { user: u_id },
+  //       { profilePicture: imageUrl }
+  //     );
+  //   res.status(200).json(updatedPersonalInformation);
+  // }
 };
 
 const addProfilePicture = async (req, res) => {
   const u_id = req.params.id;
   console.log(u_id, req.file);
-  const imageUrl = `data:${req.file.mimetype};base64,${req.file.buffer.toString('base64')}`;
+  const URL = `data:${req.file.mimetype};base64,${req.file.buffer.toString(
+    "base64"
+  )}`;
   const personalInformation = await PersonalInformation.findOne({ user: u_id });
   if (!personalInformation) {
     res.status(404).json({ message: "Personal Information not found" });
@@ -65,9 +86,8 @@ const addProfilePicture = async (req, res) => {
     const updatedPersonalInformation =
       await PersonalInformation.findOneAndUpdate(
         { user: u_id },
-        { profilePicture: imageUrl }
+        { profilePicture: URL }
       );
-
     res.status(200).json(updatedPersonalInformation);
   }
 };
@@ -77,4 +97,5 @@ module.exports = {
   getPersonalInformation,
   updatePersonalInformation,
   addProfilePicture,
+  createProfilePictureURL,
 };
