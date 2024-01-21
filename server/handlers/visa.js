@@ -1,13 +1,9 @@
 const { visaModel } = require("../models/visaDocuments");
 const PersonalInformation = require("../models/personalInformation");
-const nodemailer = require("nodemailer");
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: "rachelqiu0428@gmail.com",
-    pass: "Jinan123!",
-  },
+const sendmail = require("sendmail")({
+  smtpPort: 465,
 });
+
 const getAllVisa = async (req, res) => {
   try {
     const visaDoc = await visaModel.find();
@@ -163,12 +159,13 @@ const getHrSideData = async (req, res) => {
       }
 
       if (profileData) {
-        const { name, workAuthorization } = profileData;
+        const { name, workAuthorization, email } = profileData;
         const data = {
           id: id,
           firstName: name.firstName,
           lastName: name.lastName,
           name: `${name.firstName} ${name.lastName}`,
+          email: email,
           preferredName: name.preferredName,
           middleName: name.middleName,
           Work_Authorization: {
@@ -202,21 +199,18 @@ const getHrSideData = async (req, res) => {
 };
 const sendNotification = async (req, res) => {
   const { to, subject, text } = req.body;
-  const mailOptions = {
-    from: "rachelqiu0428@gmail.com",
-    to: to,
-    subject: subject,
-    text: text,
-  };
-  transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-      console.error("Error sending email:", error);
-      res.status(500).json({ error: "Error sending email" });
-    } else {
-      console.log("Email sent:", info.response);
-      res.json({ message: "Email sent successfully" });
+  sendmail(
+    {
+      from: "no-reply@chuwaamerica.com",
+      to: to,
+      subject: subject,
+      html: text,
+    },
+    function (err, reply) {
+      if (err) console.log(err && err.stack);
+      else res.status(200);
     }
-  });
+  );
 };
 
 module.exports = {
