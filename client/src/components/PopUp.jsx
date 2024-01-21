@@ -30,6 +30,13 @@ const PopUp = (props) => {
           },
         }
       );
+      if (response.status === 201) {
+        alert("Your File Was Uploaded Successfully!");
+        props.setIsPopUp(false);
+      } else {
+        alert("Something Went Wrong");
+      }
+
       console.log(response);
     };
     storeFile();
@@ -44,8 +51,8 @@ const PopUp = (props) => {
         />
         <FolderPlusIcon className="text-blue-500 h-10 w-10 mb-10" />
         <div className="text-gray-500 mx-3 mb-5 flex flex-col items-center">
-          <p>DRAG AND DROP</p>
-          <p>OR</p>
+          {/* <p>DRAG AND DROP</p>
+          <p>OR</p> */}
           <p>CHOOSE A FILE FROM YOUR COMPUTER</p>
         </div>
         <input type="file" className="w-1/2" onChange={onFileChange} />
