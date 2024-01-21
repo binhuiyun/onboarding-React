@@ -4,7 +4,7 @@ import { Table, Button } from "antd";
 import { useNavigate } from "react-router-dom";
 
 import { createTokenThunk } from "../../thunks/token-thunk";
-import HRHeader from "../layout/HRHeader";
+import Header from "../layout/HRHeader";
 
 const columns = [
   {
@@ -71,7 +71,7 @@ export default function HiringManagement() {
 
   return (
     <div>
-      <HRHeader />
+      <Header />
       <h1>Hiring Management</h1>
       <Table
         rowSelection={rowSelection}

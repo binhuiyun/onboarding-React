@@ -21,6 +21,7 @@ const OnboardingPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const fileInputRef = useRef(null);
+  const { user } = useSelector((state) => state.user);
   const [onboardingStatus, setOnboardingStatus] = useState(null);
   const [optReceipt, setOptReceipt] = useState();
   const u_id = localStorage.getItem("userID");
@@ -255,7 +256,7 @@ const OnboardingPage = () => {
         </p>
       </Modal>
 
-      <Header />
+      <Header user={user}/>
       {onboardingStatus == "pending" && (
         <ProfileForm personalInformation={formData} />
       )}

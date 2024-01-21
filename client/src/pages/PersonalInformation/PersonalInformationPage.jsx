@@ -110,9 +110,11 @@ const PersonalInformationPage = () => {
       }
     });
     // TODO: handle more documents
+    // hard coded for now
     axios
       .get("http://localhost:4000/api/visa/65a4ad3fac4b38c860962852")
       .then((res) => {
+        console.log("Fetched documents:", res.data.optReceipt);
         setDocuments(res.data.optReceipt);
       })
       .then(() => {
