@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Table, Button } from "antd";
 import { useNavigate } from "react-router-dom";
-
 import { createTokenThunk } from "../../thunks/token-thunk";
 import Header from "../../components/Header";
 
@@ -33,12 +32,18 @@ const data = [
     key: "3",
     name: "Bob",
     email: "bob@gmail.com",
+  },
+  {
+    key: '4',
+    name : "CC",
+    email:"cc@gmail.com",
   }
 ];
 
 export default function HiringManagement() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const {user} = useSelector((state) => state.user);
   const [selectedRowKey, setSelectedRowKey] = useState(null);
   const [selectedEmail, setSelectedEmail] = useState("");
   const [selectedName, setSelectedName] = useState("");
@@ -48,6 +53,8 @@ export default function HiringManagement() {
     setSelectedName(record.name);
   };
 
+
+  console.log("user", user.id);
   const rowSelection = {
     type: "radio",
     selectedRowKeys: selectedRowKey,

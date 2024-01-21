@@ -54,7 +54,7 @@ export default function Register() {
 
   useEffect(() => {
     if (token) {
-      axios.post('http://localhost:4000/api/auth/register', null, {
+      axios.post('http://localhost:4000/api/auth/verify', null, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

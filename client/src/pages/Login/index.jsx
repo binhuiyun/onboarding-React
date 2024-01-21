@@ -27,6 +27,7 @@ export default function LogIn() {
   const onSubmit = (data) => {
     dispatch(loginThunk(data)).then((res) => {
       if (res.payload.token) {
+      //  dispatch(fetchUserByIdThunk(res.payload.token));
         if (res.payload.username === "hr") {
           navigate("/hiring-management");
         } else {

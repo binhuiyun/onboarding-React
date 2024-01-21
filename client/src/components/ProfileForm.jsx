@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
 import {
   Row,
@@ -21,9 +22,10 @@ import {
 const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
-const ProfileForm = (props) => {
-  console.log(props);
-  const employeeProfile = props.personalInformation;
+const ProfileForm = ({employeeProfile}) => {
+
+
+  console.log(employeeProfile.name);
   return (
     <>
       <div className="flex flex-col items-center mt-6">
