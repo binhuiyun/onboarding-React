@@ -202,8 +202,10 @@ const OnboardingPage = () => {
     console.log("Emergency contact:", newEmergencyContact);
 
     setFormData({
+      
       ...formData,
       emergencyContact: [
+
         ...formData.emergencyContact,
         { ...newEmergencyContact },
       ],

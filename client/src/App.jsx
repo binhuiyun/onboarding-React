@@ -17,6 +17,7 @@ import NotFound from "./pages/NotFound";
 import EmployeeProfilePage from "./pages/EmployeeProfile/EmployeeProfilePage";
 import EmployeeProfileDetailsPage from "./pages/EmployeeProfile/EmployeeProfileDetailsPage";
 import ApplicationFeedback from "./pages/HiringManagement/ReviewApplications/ApplicationFeedback";
+import AuthLayout from "./components/AuthLayout";
 
 const ApplicationStatusRouter = () => {
   return (
@@ -45,6 +46,7 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register/:token" element={<Register />} />
+        <Route element = {<AuthLayout/>}>
         <Route path="/hiring-management" element={<HiringManagement />} />
 
         <Route
@@ -74,6 +76,7 @@ function App() {
         <Route path="/onboarding" element={<OnboardingPage />} />
         <Route path="/employee-profile" element={<EmployeeProfilePage />} />
         <Route path="/employee-profile/details" element={<EmployeeProfileDetailsPage />} />
+        </Route>
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

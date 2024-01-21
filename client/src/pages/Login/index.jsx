@@ -8,6 +8,7 @@ export default function LogIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { message } = useSelector((state) => state.error);
+  const {user} = useSelector((state)=> state.user);
 
   const fields = [
     {
@@ -28,7 +29,7 @@ export default function LogIn() {
     dispatch(loginThunk(data)).then((res) => {
       if (res.payload.token) {
       //  dispatch(fetchUserByIdThunk(res.payload.token));
-        if (res.payload.username === "hr") {
+        if (user.username === "hr") {
           navigate("/hiring-management");
         } else {
           navigate("/onboarding");
