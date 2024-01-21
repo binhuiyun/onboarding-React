@@ -22,10 +22,9 @@ const findAllUsers = async (req, res) => {
 const updateCurrentUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    if (!user) {
-      res.status(404).json({ message: "User not found" });
+    if (user) {
       user.onboardingStatus =
-        req.body.onboardingStatus ?? user.onboardingStatus;
+      req.body.onboardingStatus ?? user.onboardingStatus;
       user.profile = req.body.profile ?? user.profile;
       await user.save();
       console.log("after update", user.onboardingStatus);

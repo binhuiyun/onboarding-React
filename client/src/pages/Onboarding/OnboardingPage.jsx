@@ -22,6 +22,7 @@ const OnboardingPage = () => {
   const [loading, setLoading] = useState(true);
   const fileInputRef = useRef(null);
   const [onboardingStatus, setOnboardingStatus] = useState(null);
+ // const {application} = useSelector((state) => state.application);
   const [optReceipt, setOptReceipt] = useState();
   const u_id = localStorage.getItem("userID");
   const {user }= useSelector((state) => state.user);
@@ -33,6 +34,7 @@ const OnboardingPage = () => {
     email: "",
     relationship: "",
   });
+  //const [formData, setFormData] = useState(application);
   const [formData, setFormData] = useState({
     user: u_id,
     name: { firstName: "", lastName: "", middleName: "", preferredName: "" },
@@ -47,7 +49,7 @@ const OnboardingPage = () => {
       zip: "",
     },
     phoneNumber: { cellPhoneNumber: "", workPhoneNumber: "" },
-    email: "example@example.com", // Assuming email is pre-filled and cannot be edited
+    email: "", // Assuming email is pre-filled and cannot be edited
     ssn: "",
     dateOfBirth: "",
     gender: "",
@@ -216,11 +218,12 @@ const OnboardingPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createInfo(e);
+   // createInfo(e);
     dispatch(updateTokenStatusThunk(user.email));
-    dispatch(updateCurrentUserThunk(user.id, { onboardingStatus: "pending" }));
-  
-  };
+    dispatch(updateCurrentUserThunk({id: u_id, data:
+     {
+      onboardingStatus: "pending" }}));
+    } ;
 
   async function createInfo(e) {
     e.preventDefault();
@@ -245,7 +248,7 @@ const OnboardingPage = () => {
 
   return (
     <>
-      <Modal
+      {/* <Modal
         title={"Hello " + formData.name.firstName + ","}
         open={showModal}
         onCancel={handleCancel}
@@ -255,7 +258,7 @@ const OnboardingPage = () => {
         <p className="text-lg">
           Please wait for HR to review your application.
         </p>
-      </Modal>
+      </Modal> */}
 
       {/* <Header /> */}
       {onboardingStatus == "pending" && (
