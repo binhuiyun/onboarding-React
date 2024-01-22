@@ -9,9 +9,10 @@ import { selectForUser, fetchForUser } from "../../redux/visaSlice";
 
 const VisaPage = () => {
   const dispatch = useDispatch();
-  let user = {
-    id: localStorage.getItem("userID"),
-  };
+  // let user = {
+  //   id: localStorage.getItem("userID"),
+  // };
+  const { user } = useSelector((state) => state.user);
   const info = useSelector(selectForUser);
   console.log(info);
   useEffect(() => {
@@ -34,7 +35,7 @@ const VisaPage = () => {
       {info && (
         <>
           <Header />
-          <div className="text-4xl text-slate-400 mx-20 my-5">{`Hi, welcome`}</div>
+          <div className="text-4xl text-slate-400 mx-20 my-5">{`Hi, ${user.username}`}</div>
           <div className="text-3xl text-geekblue mx-20 mb-10">
             Visa Management System
           </div>
