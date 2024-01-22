@@ -13,7 +13,6 @@ const VisaPage = () => {
   //   id: localStorage.getItem("userID"),
   // };
   const { user } = useSelector((state) => state.user);
-  console.log("try", user);
   const info = useSelector(selectForUser);
   console.log(info);
   useEffect(() => {
