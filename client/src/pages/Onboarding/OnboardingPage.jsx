@@ -86,7 +86,7 @@ const OnboardingPage = () => {
       relationship: "",
     },
     emergencyContact: [],
-    onboardingStatus: "",
+    //onboardingStatus: "",
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
