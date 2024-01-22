@@ -25,7 +25,7 @@ import axios from "axios";
 const PersonalInformationPage = () => {
   const didMountRef = useRef(false);
   const fileInputRef = useRef(null);
-  const {user} = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const u_id = localStorage.getItem("userID");
   const [loading, setLoading] = useState(true);
@@ -110,26 +110,20 @@ const PersonalInformationPage = () => {
         setFormData(res.payload);
       }
     });
-    // TODO: handle more documents
 
-    if (
-      formData.workAuthorization.citizenship === "no" &&
-      formData.workAuthorization.workAuthorizationType === "F1(CPT/OPT)"
-    ) {
-      axios
-        .get(`http://localhost:4000/api/visa/${u_id}`)
-        .then((res) => {
-          setDocuments(res.data.optReceipt);
-        })
-        .then(() => {
-          setTimeout(() => {
-            // Set loading to false after 1 second
-            setLoading(false);
-          }, 1000);
-        });
-    } else {
-      setLoading(false);
-    }
+    // TODO: handle more documents
+    axios
+      .get(`http://localhost:4000/api/visa/${u_id}`)
+      .then((res) => {
+        setDocuments(res.data.optReceipt);
+        console.log("Documents:", res.data);
+      })
+      .then(() => {
+        setTimeout(() => {
+          // Set loading to false after 1 second
+          setLoading(false);
+        }, 1000);
+      });
   }, []);
 
   useEffect(() => {
@@ -395,7 +389,7 @@ const PersonalInformationPage = () => {
   return (
     <>
       <div className="flex flex-col justify-between overflow-auto">
-        <Header user={user}/>
+        <Header user={user} />
 
         {/* Contact Info Modal*/}
         <Modal
