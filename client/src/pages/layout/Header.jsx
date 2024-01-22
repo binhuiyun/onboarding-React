@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router";
 import { fetchPersonalInformationByUID } from "../../redux/personalInformationSlice";
+import { fetchUserByIdThunk } from "../../thunks/auth-thunk";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Avatar, Menu, Dropdown, Space } from "antd";
@@ -13,6 +14,7 @@ import {
 } from "@ant-design/icons";
 
 const Header = (props) => {
+  const [isHR, setIsHR] = useState(false);
   const u_id = localStorage.getItem("userID");
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -23,6 +25,10 @@ const Header = (props) => {
   useEffect(() => {
     dispatch(fetchPersonalInformationByUID(u_id)).then((res) => {
       setAvatar(res.payload.profilePicture);
+    });
+    dispatch(fetchUserByIdThunk(u_id)).then((res) => {
+      console.log("Fetched user:", res.payload);
+      setIsHR(res.payload.isHR);
     });
   }, []);
 
@@ -59,7 +65,7 @@ const Header = (props) => {
     <>
       <header className="flex items-center text-base justify-between bg-[#F0F0F0] px-20 py-4 border-b-2">
         <div className="text-3xl flex items-center">Chuwa America</div>
-        {!props.user.isHR && (
+        {!isHR && (
           <div className="flex flex-row">
             <button
               type="button"
@@ -86,7 +92,7 @@ const Header = (props) => {
           </div>
         )}
 
-        {props.user.isHR && (
+        {isHR && (
           <div className="flex flex-row">
             <button
               type="button"

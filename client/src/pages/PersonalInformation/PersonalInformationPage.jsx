@@ -25,6 +25,7 @@ import axios from "axios";
 const PersonalInformationPage = () => {
   const didMountRef = useRef(false);
   const fileInputRef = useRef(null);
+  const {user} = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const u_id = localStorage.getItem("userID");
   const [loading, setLoading] = useState(true);
@@ -394,7 +395,7 @@ const PersonalInformationPage = () => {
   return (
     <>
       <div className="flex flex-col justify-between overflow-auto">
-        <Header />
+        <Header user={user}/>
 
         {/* Contact Info Modal*/}
         <Modal

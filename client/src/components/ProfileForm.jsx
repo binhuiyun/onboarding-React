@@ -23,9 +23,6 @@ const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
 const ProfileForm = ({employeeProfile}) => {
-
-
- // console.log(employeeProfile.name);
   return (
     employeeProfile && (
     <>

@@ -19,6 +19,8 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString();
 
+// TODO: handle approved
+
 const OnboardingPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -260,7 +262,7 @@ const OnboardingPage = () => {
 
       <Header user={user}/>
       {onboardingStatus == "pending" && (
-        <ProfileForm personalInformation={formData} />
+        <ProfileForm employeeProfile={formData} />
       )}
       {onboardingStatus != "pending" && (
         <form className="max-w-md mx-auto mt-8" onSubmit={handleSubmit}>
@@ -843,7 +845,7 @@ const OnboardingPage = () => {
                 type="tel"
                 id="phone"
                 name="phone"
-                value={formData.reference.phone}
+                value={formData.reference.fetchUserByIdThunkphone}
                 onChange={handleReferenceChange}
                 placeholder="Phone"
                 className="mt-1 p-2 border rounded-md"
