@@ -12,9 +12,8 @@ const Navbar = () => {
   const u_id = localStorage.getItem("userID");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [avatar, setAvatar] = useState(
-    "https://images.unsplash.com/photo-1599566150163-29194dcaad36?q=80&w=2574&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-  );
+  const [avatar, setAvatar] = useState();
+
 
   const handleEmployeeProfilesButtonClick = () => {
     navigate("/employee-profile");
@@ -76,7 +75,15 @@ const Navbar = () => {
           <Dropdown menu={{ items }} placement="bottom" arrow>
                 <img
                   className="p-0.5 w-[40px] h-[40px] rounded-full ring-1 ring-black object-cover"
-                  src={avatar}
+                  src={
+                    avatar && avatar.data.length > 0
+                      ? URL.createObjectURL(
+                          new Blob([new Uint8Array(avatar.data)], {
+                            type: "image/png",
+                          })
+                        )
+                      : "https://as2.ftcdn.net/v2/jpg/05/49/98/39/1000_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.webp"
+                  }
                 />
               </Dropdown>
      
