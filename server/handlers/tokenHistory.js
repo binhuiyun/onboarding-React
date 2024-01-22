@@ -8,7 +8,7 @@ const generateAndSend = async (req, res) => {
     { name },
     process.env.JWT_SECRET_KEY,
     // TODO: change expiresIn to 3h for production
-    { expiresIn: "72h" }
+    { expiresIn: "3h" }
   );
   try {
     const tokenHistory = new TokenHistory({
