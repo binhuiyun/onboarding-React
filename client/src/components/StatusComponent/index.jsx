@@ -40,7 +40,8 @@ const StatusComponent = ({ status }) => {
   return (
     <>
     <Navbar />
-      <h1>{uppercaseStatus} Applications</h1>
+    <div className="flex justify-center items-center text-3xl text-geekblue mx-20 mb-10 mt-10">
+      {uppercaseStatus} Applications</div>
       <Table
         columns={columns}
         dataSource={applications.map((app) => ({

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Button, Input, Spin, message } from "antd";
+import { Button, Input, Spin, message, Typography } from "antd";
 import ProfileForm from "../../../../components/ProfileForm";
 import { updateCurrentUserThunk } from "../../../../thunks/auth-thunk";
 
@@ -83,8 +83,15 @@ const ApplicationFeedback = () => {
                   className="w-full overflow-auto"
                 />
                 <div className="flex flex-row space-x-5">
-                  <Button onClick={handleApprove}>Approve</Button>
-                  <Button onClick={handleReject}>Reject</Button>
+                  
+                  <Button type="primary" 
+                  style={{ backgroundColor: '#4CAF50', borderColor: '#4CAF50' }}
+                  onClick={handleApprove}>Approve</Button>
+                  <Button type= "primary" danger="true"
+              
+
+                  onClick={handleReject}>Reject</Button>
+
                 </div>
               </div>
             )}

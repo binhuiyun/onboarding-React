@@ -1,7 +1,8 @@
 import React from "react";
-import { Card, Col, Row , Button} from "antd";
+import { Card, Col, Row , Button, Typography} from "antd";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../../components/Navbar";
+
 
 const ReviewApplications = () => {
   const navigate = useNavigate();
@@ -17,7 +18,9 @@ const ReviewApplications = () => {
   return (
     <>
     <Navbar />
-      <h1>Onboarding Application Review</h1>
+    <div className="flex justify-center items-center text-3xl text-geekblue mx-20 mb-10 mt-10">
+        Review Applications
+    </div>
       <Row gutter={16}>
         <Col span={8}>
           <Card title="Pending" bordered={false}>
