@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Table, Typography } from "antd";
 import { fetchTokenHistoryThunk } from "../../../thunks/token-thunk";
 import Navbar from "../../../components/Navbar";
-import styles from "../style.module.css";
+
 
 const columns = [
   {
