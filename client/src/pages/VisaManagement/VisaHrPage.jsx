@@ -5,6 +5,8 @@ import { Space, Table, Tag, Input, Pagination } from "antd";
 import ReviewAction from "../../components/ReviewAction";
 import SendNotification from "../../components/SendNotification";
 import Header from "../layout/Header";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchForHr, selectForHr } from "../../redux/visaSlice";
 
 // api : router.get("/hr", getHrSideData);
 
@@ -157,14 +159,11 @@ const VisaHrPage = () => {
       ),
     },
   ];
-  const [info, setInfo] = useState([]);
+  const info = useSelector(selectForHr);
   const [filter, setFilter] = useState("IN PROGRESS");
+  const dispatch = useDispatch();
   useEffect(() => {
-    const fetchDocs = async () => {
-      const response = await axios.get("http://localhost:4000/api/visa/hr");
-      setInfo(response.data);
-    };
-    fetchDocs();
+    dispatch(fetchForHr());
   }, []);
 
   console.log(info);

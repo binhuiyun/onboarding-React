@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { FolderPlusIcon, XMarkIcon } from "@heroicons/react/24/solid";
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { fetchForUser } from "../redux/visaSlice";
 
 const PopUp = (props) => {
   const [selectedFile, setSelectedFile] = useState(null);
-  // const { user } = useSelector((state) => state.user);
-  // console.log("here is popup user", user.id);
+
+  const dispatch = useDispatch();
   let user = {};
   user = {
     id: localStorage.getItem("userID"),
@@ -32,6 +33,7 @@ const PopUp = (props) => {
       );
       if (response.status === 201) {
         alert("Your File Was Uploaded Successfully!");
+        dispatch(fetchForUser(localStorage.getItem("userID")));
         props.setIsPopUp(false);
       } else {
         alert("Something Went Wrong");

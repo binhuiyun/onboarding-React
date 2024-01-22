@@ -2,12 +2,15 @@ import React, { useEffect, useState } from "react";
 import RejectFeedback from "./RejectFeedback";
 import { Button, Popover } from "antd";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { fetchForHr } from "../redux/visaSlice";
 
 //TODO : one file, one reject, one approve
 const ReviewAction = (props) => {
   const { file, fileTitle, filter, id, fileType } = props;
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   console.log(file, fileTitle, filter, id, fileType);
+  const dispatch = useDispatch();
 
   const handleApprove = (e) => {
     e.preventDefault();
@@ -16,6 +19,7 @@ const ReviewAction = (props) => {
       .post(`http://localhost:4000/api/visa/approve/${id}/${fileType}`)
       .then((response) => {
         console.log(response.data);
+        dispatch(fetchForHr());
       })
       .catch((error) => {
         console.error("Error:", error);

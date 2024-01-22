@@ -2,12 +2,15 @@ import React, { useState } from "react";
 import { Button, Modal, Popover } from "antd";
 import { Input, Form } from "antd";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { fetchForHr } from "../redux/visaSlice";
 const { TextArea } = Input;
 
 const RejectFeedback = (props) => {
   const { id, fileType } = props;
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [feedback, setFeedback] = useState("");
+  const dispatch = useDispatch();
   const showModal = () => {
     setIsModalOpen(true);
   };
@@ -20,6 +23,7 @@ const RejectFeedback = (props) => {
       })
       .then((response) => {
         console.log("Feedback sent:", response.data);
+        dispatch(fetchForHr());
         setIsModalOpen(false);
       })
       .catch((error) => {
