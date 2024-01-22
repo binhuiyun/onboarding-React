@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router";
 import { fetchPersonalInformationByUID } from "../../redux/personalInformationSlice";
+import { fetchUserByIdThunk } from "../../thunks/auth-thunk";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Avatar, Menu, Dropdown, Space } from "antd";
@@ -25,7 +26,10 @@ const Header = (props) => {
     dispatch(fetchPersonalInformationByUID(u_id)).then((res) => {
       setAvatar(res.payload.profilePicture);
     });
-    setIsHR(props.user.isHR);
+    dispatch(fetchUserByIdThunk(u_id)).then((res) => {
+      console.log("Fetched user:", res.payload);
+      setIsHR(res.payload.isHR);
+    });
   }, []);
 
   const handlePersonalInformationButtonClick = () => {

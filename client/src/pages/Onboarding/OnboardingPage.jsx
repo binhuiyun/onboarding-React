@@ -1,4 +1,3 @@
-// UserProfileForm.js
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
@@ -29,14 +28,7 @@ const OnboardingPage = () => {
  // const {application} = useSelector((state) => state.application);
   const [optReceipt, setOptReceipt] = useState();
   const u_id = localStorage.getItem("userID");
-  const [newEmergencyContact, setNewEmergencyContact] = useState({
-    firstName: "",
-    lastName: "",
-    middleName: "",
-    phone: "",
-    email: "",
-    relationship: "",
-  });
+  const [newEmergencyContact, setNewEmergencyContact] = useState();
   //const [formData, setFormData] = useState(application);
   const [formData, setFormData] = useState({
     user: u_id,
@@ -104,6 +96,7 @@ const OnboardingPage = () => {
   }, [onboardingStatus]);
 
   useEffect(() => {
+    if (newEmergencyContact === undefined) return;
     console.log("New emergency contact:", newEmergencyContact);
     setFormData({
       ...formData,
@@ -221,7 +214,7 @@ const OnboardingPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-   // createInfo(e);
+    createInfo(e);
     dispatch(updateTokenStatusThunk(user.email));
     dispatch(updateCurrentUserThunk({id: u_id, data:
      {
@@ -850,7 +843,7 @@ const OnboardingPage = () => {
                 type="tel"
                 id="phone"
                 name="phone"
-                value={formData.reference.phone}
+                value={formData.reference.fetchUserByIdThunkphone}
                 onChange={handleReferenceChange}
                 placeholder="Phone"
                 className="mt-1 p-2 border rounded-md"

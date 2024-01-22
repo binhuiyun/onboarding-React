@@ -25,7 +25,8 @@ export default function LogIn() {
     },
   ];
 
-  // TODO: REDIRECT TO ONBOARDING OR PERSONAL INFORMATION PAGE  
+  // TODO: check onboarding==approved:PERSONAL INFORMATION PAGE  
+  // else REDIRECT TO ONBOARDING PAGE
   const onSubmit = (data) => {
     dispatch(loginThunk(data)).then((res) => {
      if (res.payload.token) {

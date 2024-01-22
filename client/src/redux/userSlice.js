@@ -3,6 +3,7 @@ import { loginThunk, registerThunk, fetchUserByIdThunk, updateCurrentUserThunk} 
 
 export const initialState = {
   isAuthenticated: false,
+  isAuthenticated: false,
   user: {},
   status: "idle",
 };
@@ -12,6 +13,7 @@ const currentUserSlice = createSlice({
   initialState,
   reducers: {
     setCurrentUser: (state, action) => {
+      state.isAuthenticated = !!Object.keys(action.payload).length;
       state.isAuthenticated = !!Object.keys(action.payload).length;
       state.user = action.payload;
     },
@@ -28,12 +30,12 @@ const currentUserSlice = createSlice({
     });
     builder.addCase(loginThunk.fulfilled, (state, action) => {
       state.status = "success";
-      state.isAutenicated = true;
+      state.isAuthenticated = true;
       state.user = action.payload;
     });
     builder.addCase(loginThunk.rejected, (state) => {
       state.status = "failed";
-      state.isAutenicated = false;
+      state.isAuthenticated = false;
       state.user = {};
     });
  

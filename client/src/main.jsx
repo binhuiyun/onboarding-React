@@ -11,8 +11,11 @@ import 'antd/dist/reset.css';
 if (localStorage.getItem("token")) {
   const decoded = jwtDecode(localStorage.getItem("token"));
   console.log("set current user:", decoded);
+  // TODO: fetch user from DB
+  // dispatch(fetchUserByIdThunk(u_id)).then((res) => {
+  //   console.log("Fetched user:", res.payload);
+  // });
   store.dispatch(setCurrentUser(decoded));
-
 }
 
 ReactDOM.createRoot(document.getElementById("root")).render(

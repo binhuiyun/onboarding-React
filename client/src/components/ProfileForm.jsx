@@ -1,3 +1,4 @@
+//TODO :refeence and emergency contact render and document upload
 import React, { useState, useRef, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { PlusOutlined } from "@ant-design/icons";
@@ -23,9 +24,6 @@ const { RangePicker } = DatePicker;
 const { TextArea } = Input;
 
 const ProfileForm = ({employeeProfile}) => {
-
-
- // console.log(employeeProfile.name);
   return (
     employeeProfile && (
     <>
