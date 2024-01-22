@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Table, Button } from "antd";
+import { Table, Button, message } from "antd";
 import { useNavigate } from "react-router-dom";
 import { createTokenThunk } from "../../thunks/token-thunk";
-//import HRHeader from "../layout/HRHeader";
 import Navbar from "../../components/Navbar";
 const columns = [
   {
@@ -34,16 +33,17 @@ const data = [
     email: "bob@gmail.com",
   },
   {
-    key: '4',
-    name : "CC",
-    email:"cc@gmail.com",
-  }
+    key: "4",
+    name: "CC",
+    email: "cc@gmail.com",
+  },
 ];
 
 export default function HiringManagement() {
+  const [messageApi, contextHolder] = message.useMessage();
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const {user, isAutenicated} = useSelector((state) => state.user);
+  const { user } = useSelector((state) => state.user);
   const [selectedRowKey, setSelectedRowKey] = useState(null);
   const [selectedEmail, setSelectedEmail] = useState("");
   const [selectedName, setSelectedName] = useState("");
@@ -53,8 +53,7 @@ export default function HiringManagement() {
     setSelectedName(record.name);
   };
 
-
-  console.log("user auth", isAutenicated);
+  console.log("user role", user.isHR);
   const rowSelection = {
     type: "radio",
     selectedRowKeys: selectedRowKey,
@@ -65,11 +64,14 @@ export default function HiringManagement() {
     },
   };
 
-  const handleSendToken =  () => {
-  
-      dispatch(createTokenThunk({email: selectedEmail, name: selectedName}));
-      console.log("crete token success for ", selectedName);
-  
+  const handleSendToken = () => {
+    dispatch(createTokenThunk({ email: selectedEmail, name: selectedName }));
+    console.log("create token success for ", selectedName);
+    messageApi.open({
+      type: "success",
+      content: "Token created and sent",
+      duration: 2,
+    });
   };
 
   const handleReviewApplications = () => {
@@ -78,8 +80,8 @@ export default function HiringManagement() {
 
   return (
     <div>
+      {contextHolder}
       <Navbar />
-      <h1>Hiring Management</h1>
       <Table
         rowSelection={rowSelection}
         columns={columns}
@@ -98,7 +100,7 @@ export default function HiringManagement() {
       <Button onClick={handleReviewApplications}>View Applications</Button>
       <br />
       <br />
-      <Button onClick={()=> navigate("token")}> View Token History</Button>
+      <Button onClick={() => navigate("token")}> View Token History</Button>
     </div>
   );
 }

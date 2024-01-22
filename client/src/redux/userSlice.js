@@ -16,10 +16,11 @@ const currentUserSlice = createSlice({
       state.user = action.payload;
     },
     logOutUser: (state) => {
-      state.isAuthenticated = false;
+      state.isAuthenticated= false;
       state.user = {};
       state.status = "idle";
       localStorage.removeItem("token");
+      localStorage.removeItem("userID");
     },
   },
   extraReducers: (builder) => {

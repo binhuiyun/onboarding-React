@@ -6,15 +6,12 @@ import store from "./redux/store";
 import { jwtDecode } from "jwt-decode";
 import { Provider } from "react-redux";
 import { setCurrentUser } from "./redux/userSlice.js";
-import 'antd/dist/reset.css';
+import "antd/dist/reset.css";
 
 if (localStorage.getItem("token")) {
   const decoded = jwtDecode(localStorage.getItem("token"));
-  console.log("set current user:", decoded);
-  // TODO: fetch user from DB
-  // dispatch(fetchUserByIdThunk(u_id)).then((res) => {
-  //   console.log("Fetched user:", res.payload);
-  // });
+  console.log("set current user", decoded);
+
   store.dispatch(setCurrentUser(decoded));
 }
 

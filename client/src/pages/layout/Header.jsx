@@ -12,8 +12,9 @@ import {
   TranslationOutlined,
   PoweroffOutlined,
 } from "@ant-design/icons";
+import { logOutUser } from "../../redux/userSlice";
 
-const Header = (props) => {
+const Header = () => {
   const [isHR, setIsHR] = useState(false);
   const u_id = localStorage.getItem("userID");
   const navigate = useNavigate();
@@ -46,18 +47,17 @@ const Header = (props) => {
   };
 
   const handleVisaStatusManagementButtonClick = () => {
-    navigate("/visa");
+    navigate("/visa-hr");
   };
 
   const handleHiringManagementButtonClick = () => {
-    navigate("/hiring");
+    navigate("/hiring-management");
   };
 
   const items = [
     {
       key: "1",
-      label: <a href="">Log Out</a>,
-      label: <a href="">Log Out</a>,
+      label: <div onClick={() => dispatch(logOutUser())}>Log Out</div>,
     },
   ];
 
