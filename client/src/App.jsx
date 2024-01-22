@@ -18,8 +18,8 @@ import EmployeeProfilePage from "./pages/EmployeeProfile/EmployeeProfilePage";
 import EmployeeProfileDetailsPage from "./pages/EmployeeProfile/EmployeeProfileDetailsPage";
 import ApplicationFeedback from "./pages/HiringManagement/ReviewApplications/ApplicationFeedback";
 import AuthLayout from "./components/Layout/AuthLayout";
+import ProtectedRoute from "./components/Layout/ProtectedRoute";
 import Layout from "./components/Layout";
-
 
 const ApplicationStatusRouter = () => {
   return (
@@ -35,9 +35,8 @@ const ApplicationStatus = () => {
     pending: <PendingApplications />,
     approved: <ApprovedApplications />,
     rejected: <RejectedApplications />,
-
   };
-  const selectedComponent = statusComponentMap[status] ||<NotFound/>;
+  const selectedComponent = statusComponentMap[status] || <NotFound />;
 
   return <div>{selectedComponent}</div>;
 };
@@ -45,39 +44,102 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Layout />} >
-        <Route path="/login" element={<Login />} />
-        <Route path="/register/:token" element={<Register />} />
-        <Route element = {<AuthLayout/>}>
-        <Route path="/hiring-management" element={<HiringManagement />} />
-        <Route
-          path="/hiring-management/applications/*"
-          element={<ApplicationStatusRouter />}
-        />
-        <Route
-          path="/hiring-management/applications"
-          element={<ReviewApplications />}
-        />
-        <Route
-          path="/hiring-management/token"
-          element={<ReviewTokenHistory />}
-        />
-        <Route
-          path="/applications/:id"
-          element={<ApplicationFeedback />}  
-        />
+        <Route path="/" element={<Layout />}>
+          <Route path="/login" element={<Login />} />
+          <Route path="/register/:token" element={<Register />} />
+          {/* <Route element = {<AuthLayout/>}> */}
+          <Route
+            path="/hiring-management"
+            element={
+              <ProtectedRoute>
+                <HiringManagement />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/hiring-management/applications/*"
+            element={
+              <ProtectedRoute>
+                <ApplicationStatusRouter />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/hiring-management/applications"
+            element={
+              <ProtectedRoute>
+                <ReviewApplications />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/hiring-management/token"
+            element={
+              <ProtectedRoute>
+                <ReviewTokenHistory />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/applications/:id"
+            element={
+              <ProtectedRoute>
+                <ApplicationFeedback />
+              </ProtectedRoute>
+            }
+          />
         </Route>
-        <Route path="/visa" element={<VisaPage />} />
-        <Route path="/visa-hr" element={<VisaHrPage />} />
+        <Route
+          path="/visa"
+          element={
+            <ProtectedRoute>
+              <VisaPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/visa-hr"
+          element={
+            <ProtectedRoute>
+              <VisaHrPage />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/personal-information"
-          element={<PersonalInformationPage />}
+          element={
+            <ProtectedRoute>
+              <PersonalInformationPage />
+            </ProtectedRoute>
+          }
         />
-        <Route path="/onboarding" element={<OnboardingPage />} />
-        <Route path="/employee-profile" element={<EmployeeProfilePage />} />
-        <Route path="/employee-profile/details" element={<EmployeeProfileDetailsPage />} />
-        </Route>
+        <Route
+          path="/onboarding"
+          element={
+            <ProtectedRoute>
+              <OnboardingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/employee-profile"
+          element={
+            <ProtectedRoute>
+              <EmployeeProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/employee-profile/details"
+          element={
+            <ProtectedRoute>
+              <EmployeeProfileDetailsPage />
+            </ProtectedRoute>
+          }
+        />
+        {/* </Route> */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>

@@ -8,8 +8,8 @@ export default function AuthLayout() {
   const location = useLocation();
   if (!isAuthenticated) {
     console.log("no auth");
-    return <Navigate to="/login" state={{from: location.pathname}}/>;
+    return <Navigate to="/login" state={{ from: location.pathname }} />;
   }
 
-  return <Outlet/>;
+  return <Outlet />;
 }
