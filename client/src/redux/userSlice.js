@@ -3,7 +3,6 @@ import { loginThunk, registerThunk, fetchUserByIdThunk, updateCurrentUserThunk} 
 
 export const initialState = {
   isAuthenticated: false,
-  isAuthenticated: false,
   user: {},
   status: "idle",
 };
@@ -14,7 +13,6 @@ const currentUserSlice = createSlice({
   reducers: {
     setCurrentUser: (state, action) => {
       state.isAuthenticated = !!Object.keys(action.payload).length;
-      state.isAuthenticated = !!Object.keys(action.payload).length;
       state.user = action.payload;
     },
     logOutUser: (state) => {
@@ -22,6 +20,7 @@ const currentUserSlice = createSlice({
       state.user = {};
       state.status = "idle";
       localStorage.removeItem("token");
+      localStorage.removeItem("userID");
     },
   },
   extraReducers: (builder) => {

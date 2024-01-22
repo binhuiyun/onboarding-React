@@ -17,7 +17,9 @@ import NotFound from "./pages/NotFound";
 import EmployeeProfilePage from "./pages/EmployeeProfile/EmployeeProfilePage";
 import EmployeeProfileDetailsPage from "./pages/EmployeeProfile/EmployeeProfileDetailsPage";
 import ApplicationFeedback from "./pages/HiringManagement/ReviewApplications/ApplicationFeedback";
-import AuthLayout from "./components/AuthLayout";
+import AuthLayout from "./components/Layout/AuthLayout";
+import Layout from "./components/Layout";
+
 
 const ApplicationStatusRouter = () => {
   return (
@@ -43,7 +45,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Home />} />
+        {/* <Route path="/" element={<Layout />} > */}
         <Route path="/login" element={<Login />} />
         <Route path="/register/:token" element={<Register />} />
         <Route element = {<AuthLayout/>}>
@@ -64,7 +66,7 @@ function App() {
           path="/applications/:id"
           element={<ApplicationFeedback />}  
         />
-
+        {/* </Route> */}
         <Route path="/visa" element={<VisaPage />} />
         <Route path="/visa-hr" element={<VisaHrPage />} />
 

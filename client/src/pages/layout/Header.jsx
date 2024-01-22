@@ -13,7 +13,7 @@ import {
   PoweroffOutlined,
 } from "@ant-design/icons";
 
-const Header = (props) => {
+const Header = () => {
   const [isHR, setIsHR] = useState(false);
   const u_id = localStorage.getItem("userID");
   const navigate = useNavigate();
@@ -46,18 +46,19 @@ const Header = (props) => {
   };
 
   const handleVisaStatusManagementButtonClick = () => {
-    navigate("/visa");
+    navigate("/visa-hr");
   };
 
   const handleHiringManagementButtonClick = () => {
-    navigate("/hiring");
+    navigate("/hiring-management");
   };
 
   const items = [
     {
       key: "1",
       label: <a href="">Log Out</a>,
-
+      
+      
     },
   ];
 
