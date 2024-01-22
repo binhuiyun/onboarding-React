@@ -190,6 +190,7 @@ const PersonalInformationPage = () => {
     setOpenContactInfoEditModal(false);
     setOpenEmploymentAddModal(false);
     setOpenAddFileModal(false);
+    setOpenEmergencyContactAddModal(false);
   };
 
   const handleEmploymentEditButtonClick = () => {
