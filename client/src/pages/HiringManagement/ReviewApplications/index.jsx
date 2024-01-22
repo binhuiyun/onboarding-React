@@ -3,7 +3,6 @@ import { Card, Col, Row , Button} from "antd";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../../components/Navbar";
 
-
 const ReviewApplications = () => {
   const navigate = useNavigate();
   const handlePending = () => {
@@ -18,7 +17,7 @@ const ReviewApplications = () => {
   return (
     <>
     <Navbar />
-      <h1>ReviewApplications</h1>
+      <h1>Onboarding Application Review</h1>
       <Row gutter={16}>
         <Col span={8}>
           <Card title="Pending" bordered={false}>

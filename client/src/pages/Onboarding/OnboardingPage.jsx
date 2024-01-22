@@ -117,7 +117,8 @@ const OnboardingPage = () => {
 
   useEffect(() => {
     if (onboardingStatus == "pending") setShowModal(true);
-    if (onboardingStatus == "rejected") setShowRejectedModal(true);
+    else if (onboardingStatus == "rejected") setShowRejectedModal(true);
+    else if (onboardingStatus == "approved") navigate("/personal-information");
   }, [onboardingStatus]);
 
   useEffect(() => {

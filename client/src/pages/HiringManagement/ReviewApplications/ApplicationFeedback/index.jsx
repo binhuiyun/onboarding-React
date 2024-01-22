@@ -1,4 +1,4 @@
-import React,{useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Button, Input, Spin, message } from "antd";
@@ -6,75 +6,94 @@ import ProfileForm from "../../../../components/ProfileForm";
 import { updateCurrentUserThunk } from "../../../../thunks/auth-thunk";
 
 const { TextArea } = Input;
-import { updateApplicationStatusThunk, fetchApplicationByIdThunk} from "../../../../thunks/application-thunk";
+import {
+  updateApplicationStatusThunk,
+  fetchApplicationByIdThunk,
+} from "../../../../thunks/application-thunk";
 import Navbar from "../../../../components/Navbar";
 
-const ApplicationFeedback= () => {
+const ApplicationFeedback = () => {
   const [messageApi, contextHolder] = message.useMessage();
-  const {application} = useSelector((state) => state.application);
+  const { application } = useSelector((state) => state.application);
   const status = useSelector((state) => state.application.status);
   const dispatch = useDispatch();
-  const {id} = useParams();
+  const { id } = useParams();
   const [feedback, setFeedback] = useState("");
   const u_id = localStorage.getItem("userID");
 
   useEffect(() => {
     dispatch(fetchApplicationByIdThunk(id));
-  }
-  , [id]);
-  
+  }, [id]);
+
   const handleApprove = () => {
     console.log(id);
     messageApi.open({
       type: "success",
       content: "Application approved",
       duration: 2,
-      
     });
-    dispatch(updateApplicationStatusThunk({id, payload:{onboardingStatus:"approved"}}));
-    dispatch(updateCurrentUserThunk({id: u_id, data:
-      {
-       onboardingStatus: "approved" }}));
-     } ;
-   
-    
+    dispatch(
+      updateApplicationStatusThunk({
+        id,
+        payload: { onboardingStatus: "approved" },
+      })
+    );
+    dispatch(
+      updateCurrentUserThunk({
+        id: u_id,
+        data: {
+          onboardingStatus: "approved",
+        },
+      })
+    );
+  };
 
   const handleReject = () => {
-    dispatch(updateApplicationStatusThunk({id, payload:{onboardingStatus:"rejected", feedback}}));
+    dispatch(
+      updateApplicationStatusThunk({
+        id,
+        payload: { onboardingStatus: "rejected", feedback },
+      })
+    );
     messageApi.open({
       type: "warning",
       content: "Application rejected",
       duration: 2,
-    
     });
   };
 
-  if (status === "loading" || status === "idle" ) {
+  if (status === "loading" || status === "idle") {
     return <Spin />;
   }
   return (
     <>
-    <Navbar />
+      <Navbar />
       {contextHolder}
       {application && (
         <>
-      <ProfileForm employeeProfile={application}/>
-      {application.onboardingStatus === "pending" && (
-        <div>
-        
-      <Button onClick={handleApprove}>Approve</Button>
-      <Button onClick={handleReject}>Reject</Button>
-      <TextArea 
-      rows={4}
-       value={feedback}
-        onChange={(e)=>setFeedback(e.target.value)}
-        />
-      </div>
+          <div className="flex">
+            <ProfileForm employeeProfile={application} />
+            {application.onboardingStatus === "pending" && (
+              <div className="flex flex-col space-y-5 w-full justify-center items-center">
+              <p className="text-xl">Feedback</p>
+                <TextArea
+                  rows={4}
+                  value={feedback}
+                  onChange={(e) => setFeedback(e.target.value)}
+                  className="w-full overflow-auto"
+                />
+                <div className="flex flex-row space-x-5">
+                  <Button onClick={handleApprove}>Approve</Button>
+                  <Button onClick={handleReject}>Reject</Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </>
       )}
-    </>
-  )};
+      ;
     </>
   );
-}
+};
 
 export default ApplicationFeedback;

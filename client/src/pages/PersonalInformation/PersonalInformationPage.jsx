@@ -124,8 +124,14 @@ const PersonalInformationPage = () => {
           // Set loading to false after 1 second
           setLoading(false);
         }, 1000);
+      })
+      .catch((error) => {
+        console.log(error);
+        setTimeout(() => {
+          // Set loading to false after 1 second
+          setLoading(false);
+        }, 1000);
       });
-
     // axios
     //   .get(`http://localhost:4000/api/visa/${u_id}`)
     //   .then((res) => {
@@ -1302,7 +1308,7 @@ const PersonalInformationPage = () => {
             Edit
           </button>
 
-          <div className="grid divide-y-[3px] divide-gray-500/20 border border-black rounded-3xl xs:w-[288px] sm:w-[576px] md:w-[691px] lg:w-[921px] xl:w-[1152px] 2xl:w-[1382px] 3xl:w-[1728px] h-fit">
+          <div className="pb-4 grid divide-y-[3px] divide-gray-500/20 border border-black rounded-3xl xs:w-[288px] sm:w-[576px] md:w-[691px] lg:w-[921px] xl:w-[1152px] 2xl:w-[1382px] 3xl:w-[1728px] h-fit">
             <div className="flex flex-row items-center justify-between">
               <span className="text-2xl font-bold px-8 py-2">Employment</span>
               <div className="px-8">
@@ -1385,7 +1391,7 @@ const PersonalInformationPage = () => {
             </div>
           </div>
 
-          <div className="grid divide-y-[3px] divide-gray-500/20 border border-black rounded-3xl xs:w-[288px] sm:w-[576px] md:w-[691px] lg:w-[921px] xl:w-[1152px] 2xl:w-[1382px] 3xl:w-[1728px] h-fit">
+          <div className="pb-4 grid divide-y-[3px] divide-gray-500/20 border border-black rounded-3xl xs:w-[288px] sm:w-[576px] md:w-[691px] lg:w-[921px] xl:w-[1152px] 2xl:w-[1382px] 3xl:w-[1728px] h-fit">
             <div className="flex flex-row items-center justify-between">
               <span className="text-2xl font-bold px-8 py-2">
                 Emergency Contact
@@ -1459,7 +1465,7 @@ const PersonalInformationPage = () => {
               </table>
             </div>
           </div>
-          <div className="grid divide-y-[3px] divide-gray-500/20 border border-black rounded-3xl xs:w-[288px] sm:w-[576px] md:w-[691px] lg:w-[921px] xl:w-[1152px] 2xl:w-[1382px] 3xl:w-[1728px] h-fit">
+          <div className="pb-4 grid divide-y-[3px] divide-gray-500/20 border border-black rounded-3xl xs:w-[288px] sm:w-[576px] md:w-[691px] lg:w-[921px] xl:w-[1152px] 2xl:w-[1382px] 3xl:w-[1728px] h-fit">
             <div className="flex flex-row items-center justify-between">
               <span className="text-2xl font-bold px-8 py-2">Documents</span>
             </div>

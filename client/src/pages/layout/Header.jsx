@@ -23,7 +23,8 @@ const Header = () => {
 
   useEffect(() => {
     dispatch(fetchPersonalInformationByUID(u_id)).then((res) => {
-      setAvatar(res.payload.profilePicture);
+      if (res.payload.profilePicture)
+        setAvatar(res.payload.profilePicture);
     });
     dispatch(fetchUserByIdThunk(u_id)).then((res) => {
       console.log("Fetched user:", res.payload);
@@ -39,7 +40,6 @@ const Header = () => {
     navigate("/visa");
   };
 
-  //TODO: navigate to wrong route?
   const handleEmployeeProfilesButtonClick = () => {
     navigate("/employee-profile");
   };
@@ -58,7 +58,7 @@ const Header = () => {
       label: <div onClick={() => dispatch(logOutUser())}>Log Out</div>,
     },
   ];
-
+  
   return (
     <>
       <header className="flex items-center text-base justify-between bg-[#F0F0F0] px-20 py-4 border-b-2">
@@ -90,7 +90,7 @@ const Header = () => {
                             type: "image/png",
                           })
                         )
-                      : ""
+                      : "https://as2.ftcdn.net/v2/jpg/05/49/98/39/1000_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.webp"
                   }
                 />
               </Dropdown>
