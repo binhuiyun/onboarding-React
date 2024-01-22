@@ -8,7 +8,7 @@ const submitOnboarding = createAsyncThunk(
   async (payload) => {
     const { formData, u_id, document } = payload;
     const res = await createPersonalInformation(formData, u_id);
-    
+
     if (
       formData.workAuthorization.citizenship === "no" &&
       formData.workAuthorization.workAuthorizationType === "F1(CPT/OPT)"
@@ -23,6 +23,23 @@ const submitOnboarding = createAsyncThunk(
         }
       );
       console.log(response);
+    }
+  }
+);
+
+const updateOnboarding = createAsyncThunk(
+  "onboarding/updateOnboarding",
+  async (payload) => {
+    const { formData, u_id, document } = payload;
+    try {
+      console.log("Saving Onboarding personal information: ", u_id);
+      const response = await axios.put(
+        `http://localhost:4000/api/personalInformation/${u_id}`,
+        formData
+      );
+      return response.data;
+    } catch (error) {
+      console.log(error);
     }
   }
 );
@@ -54,7 +71,7 @@ const onboardingSlice = createSlice({
 });
 
 const { reducer, actions } = onboardingSlice;
-export { submitOnboarding };
+export { submitOnboarding, updateOnboarding };
 export const selectOnboarding = (state) => state.onboarding.onboarding;
 export const { setOnboarding } = actions;
 export default reducer;

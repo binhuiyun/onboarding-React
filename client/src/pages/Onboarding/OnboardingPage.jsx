@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
-import { submitOnboarding } from "../../redux/onboardingSlice";
+import {
+  submitOnboarding,
+  updateOnboarding,
+} from "../../redux/onboardingSlice";
 import { Document, Page, pdfjs } from "react-pdf";
 import FilePreviewer from "../../components/FilePreviewer";
 import {
@@ -11,7 +14,18 @@ import {
 import { updateTokenStatusThunk } from "../../thunks/token-thunk";
 import { fetchPersonalInformationByUID } from "../../redux/personalInformationSlice";
 import Header from "../layout/Header";
-import { Form, Input, Button, Select, Upload, message, Modal } from "antd";
+import {
+  Form,
+  Input,
+  Button,
+  Select,
+  Upload,
+  message,
+  Modal,
+  Space,
+} from "antd";
+const { TextArea } = Input;
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 import ProfileForm from "../../components/ProfileForm";
 import axios from "axios";
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -21,14 +35,22 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
 
 const OnboardingPage = () => {
   const [showModal, setShowModal] = useState(false);
+  const [showRejectedModal, setShowRejectedModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const fileInputRef = useRef(null);
   const { user } = useSelector((state) => state.user);
   const [onboardingStatus, setOnboardingStatus] = useState(null);
- // const {application} = useSelector((state) => state.application);
+  // const {application} = useSelector((state) => state.application);
   const [optReceipt, setOptReceipt] = useState();
   const u_id = localStorage.getItem("userID");
-  const [newEmergencyContact, setNewEmergencyContact] = useState();
+  const [newEmergencyContact, setNewEmergencyContact] = useState({
+    firstName: "",
+    lastName: "",
+    middleName: "",
+    phone: "",
+    email: "",
+    relationship: "",
+  });
   //const [formData, setFormData] = useState(application);
   const [formData, setFormData] = useState({
     user: u_id,
@@ -64,6 +86,7 @@ const OnboardingPage = () => {
       relationship: "",
     },
     emergencyContact: [],
+    onboardingStatus: "",
   });
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -84,6 +107,7 @@ const OnboardingPage = () => {
           console.log("Fetched personal information:", res.payload);
           setOnboardingStatus(res.payload.onboardingStatus);
           setFormData(res.payload);
+          setNewEmergencyContact(res.payload.emergencyContact[0]);
         }
       })
       .then(() => {
@@ -93,6 +117,7 @@ const OnboardingPage = () => {
 
   useEffect(() => {
     if (onboardingStatus == "pending") setShowModal(true);
+    if (onboardingStatus == "rejected") setShowRejectedModal(true);
   }, [onboardingStatus]);
 
   useEffect(() => {
@@ -210,13 +235,28 @@ const OnboardingPage = () => {
   };
   const handleCancel = () => {
     setShowModal(false);
+    setShowRejectedModal(false);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createInfo(e);
+    if (onboardingStatus == "rejected") updateInfo(e);
+    else createInfo(e);
     dispatch(updateTokenStatusThunk(user.email));
   };
+
+  async function updateInfo(e) {
+    e.preventDefault();
+    const payload = {
+      formData,
+      u_id,
+      document,
+    };
+    dispatch(updateOnboarding(payload)).then((res) => {
+      console.log("Updated onboarding:", res.payload);
+      //navigate("/personal-information");
+    });
+  }
 
   async function createInfo(e) {
     e.preventDefault();
@@ -224,8 +264,18 @@ const OnboardingPage = () => {
     if (
       formData.workAuthorization.citizenship === "no" &&
       formData.workAuthorization.workAuthorizationType === "F1(CPT/OPT)"
-    )
+    ) {
       document.append("file", optReceipt, optReceipt.name);
+      const data = new FormData();
+      data.append("file", optReceipt);
+      await axios.post(`http://localhost:4000/api/folder/${u_id}`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      alert("File uploaded successfully");
+    }
     const payload = {
       formData,
       u_id,
@@ -255,7 +305,22 @@ const OnboardingPage = () => {
         </p>
       </Modal>
 
-      <Header user={user}/>
+      <Modal
+        title={
+          <Space>
+            <ExclamationCircleOutlined style={{ color: "orange" }} />
+            Sorry, your application has been rejected
+          </Space>
+        }
+        open={showRejectedModal}
+        onCancel={handleCancel}
+        footer={[]}
+      >
+        <hr style={{ margin: "8px 0" }} />
+        <p className="text-lg">Please review and update your information.</p>
+      </Modal>
+
+      <Header user={user} />
       {onboardingStatus == "pending" && (
         <ProfileForm employeeProfile={formData} />
       )}
@@ -931,6 +996,24 @@ const OnboardingPage = () => {
             </div>
           </div>
 
+          {/* Feedback */}
+          {onboardingStatus == "rejected" && (
+            <div className="mb-4">
+              <label htmlFor="HRfeedback" className="block">
+                Rejected Reason
+              </label>
+              <TextArea
+                readOnly
+                id="HRfeedback"
+                name="HRfeedback"
+                value={formData.HRfeedback}
+                rows="3"
+                style={{ background: "#f5f5f5", borderColor: "#d9d9d9" }}
+                className="mt-1 p-2 rounded-md w-full hover:cursor-not-allowed"
+              />
+            </div>
+          )}
+
           {/* Submit Button */}
           <div className="mt-4">
             <button
@@ -940,24 +1023,6 @@ const OnboardingPage = () => {
               Submit
             </button>
           </div>
-
-          {/* Feedback */}
-          {/* <div className="mb-4">
-          <label
-            htmlFor="summaryOfUploadedFiles"
-            className="block *: "
-          >
-            Feedback
-          </label>
-          <textarea
-            id="summaryOfUploadedFiles"
-            name="summaryOfUploadedFiles"
-            value={formData.summaryOfUploadedFiles}
-            onChange={handleChange}
-            rows="3"
-            className="mt-1 p-2 border rounded-md w-full"
-          ></textarea>
-        </div> */}
         </form>
       )}
     </>

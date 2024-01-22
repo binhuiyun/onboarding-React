@@ -14,6 +14,7 @@ const personalInformationRouter = require("./routes/personalInformation");
 const userRouter = require("./routes/user");
 const applicationRouter = require("./routes/application");
 const employeeProfileRouter = require("./routes/employeeProfile");
+const folderRouter = require("./routes/folder");
 const bodyParser = require("body-parser");
 const path = require("path");
 const PORT = 4000;
@@ -38,6 +39,7 @@ app.use("/api/visa", visaRouter);
 app.use("/api/user", userRouter);
 app.use("/api/application", loginRequired, applicationRouter);
 app.use("/api/employeeProfile", employeeProfileRouter);
+app.use("/api/folder", folderRouter);
 app.use(errorHandler);
 app.use((req, res, next) => {
   const err = new Error("Not Found");

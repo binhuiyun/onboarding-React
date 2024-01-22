@@ -12,6 +12,7 @@ const getAllVisa = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
 const createVisaModel = async (req, res) => {
   try {
     const { user } = req.body;
@@ -51,6 +52,7 @@ const addToVisaDocumentation = async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 };
+
 const downloadEmptyAndSample = async (req, res) => {
   try {
     const filePath = "../server/public/Template.zip";
@@ -64,6 +66,7 @@ const downloadEmptyAndSample = async (req, res) => {
     res.status(500).json(err);
   }
 };
+
 // POST /api/visa/approve/:id/:fileType
 const approveFile = async (req, res) => {
   try {
@@ -77,6 +80,7 @@ const approveFile = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 // POST /api/visa/feedback/:id/:fileType
 const addHrFeedback = async (req, res) => {
   try {
@@ -91,6 +95,7 @@ const addHrFeedback = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 // GET /api/visa/hr
 const getHrSideData = async (req, res) => {
   try {
@@ -235,6 +240,7 @@ const getHrSideData = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
+
 const sendNotification = async (req, res) => {
   const { to, subject, text } = req.body;
   sendmail(

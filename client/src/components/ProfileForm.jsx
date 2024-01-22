@@ -37,6 +37,7 @@ const ProfileForm = ({ employeeProfile }) => {
 
   const handleDocumentClick = (e) => {
     console.log("Document Clicked");
+    console.log(documents);
     const blob = new Blob([new Uint8Array(documents.fileDoc.data)], {
       type: "application/pdf",
     });

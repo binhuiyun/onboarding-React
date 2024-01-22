@@ -23,6 +23,7 @@ import Footer from "../layout/Footer";
 import axios from "axios";
 
 const PersonalInformationPage = () => {
+  const [file, setFile] = useState(null);
   const didMountRef = useRef(false);
   const fileInputRef = useRef(null);
   const { user } = useSelector((state) => state.user);
@@ -113,10 +114,10 @@ const PersonalInformationPage = () => {
 
     // TODO: handle more documents
     axios
-      .get(`http://localhost:4000/api/visa/${u_id}`)
+      .get(`http://localhost:4000/api/folder/${u_id}`)
       .then((res) => {
-        setDocuments(res.data.optReceipt);
         console.log("Documents:", res.data);
+        setDocuments(res.data);
       })
       .then(() => {
         setTimeout(() => {
@@ -124,6 +125,19 @@ const PersonalInformationPage = () => {
           setLoading(false);
         }, 1000);
       });
+
+    // axios
+    //   .get(`http://localhost:4000/api/visa/${u_id}`)
+    //   .then((res) => {
+    //     setDocuments(res.data.optReceipt);
+    //     console.log("Documents:", res.data);
+    //   })
+    //   .then(() => {
+    //     setTimeout(() => {
+    //       // Set loading to false after 1 second
+    //       setLoading(false);
+    //     }, 1000);
+    //   });
   }, []);
 
   useEffect(() => {
@@ -270,7 +284,8 @@ const PersonalInformationPage = () => {
 
   const handleDocumentClick = (e) => {
     console.log("Document Clicked");
-    const blob = new Blob([new Uint8Array(documents.fileDoc.data)], {
+    console.log(documents);
+    const blob = new Blob([new Uint8Array(documents[0].fileBuffer.data)], {
       type: "application/pdf",
     });
     const url = URL.createObjectURL(blob);
@@ -379,6 +394,32 @@ const PersonalInformationPage = () => {
   const handleEmergencyContactAddButtonClick = async (e) => {
     console.log("EmergencyContactAddButton Clicked");
     setOpenEmergencyContactAddModal(true);
+  };
+
+  const handleFileChange = (e) => {
+    setFile(e.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (!file) {
+      alert("Please choose a file to upload");
+      return;
+    }
+
+    const data = new FormData();
+    data.append("file", file);
+
+    try {
+      await axios.post(`http://localhost:4000/api/folder/${u_id}`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      alert("File uploaded successfully");
+    } catch (error) {
+      console.error("Error uploading file:", error.message);
+    }
   };
 
   if (loading) {
@@ -1430,47 +1471,24 @@ const PersonalInformationPage = () => {
                     <th scope="col" className="px-12 py-3 w-1/2">
                       File Name
                     </th>
-                    <th scope="col" className="px-12 py-3">
-                      Status
-                    </th>
                     <th scope="col" className="px-12 py-3"></th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr className="">
-                    <th
-                      scope="row"
-                      className="px-12 py-4 font-medium whitespace-nowrap overflow-clip"
-                      onClick={handleDocumentClick}
-                    >
-                      <span className="cursor-pointer hover:text-blue-500 transition duration-300">
-                        {documents && documents.fileName}
-                      </span>
-                    </th>
-                    <td className="px-12 py-4">
-                      <span className="capitalize">
-                        {documents && documents.status}
-                      </span>
-                    </td>
-                    <td className="px-12 py-4">
-                      <div className="flex justify-end">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth="1.5"
-                          stroke="currentColor"
-                          className="w-6 h-6 hover:cursor-pointer"
+                  {documents &&
+                    documents.map((entry, index) => (
+                      <tr className="">
+                        <th
+                          scope="row"
+                          className="px-12 py-4 font-medium whitespace-nowrap overflow-clip"
+                          onClick={handleDocumentClick}
                         >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                          />
-                        </svg>
-                      </div>
-                    </td>
-                  </tr>
+                          <span className="cursor-pointer hover:text-blue-500 transition duration-300">
+                            {entry && entry.fileName}
+                          </span>
+                        </th>
+                      </tr>
+                    ))}
                 </tbody>
               </table>
             </div>
