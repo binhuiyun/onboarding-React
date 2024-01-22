@@ -28,6 +28,7 @@ const columns = [
 ];
 const StatusComponent = ({ status }) => {
   const [applications, setApplications] = useState([]);
+  const uppercaseStatus = status.charAt(0).toUpperCase() + status.slice(1);
 
   useEffect(() => {
     getAppByStatus(status).then((res) => {
@@ -39,6 +40,7 @@ const StatusComponent = ({ status }) => {
   return (
     <>
     <Navbar />
+      <h1>{uppercaseStatus} Applications</h1>
       <Table
         columns={columns}
         dataSource={applications.map((app) => ({

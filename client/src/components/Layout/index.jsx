@@ -14,7 +14,7 @@ export default function MainLayout() {
 
   const contentStyle =useMemo(
     () => ({
-      height: 'calc(100vh - 64px )',
+      height: 'calc(100vh )',
       padding: '0 50px',
       width: '100%',
       margin: '0 auto',
