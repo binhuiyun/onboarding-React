@@ -253,7 +253,7 @@ const OnboardingPage = () => {
 
   return (
     <>
-      {/* <Modal
+      <Modal
         title={"Hello " + formData.name.firstName + ","}
         open={showModal}
         onCancel={handleCancel}
@@ -263,11 +263,11 @@ const OnboardingPage = () => {
         <p className="text-lg">
           Please wait for HR to review your application.
         </p>
-      </Modal> */}
+      </Modal>
 
       <Header user={user}/>
       {onboardingStatus == "pending" && (
-        <ProfileForm personalInformation={formData} />
+        <ProfileForm employeeProfile={formData} />
       )}
       {onboardingStatus != "pending" && (
         <form className="max-w-md mx-auto mt-8" onSubmit={handleSubmit}>

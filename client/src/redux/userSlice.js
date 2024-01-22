@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { loginThunk, registerThunk, fetchUserByIdThunk, updateCurrentUserThunk} from "../thunks/auth-thunk";
 
 export const initialState = {
-  isAutenicated: false,
+  isAuthenticated: false,
   user: {},
   status: "idle",
 };
@@ -12,11 +12,11 @@ const currentUserSlice = createSlice({
   initialState,
   reducers: {
     setCurrentUser: (state, action) => {
-      state.isAutenicated = !!Object.keys(action.payload).length;
+      state.isAuthenticated = !!Object.keys(action.payload).length;
       state.user = action.payload;
     },
     logOutUser: (state) => {
-      state.isAutenicated = false;
+      state.isAuthenticated= false;
       state.user = {};
       state.status = "idle";
       localStorage.removeItem("token");

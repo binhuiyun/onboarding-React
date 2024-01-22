@@ -53,7 +53,7 @@ const Header = (props) => {
     {
       key: "1",
       label: <a href="">Log Out</a>,
-      label: <a href="">Log Out</a>,
+
     },
   ];
 
