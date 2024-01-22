@@ -25,19 +25,26 @@ export default function LogIn() {
     },
   ];
 
+  useEffect(() => {
+    if (user) {dispatch(fetchUserByIdThunk(user.id));
+    }}, []);
+  
+
   // TODO: check onboarding==approved:PERSONAL INFORMATION PAGE  
   // else REDIRECT TO ONBOARDING PAGE
   const onSubmit = (data) => {
     dispatch(loginThunk(data)).then((res) => {
      if (res.payload.token) {
-      //  dispatch(fetchUserByIdThunk(res.payload.token));
+    
         if (res.payload.username === "hr") {
-          navigate(location.state?.from || "/hiring-management");
+          navigate("/hiring-management");
         } else {
-          navigate(location.state?.from || "/onboarding");
+          console.log("user", user.onboardingStatus);
+       //   navigate("/onboarding");
         }
       }
     });
+
   };
 
   return (
