@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { getAppByStatus } from "../../services/application-service";
 import { Link } from "react-router-dom";
+import Navbar from "../Navbar";
 
 const columns = [
   {
@@ -27,6 +28,7 @@ const columns = [
 ];
 const StatusComponent = ({ status }) => {
   const [applications, setApplications] = useState([]);
+  const uppercaseStatus = status.charAt(0).toUpperCase() + status.slice(1);
 
   useEffect(() => {
     getAppByStatus(status).then((res) => {
@@ -37,6 +39,8 @@ const StatusComponent = ({ status }) => {
 
   return (
     <>
+    <Navbar />
+      <h1>{uppercaseStatus} Applications</h1>
       <Table
         columns={columns}
         dataSource={applications.map((app) => ({

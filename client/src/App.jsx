@@ -45,7 +45,7 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route path="/" element={<Layout />} > */}
+        <Route path="/" element={<Layout />} >
         <Route path="/login" element={<Login />} />
         <Route path="/register/:token" element={<Register />} />
         <Route element = {<AuthLayout/>}>
@@ -66,7 +66,7 @@ function App() {
           path="/applications/:id"
           element={<ApplicationFeedback />}  
         />
-        {/* </Route> */}
+        </Route>
         <Route path="/visa" element={<VisaPage />} />
         <Route path="/visa-hr" element={<VisaHrPage />} />
 

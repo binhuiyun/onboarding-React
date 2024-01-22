@@ -1,6 +1,7 @@
 import React from "react";
 import { Card, Col, Row , Button} from "antd";
 import { useNavigate } from "react-router-dom";
+import Navbar from "../../../components/Navbar";
 
 
 const ReviewApplications = () => {
@@ -16,6 +17,7 @@ const ReviewApplications = () => {
   }
   return (
     <>
+    <Navbar />
       <h1>ReviewApplications</h1>
       <Row gutter={16}>
         <Col span={8}>
