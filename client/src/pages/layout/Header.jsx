@@ -12,6 +12,7 @@ import {
   TranslationOutlined,
   PoweroffOutlined,
 } from "@ant-design/icons";
+import { logOutUser } from "../../redux/userSlice";
 
 const Header = () => {
   const [isHR, setIsHR] = useState(false);
@@ -56,9 +57,7 @@ const Header = () => {
   const items = [
     {
       key: "1",
-      label: <a href="">Log Out</a>,
-      
-      
+      label: <div onClick={() => dispatch(logOutUser())}>Log Out</div>,
     },
   ];
 
