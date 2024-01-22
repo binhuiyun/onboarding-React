@@ -19,8 +19,6 @@ pdfjs.GlobalWorkerOptions.workerSrc = new URL(
   import.meta.url
 ).toString();
 
-// TODO: handle approved
-
 const OnboardingPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);

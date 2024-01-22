@@ -43,17 +43,19 @@ const savePersonalInformation = createAsyncThunk(
     const { u_id, formData } = payload;
     try {
       console.log("Saving personal information: ", u_id);
-      const response = await axios.put(
-        `http://localhost:4000/api/personalInformation/${u_id}`,
-        formData
-      );
+      // const response = await axios.put(
+      //   `http://localhost:4000/api/personalInformation/${u_id}`,
+      //   formData
+      // );
       // TODO - use apiCall instead of axios
-      // const response = await apiCall({
-      //   url: `/api/personalInformation/${u_id}`,
-      //   method: "put",
-      //   formData,
-      // });
-      return response.data;
+
+      const response = await apiCall({
+        url: `/api/personalInformation/${u_id}`,
+        method: "put",
+        data: formData,
+      });
+      console.log(response);
+      return response;
     } catch (error) {
       console.log(error);
     }
