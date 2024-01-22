@@ -10,6 +10,7 @@ const {
   uploadProfilePicture,
   createProfilePictureBuffer,
   deleteEmploymentbyVisaTitle,
+  deleteEmergencyContactByIndex
 } = require("../handlers/personalInformation");
 
 router.get("/:id", getPersonalInformation);
@@ -26,5 +27,6 @@ router.post(
   createProfilePictureBuffer
 );
 router.put("/delete/employment/:visaTitle", deleteEmploymentbyVisaTitle);
+router.put("/delete/emergencyContact/:firstName", deleteEmergencyContactByIndex);
 
 module.exports = router;
