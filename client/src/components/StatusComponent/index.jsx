@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { getAppByStatus } from "../../services/application-service";
 import { Link } from "react-router-dom";
+import Navbar from "../Navbar";
 
 const columns = [
   {
@@ -37,6 +38,7 @@ const StatusComponent = ({ status }) => {
 
   return (
     <>
+    <Navbar />
       <Table
         columns={columns}
         dataSource={applications.map((app) => ({

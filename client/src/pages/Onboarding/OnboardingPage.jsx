@@ -216,10 +216,7 @@ const OnboardingPage = () => {
     e.preventDefault();
     createInfo(e);
     dispatch(updateTokenStatusThunk(user.email));
-    dispatch(updateCurrentUserThunk({id: u_id, data:
-     {
-      onboardingStatus: "pending" }}));
-    } ;
+  };
 
   async function createInfo(e) {
     e.preventDefault();

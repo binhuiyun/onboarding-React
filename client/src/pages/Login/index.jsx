@@ -1,4 +1,4 @@
-import {  useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import AuthForm from "../../components/AuthForm";
 import { fetchUserByIdThunk, loginThunk } from "../../thunks/auth-thunk";
@@ -8,7 +8,7 @@ export default function LogIn() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { message } = useSelector((state) => state.error);
-  const {user} = useSelector((state)=> state.user);
+  const { user } = useSelector((state) => state.user);
 
   const fields = [
     {
@@ -25,16 +25,26 @@ export default function LogIn() {
     },
   ];
 
-  // TODO: check onboarding==approved:PERSONAL INFORMATION PAGE  
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchUserByIdThunk(user.id));
+    }
+  }, []);
+  console.log("user onboarding", user);
+
+  // TODO: check onboarding==approved:PERSONAL INFORMATION PAGE
   // else REDIRECT TO ONBOARDING PAGE
   const onSubmit = (data) => {
     dispatch(loginThunk(data)).then((res) => {
-     if (res.payload.token) {
-      //  dispatch(fetchUserByIdThunk(res.payload.token));
+      if (res.payload.token) {
         if (res.payload.username === "hr") {
-          navigate(location.state?.from || "/hiring-management");
+          navigate("/hiring-management");
         } else {
-          navigate(location.state?.from || "/onboarding");
+          if (user.onboardingStatus === "approved") {
+            navigate("/personal-information");
+          } else {
+            navigate("/onboarding");
+          }
         }
       }
     });
@@ -42,14 +52,12 @@ export default function LogIn() {
 
   return (
     <div className="flex flex-col h-screen">
-      
       <AuthForm
         buttonText="Log in"
         onSubmit={onSubmit}
         title="Please log in first"
         fields={fields}
       />
-      
     </div>
   );
 }
