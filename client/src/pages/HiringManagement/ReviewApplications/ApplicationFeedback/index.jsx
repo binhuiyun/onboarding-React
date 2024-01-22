@@ -3,9 +3,11 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Button, Input, Spin, message } from "antd";
 import ProfileForm from "../../../../components/ProfileForm";
+import { updateCurrentUserThunk } from "../../../../thunks/auth-thunk";
 
 const { TextArea } = Input;
 import { updateApplicationStatusThunk, fetchApplicationByIdThunk} from "../../../../thunks/application-thunk";
+import Navbar from "../../../../components/Navbar";
 
 const ApplicationFeedback= () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -14,6 +16,7 @@ const ApplicationFeedback= () => {
   const dispatch = useDispatch();
   const {id} = useParams();
   const [feedback, setFeedback] = useState("");
+  const u_id = localStorage.getItem("userID");
 
   useEffect(() => {
     dispatch(fetchApplicationByIdThunk(id));
@@ -29,9 +32,12 @@ const ApplicationFeedback= () => {
       
     });
     dispatch(updateApplicationStatusThunk({id, payload:{onboardingStatus:"approved"}}));
+    dispatch(updateCurrentUserThunk({id: u_id, data:
+      {
+       onboardingStatus: "approved" }}));
+     } ;
    
     
-  };
 
   const handleReject = () => {
     dispatch(updateApplicationStatusThunk({id, payload:{onboardingStatus:"rejected", feedback}}));
@@ -39,7 +45,6 @@ const ApplicationFeedback= () => {
       type: "warning",
       content: "Application rejected",
       duration: 2,
-  
     
     });
   };
@@ -49,6 +54,7 @@ const ApplicationFeedback= () => {
   }
   return (
     <>
+    <Navbar />
       {contextHolder}
       {application && (
         <>

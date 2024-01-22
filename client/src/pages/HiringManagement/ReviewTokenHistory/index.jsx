@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { useSelector, useDispatch } from 'react-redux'; 
 import { Table } from 'antd';
 import { fetchTokenHistoryThunk } from '../../../thunks/token-thunk';
+import Navbar from '../../../components/Navbar';
 
 
 const columns = [
@@ -49,7 +50,8 @@ export default function ReviewTokenHistory() {
      
   return (
     <>
-    <h1>ReviewTokenHistory</h1>
+    <Navbar />
+    <h1>Review Token History</h1>
 
     <Table 
     columns={columns} 

@@ -8,26 +8,13 @@ import Navbar from '../Navbar';
 export default function MainLayout() {
  // const isMobile = useMediaQuery('(max-width: 450px)');
 
-  const headerStyle = useMemo(
-    () => ({
-      width: '100%',
-      height: '64px',
-      color: 'white',
-      lineHeight: '64px',
-      backgroundColor: blue[6],
-      padding: '0 50px',
-      marginBottom: '24px',
-      borderBottom: `1px solid ${blue[4]}`,
-      boxShadow: `0 2px 8px ${gray[3]}`
-    }),
-    []
-  );
+
 
 
 
   const contentStyle =useMemo(
     () => ({
-      height: 'calc(100vh - 64px - 69px)',
+      height: 'calc(100vh - 64px )',
       padding: '0 50px',
       width: '100%',
       margin: '0 auto',
@@ -39,9 +26,8 @@ export default function MainLayout() {
   return (
 
       <Layout>
-        <Layout.Header style={headerStyle}>
-          <Navbar />
-        </Layout.Header>
+    
+   
         <Layout.Content style={contentStyle}>
           <Outlet />
         </Layout.Content>
