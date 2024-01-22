@@ -14,8 +14,6 @@ import { useSelector } from "react-redux";
 import PopUp from "./PopUp";
 const FileUploader = ({ title, fileType, status, feedback, next, prev }) => {
   const [isPopUp, setIsPopUp] = useState(false);
-  const { user } = useSelector((state) => state.user);
-  console.log("here is file user", user.id);
   const handleUpload = (e) => {
     e.preventDefault();
     setIsPopUp(!isPopUp);

@@ -7,6 +7,7 @@ import errorReducer from "./errorSlice";
 import employeeProfileReducer from "./employeeProfileSlice";
 import onboardingReducer from "./onboardingSlice";
 import applicationReducer from "./applicationSlice";
+import visaReducer from "./visaSlice";
 
 export default configureStore({
   reducer: {
@@ -17,6 +18,7 @@ export default configureStore({
     employeeProfile: employeeProfileReducer,
     onboarding: onboardingReducer,
     application: applicationReducer,
+    visa: visaReducer,
   },
   devTools: true,
 });

@@ -5,58 +5,22 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import Header from "../layout/Header";
 import Footer from "../layout/Footer";
+import { selectForUser, fetchForUser } from "../../redux/visaSlice";
 
 const VisaPage = () => {
-  let user = {};
-  user = {
+  const dispatch = useDispatch();
+  let user = {
     id: localStorage.getItem("userID"),
   };
-  console.log(user.id);
-  // const [userInfo, setUserInfo] = useState()
-  const [info, setInfo] = useState({});
-  const [optReceiptStatus, setOptReceiptStatus] = useState("never uploaded");
-  const [optEADtStatus, setOptEADtStatus] = useState("never uploaded");
-  const [I983Status, setI983Status] = useState("never uploaded");
-  const [I20Status, setI20Status] = useState("never uploaded");
-  const [isOpt, setIsOpt] = useState();
+  const info = useSelector(selectForUser);
+  console.log(info);
   useEffect(() => {
-    const fetchDocs = async () => {
-      // dispatch(fetchUserByIdThunk(user.id)).then()
-      const response = await axios.get(
-        `http://localhost:4000/api/visa/${user.id}`,
-        {
-          headers: {
-            Accept: "application/json",
-          },
-        }
-      );
-      console.log(response);
-      if (response.status === 200) {
-        setIsOpt(true);
-        const optData = response.data;
-        setInfo(response.data);
-        if (optData.optReceipt) {
-          setOptReceiptStatus(optData.optReceipt.status);
-        }
-        if (optData.optEAD) {
-          setOptEADtStatus(optData.optEAD.status);
-        }
-        if (optData.I983) {
-          setI983Status(optData.I983.status);
-        }
-        if (optData.I20) {
-          setI20Status(optData.I20.status);
-        }
-      } else if (response.status === 204) {
-        setIsOpt(false);
-      }
-    };
-    fetchDocs();
+    dispatch(fetchForUser(localStorage.getItem("userID")));
   }, []);
 
   return (
     <>
-      {!isOpt && (
+      {!info && (
         <div className="flex flex-col h-screen">
           <Header />
           <div className="flex grow justify-center items-center">
@@ -67,7 +31,7 @@ const VisaPage = () => {
         </div>
       )}
       {/* TODO: change to real name */}
-      {isOpt && (
+      {info && (
         <>
           <Header />
           <div className="text-4xl text-slate-400 mx-20 my-5">{`Hi, welcome`}</div>
@@ -78,7 +42,9 @@ const VisaPage = () => {
             <FileUploader
               title="OPT Receipt"
               fileType="optReceipt"
-              status={optReceiptStatus}
+              status={
+                info.optReceipt ? info.optReceipt.status : "never uploaded"
+              }
               feedback={info.optReceipt ? info.optReceipt.feedback : undefined}
               next="OPT EAD"
               prev="approved"
@@ -87,28 +53,28 @@ const VisaPage = () => {
             <FileUploader
               title="OPT EAD"
               fileType="optEAD"
-              status={optEADtStatus}
+              status={info.optEAD ? info.optEAD.status : "never uploaded"}
               feedback={info.optEAD ? info.optEAD.feedback : undefined}
               next="I-983"
-              prev={optReceiptStatus}
+              prev={info.optReceipt ? info.optReceipt.status : "never uploaded"}
             />
 
             <FileUploader
               title="I-983"
               fileType="I983"
-              status={I983Status}
+              status={info.I983 ? info.I983.status : "never uploaded"}
               feedback={info.I983 ? info.I983.feedback : undefined}
               next="I-20"
-              prev={optEADtStatus}
+              prev={info.optEAD ? info.optEAD.status : "never uploaded"}
             />
 
             <FileUploader
               title="I-20"
               fileType="I20"
-              status={I20Status}
+              status={info.I20 ? info.I20.status : "never uploaded"}
               feedback={info.I20 ? info.I20.feedback : undefined}
               next=""
-              prev={I983Status}
+              prev={info.I983 ? info.I983.status : "never uploaded"}
             />
           </div>
         </>
