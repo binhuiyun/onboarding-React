@@ -186,8 +186,8 @@ const EmployeeProfilePage = () => {
                     <label className="">
                       Social Security Number: {employee.ssn}
                     </label>
-                    <label className="">
-                      Work Authorization Title: {employee.workAuthorization.workAuthorizationType =="" ? "Citizen" : employee.workAuthorization.workAuthorizationType}
+                    <label className="capitalize">
+                      Work Authorization Title: {employee.workAuthorization.workAuthorizationType =="" ? employee.workAuthorization.citizenType : employee.workAuthorization.workAuthorizationType}
                     </label>
                     <label className="">
                       Phone Number: {employee.phoneNumber.cellPhoneNumber}
