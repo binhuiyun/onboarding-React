@@ -29,6 +29,7 @@ const connectDB = async () => {
 };
 
 connectDB();
+
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json());
@@ -41,6 +42,7 @@ app.use("/api/application", loginRequired, applicationRouter);
 app.use("/api/employeeProfile", employeeProfileRouter);
 app.use("/api/folder", folderRouter);
 app.use(errorHandler);
+
 app.use((req, res, next) => {
   const err = new Error("Not Found");
   err.status = 404;
