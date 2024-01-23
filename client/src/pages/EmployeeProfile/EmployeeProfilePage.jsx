@@ -162,7 +162,19 @@ const EmployeeProfilePage = () => {
               <div className="flex flex-row bg-[#F0F0F0] rounded-3xl my-10 space-x-8 p-4">
                 <div className="flex w-64 items-center justify-center">
                   <img
-                    src={employee.profilePicture}
+                    src={
+                      employee.profilePicture &&
+                      employee.profilePicture.data.length > 0
+                        ? URL.createObjectURL(
+                            new Blob(
+                              [new Uint8Array(employee.profilePicture.data)],
+                              {
+                                type: "image/png",
+                              }
+                            )
+                          )
+                        : employee.defaultProfilePicture
+                    }
                     className="object-cover rounded-full"
                   />
                 </div>
