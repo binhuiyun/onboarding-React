@@ -31,6 +31,15 @@ const PopUp = (props) => {
           },
         }
       );
+      
+      const data = new FormData();
+      data.append("file", selectedFile);
+      await axios.post(`http://localhost:4000/api/folder/${user.id}`, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
       if (response.status === 201) {
         alert("Your File Was Uploaded Successfully!");
         dispatch(fetchForUser(localStorage.getItem("userID")));

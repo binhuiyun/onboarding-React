@@ -109,7 +109,7 @@ const Navbar = () => {
             <Dropdown menu={{ items }} placement="bottom" arrow>
                 <img
                   className="p-0.5 w-[40px] h-[40px] rounded-full ring-1 ring-black object-cover"
-                  src={avatar}
+                  src="https://as2.ftcdn.net/v2/jpg/05/49/98/39/1000_F_549983970_bRCkYfk0P6PP5fKbMhZMIb07mCJ6esXL.webp"
                 />
               </Dropdown>
       

@@ -14,6 +14,8 @@ import {
 import { updateTokenStatusThunk } from "../../thunks/token-thunk";
 import { fetchPersonalInformationByUID } from "../../redux/personalInformationSlice";
 import Header from "../layout/Header";
+import { updateApplicationStatusThunk } from "../../thunks/application-thunk";
+
 import {
   Form,
   Input,
@@ -257,6 +259,14 @@ const OnboardingPage = () => {
       console.log("Updated onboarding:", res.payload);
       //navigate("/personal-information");
     });
+    dispatch(
+      updateApplicationStatusThunk({
+        id: formData._id,
+        payload: { onboardingStatus: "pending" },
+      })
+    );
+    alert("Your application has been submitted for review");
+    navigate("/onboarding");
   }
 
   async function createInfo(e) {
