@@ -25,11 +25,20 @@ export default function Register() {
     {
       name: "email",
       placeholder: "Email",
+      type: "email",
       prefix: "@",
       rules: [
         {
           required: true,
           message: "Please input your email!",
+        },
+        {
+          validator: (_, value) => {
+            if (value && !value.includes('@')) {
+              return Promise.reject('Email must contain "@" symbol!');
+            }
+            return Promise.resolve();
+          },
         },
       ],
     },

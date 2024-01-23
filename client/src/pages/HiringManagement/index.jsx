@@ -21,8 +21,8 @@ const columns = [
 const data = [
   {
     key: "1",
-    name: "bhy",
-    email: "bhy@gmail.com",
+    name: "demo",
+    email: "demo@gmail.com",
   },
   {
     key: "2",

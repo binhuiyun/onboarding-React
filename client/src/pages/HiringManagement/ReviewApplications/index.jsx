@@ -1,10 +1,19 @@
 import React from "react";
-import { Card, Col, Row , Button, Typography} from "antd";
+import { Card, Col, Row , Button} from "antd";
 import { useNavigate } from "react-router-dom";
 import Navbar from "../../../components/Navbar";
 
 
 const ReviewApplications = () => {
+  const approveStyle ={
+    color: "#52c41a",
+  }
+  const rejectStyle ={
+    color: "#f5222d",
+  }
+  const pendingStyle ={
+    color: "#faad14",
+  }
   const navigate = useNavigate();
   const handlePending = () => {
     navigate("pending");
@@ -23,17 +32,21 @@ const ReviewApplications = () => {
     </div>
       <Row gutter={16}>
         <Col span={8}>
-          <Card title="Pending" bordered={false}>
+          <Card title={<div style={pendingStyle}>Pending</div>} >
+       
             <Button onClick={handlePending}>view</Button>
           </Card>
         </Col>
         <Col span={8}>
-          <Card title="Rejected" bordered={false}>
+       
+          <Card title={<div style={rejectStyle}>
+            Rejected</div>} bordered={false}>
           <Button onClick={handleRejected}>view</Button>
           </Card>
         </Col>
         <Col span={8}>
-          <Card title="Approved" bordered={false}>
+          <Card title={<div style={approveStyle}>
+          Approved</div>} bordered={false}>
           <Button onClick={handleApproved}>view</Button>
           </Card>
         </Col>
