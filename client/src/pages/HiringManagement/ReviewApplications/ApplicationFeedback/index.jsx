@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Button, Input, Spin, message, Typography } from "antd";
+import { Button, Input, Spin, message} from "antd";
 import ProfileForm from "../../../../components/ProfileForm";
 import { updateCurrentUserThunk } from "../../../../thunks/auth-thunk";
 
@@ -69,6 +69,7 @@ const ApplicationFeedback = () => {
     <>
       <Navbar />
       {contextHolder}
+     
       {application && (
         <>
           <div className="flex">
