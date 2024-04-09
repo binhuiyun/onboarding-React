@@ -1,5 +1,4 @@
 import { configureStore } from "@reduxjs/toolkit";
-
 import userReducer from "./userSlice";
 import personalInformationReducer from "./personalInformationSlice";
 import tokenHistoryReducer from "./tokenHistorySlice";
@@ -12,7 +11,7 @@ import visaReducer from "./visaSlice";
 export default configureStore({
   reducer: {
     user: userReducer,
-    personalInformation: personalInformationReducer,
+    profile: personalInformationReducer,
     tokenHistory: tokenHistoryReducer,
     error: errorReducer,
     employeeProfile: employeeProfileReducer,

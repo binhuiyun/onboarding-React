@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Table, Typography } from "antd";
+import { Table } from "antd";
 import { fetchTokenHistoryThunk } from "../../../thunks/token-thunk";
 import Navbar from "../../../components/Navbar";
 
@@ -19,13 +19,7 @@ const columns = [
     width: "12%",
     align: "center",
   },
-  {
-    title: "Registration Link",
-    dataIndex: "registrationLink",
-    ellipsis: true,
-    width: "50%",
-    align: "center",
-  },
+
   {
     title: "Status",
     dataIndex: "status",
@@ -45,7 +39,6 @@ export default function ReviewTokenHistory() {
 
   return (
     <>
-      <Navbar />
       <div className="flex justify-center items-center text-3xl text-geekblue mx-20 mb-10 mt-10">
  
         Review Token History
@@ -57,7 +50,7 @@ export default function ReviewTokenHistory() {
           key: token._id,
           name: token.name,
           email: token.email,
-          registrationLink: token.link,
+      //    registrationLink: token.link,
           status: token.status,
         }))}
       />

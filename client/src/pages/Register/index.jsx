@@ -61,25 +61,25 @@ export default function Register() {
     });
   };
 
-  useEffect(() => {
-    if (token) {
-      axios.post('http://localhost:4000/api/auth/verify', null, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }).then(res => {
-        console.log("res", res);
-      }).catch(err => {
-        console.log("post failed", err);
-        navigate("/not-found");
-      });
-      console.log("token", token);
-    }
-    else {
-      // TODO: navigate to error page
-      console.log("no token");
-    }
-  }, [token]);
+  // useEffect(() => {
+  //   if (token) {
+  //     axios.post('http://localhost:4000/api/auth/verify', null, {
+  //       headers: {
+  //         Authorization: `Bearer ${token}`,
+  //       },
+  //     }).then(res => {
+  //       console.log("res", res);
+  //     }).catch(err => {
+  //       console.log("post failed", err);
+  //       navigate("/not-found");
+  //     });
+  //     console.log("token", token);
+  //   }
+  //   else {
+  //     // TODO: navigate to error page
+  //     console.log("no token");
+  //   }
+  // }, [token]);
 
   return (
     <>

@@ -98,8 +98,6 @@ const savePersonalInformationWithEmergencyContact = createAsyncThunk(
 
 const initialState = {
   personalInformation: {
-    name: {},
-    address: {},
   },
 };
 

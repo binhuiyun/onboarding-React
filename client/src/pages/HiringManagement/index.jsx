@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Table, Button, message, Breadcrumb } from "antd";
 import { HomeOutlined, UserOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
 import { createTokenThunk } from "../../thunks/token-thunk";
-import Navbar from "../../components/Navbar";
 
 const columns = [
   {
@@ -76,34 +74,8 @@ export default function HiringManagement() {
     });
   };
 
-
-
   return (
     <div>
-      {contextHolder}
-      <Navbar />
-      <br />
-      <Breadcrumb
-        items={[
-          {
-            title: <HomeOutlined />,
-          },
-
-          {
-            title: <a href="hiring-management/token"> Token History</a>,
-          },
-       
-          {
-            title:(
-              <>
-             <UserOutlined />
-            <a href="/hiring-management/applications"> Application Management</a>
-            </>
-            )
-          }
-        ]}
-      />
-      <br />
       <Table
         rowSelection={rowSelection}
         columns={columns}

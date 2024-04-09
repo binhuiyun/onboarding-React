@@ -34,22 +34,27 @@ export default function LogIn() {
 
   // TODO: check onboarding==approved:PERSONAL INFORMATION PAGE
   // else REDIRECT TO ONBOARDING PAGE
+  // const onSubmit = (data) => {
+  //   dispatch(loginThunk(data)).then((res) => {
+  //     if (res.payload.token) {
+  //       if (res.payload.username === "hr") {
+  //         navigate("/hiring-management");
+  //       } else {
+  //         if (user.onboardingStatus === "approved") {
+  //           navigate("/personal-information");
+  //         } else {
+  //           navigate("/onboarding");
+  //         }
+  //       }
+  //     }
+  //   });
+  // };
   const onSubmit = (data) => {
-    dispatch(loginThunk(data)).then((res) => {
-      if (res.payload.token) {
-        if (res.payload.username === "hr") {
-          navigate("/hiring-management");
-        } else {
-          if (user.onboardingStatus === "approved") {
-            navigate("/personal-information");
-          } else {
-            navigate("/onboarding");
-          }
-        }
-      }
+    dispatch(loginThunk(data)).then(() => {
+      console.log("login++++++++++++", message);
+      
     });
-  };
-
+  }
   return (
     <div className="flex flex-col h-screen">
       <AuthForm

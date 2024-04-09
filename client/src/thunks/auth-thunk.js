@@ -8,13 +8,14 @@ export const loginThunk = createAsyncThunk(
   async (data, thunkAPI) => {
     try {
       const user = await login(data);
-      localStorage.setItem("userID", user.id);
-      localStorage.setItem("token", user.token);
-      console.log("login thunk", user.token);
+      // localStorage.setItem("userID", user.id);
+      // localStorage.setItem("token", user.token);
+      // console.log("login thunk", user.token);
       thunkAPI.dispatch(removeError());
       return user;
     } catch (error) {
       const { message } = error;
+      console.log("login thunk error", message);
       thunkAPI.dispatch(addError(message));
       return thunkAPI.rejectWithValue(message);
     }

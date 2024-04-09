@@ -6,11 +6,10 @@ import HiringManagement from "./pages/HiringManagement";
 import PersonalInformationPage from "./pages/PersonalInformation/PersonalInformationPage";
 import "./App.css";
 import VisaPage from "./pages/VisaManagement/VisaPage";
-import ReviewApplications from "./pages/HiringManagement/ReviewApplications";
 import PendingApplications from "./pages/HiringManagement/ReviewApplications/PendingApplications";
 import ApprovedApplications from "./pages/HiringManagement/ReviewApplications/ApprovedApplications";
 import RejectedApplications from "./pages/HiringManagement/ReviewApplications/RejectedApplications";
-import OnboardingPage from "./pages/Onboarding/OnboardingPage";
+import OnboardingPage from "./pages/Onboarding/";
 import ReviewTokenHistory from "./pages/HiringManagement/ReviewTokenHistory";
 import VisaHrPage from "./pages/VisaManagement/VisaHrPage";
 import NotFound from "./pages/NotFound";
@@ -20,6 +19,7 @@ import ApplicationFeedback from "./pages/HiringManagement/ReviewApplications/App
 import AuthLayout from "./components/Layout/AuthLayout";
 import ProtectedRoute from "./components/Layout/ProtectedRoute";
 import Layout from "./components/Layout";
+
 
 const ApplicationStatusRouter = () => {
   return (
@@ -46,7 +46,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Layout />}>
           <Route path="/login" element={<Login />} />
-          <Route path="/register/:token" element={<Register />} />
+          <Route path="/register" element={<Register />} />
           {/* <Route element = {<AuthLayout/>}> */}
           <Route
             path="/hiring-management"
@@ -65,10 +65,12 @@ function App() {
             }
           />
           <Route
-            path="/hiring-management/applications"
+            path="/hiring-management/applications/*"
             element={
               <ProtectedRoute>
-                <ReviewApplications />
+                <ApprovedApplications />
+                <RejectedApplications />
+                <PendingApplications />
               </ProtectedRoute>
             }
           />
@@ -117,9 +119,9 @@ function App() {
         <Route
           path="/onboarding"
           element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <OnboardingPage />
-            </ProtectedRoute>
+            // </ProtectedRoute>
           }
         />
         <Route
