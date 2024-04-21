@@ -40,7 +40,7 @@ const data = [
 ];
 
 export default function HiringManagement() {
-  const [messageApi, contextHolder] = message.useMessage();
+  const [messageApi] = message.useMessage();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const [selectedRowKey, setSelectedRowKey] = useState(null);
@@ -52,8 +52,6 @@ export default function HiringManagement() {
     setSelectedEmail(record.email);
     setSelectedName(record.name);
   };
-
-  console.log("user role", user.isHR);
   const rowSelection = {
     type: "radio",
     selectedRowKeys: selectedRowKey,

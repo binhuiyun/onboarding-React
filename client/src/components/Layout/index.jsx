@@ -2,10 +2,13 @@ import React, { useMemo } from 'react';
 import { Layout, Menu, Breadcrumb } from 'antd';
 import { blue, gray, } from '@ant-design/colors';
 import { Outlet, Link } from 'react-router-dom';
+import { logOutUser } from '../../redux/userSlice';
+import { useDispatch } from 'react-redux';
 //import { useMediaQuery } from 'hooks/useMediaQuery';
 
 export default function MainLayout() {
  // const isMobile = useMediaQuery('(max-width: 450px)');
+ const dispatch = useDispatch();
 
   const items = useMemo(
     () => [
@@ -34,7 +37,10 @@ export default function MainLayout() {
       {
         key: '5',
         label: 'Logout',
-        link: '/logout',
+        onClick: () => {
+          console.log("Logout Clicked");
+          dispatch(logOutUser());
+        },
       
       },
     ],
@@ -67,17 +73,17 @@ export default function MainLayout() {
                 {
                   key : "1",
                   label:
-                     <Link to="applications/approved">Approved</Link>
+                     <Link to="hiring-management/applications/approved">Approved</Link>
     
                 },
                 {
                   key : "2",
-                  label: <Link to="applications/rejected">Rejected</Link>
+                  label: <Link to="hiring-management/applications/rejected">Rejected</Link>
                   
                 },
                 {
                   key : "3",
-                  label: <Link to="applications/pending">Pending</Link>
+                  label: <Link to="hiring-management/applications/pending">Pending</Link>
                   
                 },
               ],

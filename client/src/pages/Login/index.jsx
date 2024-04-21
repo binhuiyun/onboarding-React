@@ -12,8 +12,8 @@ export default function LogIn() {
 
   const fields = [
     {
-      placeholder: "username",
-      name: "username",
+      placeholder: "email",
+      name: "email",
       type: "text",
     },
     {

@@ -3,7 +3,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Home from "./pages/Home";
 import HiringManagement from "./pages/HiringManagement";
-import PersonalInformationPage from "./pages/PersonalInformation/PersonalInformationPage";
+import PersonalInformation from "./pages/PersonalInformation";
 import "./App.css";
 import VisaPage from "./pages/VisaManagement/VisaPage";
 import PendingApplications from "./pages/HiringManagement/ReviewApplications/PendingApplications";
@@ -13,7 +13,7 @@ import OnboardingPage from "./pages/Onboarding/";
 import ReviewTokenHistory from "./pages/HiringManagement/ReviewTokenHistory";
 import VisaHrPage from "./pages/VisaManagement/VisaHrPage";
 import NotFound from "./pages/NotFound";
-import EmployeeProfilePage from "./pages/EmployeeProfile/EmployeeProfilePage";
+import EmployeeProfile from "./pages/EmployeeProfile";
 import EmployeeProfileDetailsPage from "./pages/EmployeeProfile/EmployeeProfileDetailsPage";
 import ApplicationFeedback from "./pages/HiringManagement/ReviewApplications/ApplicationFeedback";
 import AuthLayout from "./components/Layout/AuthLayout";
@@ -109,11 +109,11 @@ function App() {
         />
 
         <Route
-          path="/personal-information"
+          path="/personal-information/:id"
           element={
-            <ProtectedRoute>
-              <PersonalInformationPage />
-            </ProtectedRoute>
+          //  <ProtectedRoute>
+              <PersonalInformation />
+          //  </ProtectedRoute>
           }
         />
         <Route
@@ -128,17 +128,17 @@ function App() {
           path="/employee-profile"
           element={
             <ProtectedRoute>
-              <EmployeeProfilePage />
+              <EmployeeProfile />
             </ProtectedRoute>
           }
         />
 
         <Route
-          path="/employee-profile/details"
+          path="/employee-profile/:u_id"
           element={
-            <ProtectedRoute>
+            // <ProtectedRoute>
               <EmployeeProfileDetailsPage />
-            </ProtectedRoute>
+            // </ProtectedRoute>
           }
         />
         {/* </Route> */}

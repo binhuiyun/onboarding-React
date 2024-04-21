@@ -6,6 +6,7 @@ const upload = multer({ storage: storage });
 const {
   updatePersonalInformation,
   getPersonalInformation,
+  getAllProfile,
   createPersonalInformation,
   uploadProfilePicture,
   createProfilePictureBuffer,
@@ -14,6 +15,7 @@ const {
 } = require("../handlers/personalInformation");
 
 router.get("/:id", getPersonalInformation);
+router.get("/", getAllProfile);
 router.put("/:id", updatePersonalInformation);
 router.post("/:id", createPersonalInformation);
 router.post(

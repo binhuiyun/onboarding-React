@@ -5,7 +5,7 @@ const createPersonalInformation = async (req, res) => {
   console.log(u_id, req.body);
   try {
     const personalInformation = await PersonalInformation.findOne({
-      user: u_id,
+      userId: u_id,
     });
     if (!personalInformation) {
       const newPersonalInformation = new PersonalInformation(req.body);
@@ -24,7 +24,7 @@ const getPersonalInformation = async (req, res) => {
   const u_id = req.params.id;
   try {
     const personalInformation = await PersonalInformation.findOne({
-      user: u_id,
+      userId: u_id,
     });
     if (!personalInformation) {
       res.status(404).json({ message: "Personal Information not found" });
@@ -40,18 +40,29 @@ const updatePersonalInformation = async (req, res) => {
   const personalInformation = req.body;
   console.log(u_id, personalInformation);
 
-  const record = await PersonalInformation.findOne({ user: u_id });
+  const record = await PersonalInformation.findOne({ userId: u_id });
   if (!record) {
     res.status(404).json({ message: "Personal Information not found" });
   } else {
     await PersonalInformation.findOneAndUpdate(
-      { user: u_id },
+      { userId: u_id },
       personalInformation
     );
     res.status(200).json(personalInformation);
   }
 };
 
+const getAllProfile = async (req, res) => {
+  try {
+    const personalInformation = await PersonalInformation.find().sort(
+      {"lastName":1}
+    
+    );
+    res.status(200).json(personalInformation);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
 const createProfilePictureBuffer = async (req, res) => {
   const u_id = req.params.id;
   console.log(u_id, req.file);
@@ -142,6 +153,7 @@ const deleteEmploymentbyVisaTitle = async (req, res) => {
 module.exports = {
   createPersonalInformation,
   getPersonalInformation,
+  getAllProfile,
   updatePersonalInformation,
   uploadProfilePicture,
   createProfilePictureBuffer,

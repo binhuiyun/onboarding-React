@@ -19,9 +19,9 @@ export default async function apiCall({ url: apiUrl, method, data, headers }) {
       body: JSON.stringify(data)
     });
     if (!response.ok) {
-      console.log("api error !!!!", response);
+     
       const { error } = await response.json();
-      console.log("auth error !!!!", error);
+    //  console.log("auth error !!!!", error);
       throw new Error(error.message);
     }
     const result = await response.json();

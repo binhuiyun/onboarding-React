@@ -1,39 +1,19 @@
-//TODO :refeence and emergency contact render and document upload
-import React, { useState, useRef, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import { PlusOutlined } from "@ant-design/icons";
-import {
-  Row,
-  Col,
-  Button,
-  Cascader,
-  Checkbox,
-  ColorPicker,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Radio,
-  Select,
-  Slider,
-  Switch,
-  TreeSelect,
-  Upload,
-} from "antd";
-const { RangePicker } = DatePicker;
-const { TextArea } = Input;
-import axios from "axios";
+import React, { useState, useEffect } from "react";
+import { Row, Col, Form, Input } from "antd";
 
-const ProfileForm = ({ employeeProfile }) => {
+const { TextArea } = Input;
+
+const ProfileForm = ({ employeeProfile, disabled, form, onFinish}) => {
   const [documents, setDocuments] = useState([]);
-  useEffect(() => {
-    axios
-      .get(`http://localhost:4000/api/visa/${employeeProfile.user}`)
-      .then((res) => {
-        setDocuments(res.data.optReceipt);
-        console.log("Documents:", res.data);
-      });
-  }, []);
+
+  // useEffect(() => {
+  //   axios
+  //     .get(`http://localhost:4000/api/visa/${employeeProfile.userId}`)
+  //     .then((res) => {
+  //       setDocuments(res.data.optReceipt);
+  //       console.log("Documents:", res.data);
+  //     });
+  // }, []);
 
   const handleDocumentClick = (e) => {
     console.log("Document Clicked");
@@ -45,194 +25,221 @@ const ProfileForm = ({ employeeProfile }) => {
     window.open(url, "_blank");
   };
 
+
   return (
     employeeProfile && (
       <>
         <div className="flex flex-col items-center mt-6">
-          <Form
+          <Form onFinish={onFinish} form={form}
+            disabled={disabled}
             labelCol={{
               span: 8,
             }}
             wrapperCol={{
-              span: 10,
+              span: 12,
             }}
             layout="horizontal"
-            disabled
             style={{
               width: 1000,
             }}
           >
-            <Form.Item label="First Name">
-              <Input
-                style={{ textTransform: "capitalize" }}
-                value={employeeProfile.name.firstName}
-              />
+            <Form.Item
+              label="First Name"
+              name="firstName"
+              initialValue={employeeProfile.firstName}
+            >
+              <Input style={{ textTransform: "capitalize" }} />
             </Form.Item>
-            <Form.Item label="Last Name">
-              <Input
-                style={{ textTransform: "capitalize" }}
-                value={employeeProfile.name.lastName}
-              />
+            <Form.Item
+              label="Last Name"
+              name="lastName"
+              initialValue={employeeProfile.lastName}
+            >
+              <Input style={{ textTransform: "capitalize" }} />
             </Form.Item>
-            <Form.Item label="Middle Name">
-              <Input
-                style={{ textTransform: "capitalize" }}
-                value={employeeProfile.name.middleName}
-              />
+            <Form.Item
+              label="Middle Name"
+              name="middleName"
+              initialValue={employeeProfile.middleName}
+            >
+              <Input style={{ textTransform: "capitalize" }} />
             </Form.Item>
-            <Form.Item label="Preferred Name">
-              <Input
-                style={{ textTransform: "capitalize" }}
-                value={employeeProfile.name.preferredName}
-              />
+            <Form.Item
+              label="Preferred Name"
+              name="preferredName"
+              initialValue={employeeProfile.preferredName}
+            >
+              <Input style={{ textTransform: "capitalize" }} />
             </Form.Item>
-            <Form.Item label="Address">
-              <TextArea
-                value={[
-                  employeeProfile.address.streetName,
-                  ` ${employeeProfile.address.aptNumber}\n${employeeProfile.address.city}`,
-                  ` ${employeeProfile.address.state} ${employeeProfile.address.zip}`,
-                ]}
-              />
+            <Form.Item
+              label="Address"
+              name="Address"
+              initialValue={[
+                employeeProfile.streetAddress,
+                ` ${employeeProfile.apt}\n${employeeProfile.city}`,
+                ` ${employeeProfile.state} ${employeeProfile.zip}`,
+              ]}
+            >
+              <TextArea />
             </Form.Item>
-            <Form.Item label="Cell Phone Number">
-              <Input value={employeeProfile.phoneNumber.cellPhoneNumber} />
+            <Form.Item
+              label="Cell Phone Number"
+              name="cellPhone"
+              initialValue={employeeProfile.cellPhone}
+            >
+              <Input />
             </Form.Item>
-            <Form.Item label="Work Phone Number">
-              <Input value={employeeProfile.phoneNumber.workPhoneNumber} />
+            <Form.Item
+              label="Work Phone Number"
+              name="workPhone"
+              initialValue={employeeProfile.workPhone}
+            >
+              <Input />
             </Form.Item>
-            <Form.Item label="Email">
-              <Input value={employeeProfile.email} />
+            <Form.Item
+              label="Email"
+              name="email"
+              initialValue={employeeProfile.email}
+            >
+              <Input />
             </Form.Item>
-            <Form.Item label="Social Security Number">
-              <Input value={employeeProfile.ssn} />
+            <Form.Item
+              label="Social Security Number"
+              name="ssn"
+              initialValue={employeeProfile.ssn}
+            >
+              <Input />
             </Form.Item>
-            <Form.Item label="Date of Birth">
-              <Input value={employeeProfile.dateOfBirth} />
+            <Form.Item
+              label="Date of Birth"
+              name="dob"
+              initialValue={employeeProfile.dob}
+            >
+              <Input />
             </Form.Item>
-            <Form.Item label="Gender">
-              <Input
-                style={{ textTransform: "capitalize" }}
-                value={employeeProfile.gender}
-              />
+            <Form.Item
+              label="Gender"
+              name="gender"
+              initialValue={employeeProfile.gender}
+            >
+              <Input style={{ textTransform: "capitalize" }} />
             </Form.Item>
-            <Form.Item label="Permanent resident or citizen of the U.S">
-              <Input
-                style={{ textTransform: "capitalize" }}
-                value={employeeProfile.workAuthorization.citizenship}
-              />
+            <Form.Item
+              label="Permanent resident or citizen of the U.S"
+              name="citizenship"
+              initialValue={employeeProfile.citizenship}
+            >
+              <Input style={{ textTransform: "capitalize" }} />
             </Form.Item>
-            <Form.Item label="Work Authorization">
-              <Input
-                style={{ textTransform: "capitalize" }}
-                value={employeeProfile.workAuthorization.workAuthorizationType}
-              />
+            <Form.Item
+              label="Work Authorization"
+              name="workAuthorizationTitle"
+              initialValue={employeeProfile.workAuthorizationTitle}
+            >
+              <Input style={{ textTransform: "capitalize" }} />
             </Form.Item>
-            <Form.Item label="Start Date">
-              <Input
-                style={{ textTransform: "capitalize" }}
-                value={employeeProfile.workAuthorization.startDate}
-              />
+            <Form.Item
+              label="Start Date"
+              name="startDate"
+              initialValue={employeeProfile.startDate}
+            >
+              <Input style={{ textTransform: "capitalize" }} />
             </Form.Item>
-            <Form.Item label="End Date">
-              <Input
-                style={{ textTransform: "capitalize" }}
-                value={employeeProfile.workAuthorization.endDate}
-              />
+            <Form.Item
+              label="End Date"
+              name="endDate"
+              initialValue={employeeProfile.endDate}
+            >
+              <Input style={{ textTransform: "capitalize" }} />
             </Form.Item>
 
             <Form.Item label="Reference">
               <Row gutter={0} style={{ height: 35, visibility: "hidden" }} />
               <Row gutter={20}>
                 <Col span={12}>
-                  <Form.Item label="First Name">
-                    <Input
-                      style={{ textTransform: "capitalize" }}
-                      value={employeeProfile.reference.firstName}
-                    />
+                  <Form.Item
+                    label="First Name"
+                    name="referenceFirstName"
+                    initialValue={employeeProfile.referenceFirstName}
+                  >
+                    <Input style={{ textTransform: "capitalize" }} />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
-                  <Form.Item label="Last Name">
-                    <Input
-                      style={{ textTransform: "capitalize" }}
-                      value={employeeProfile.reference.lastName}
-                    />
-                  </Form.Item>
-                </Col>
-              </Row>
-              <Row gutter={16}>
-                <Col span={12}>
-                  <Form.Item label="Middle Name">
-                    <Input
-                      style={{ textTransform: "capitalize" }}
-                      value={employeeProfile.reference.middleName}
-                    />
+                  <Form.Item
+                    label="Last Name"
+                    name="referenceLastName"
+                    initialValue={employeeProfile.referenceLastName}
+                  >
+                    <Input style={{ textTransform: "capitalize" }} />
                   </Form.Item>
                 </Col>
               </Row>
-              <Row gutter={16}>
+              <Row gutter={20}>
                 <Col span={12}>
-                  <Form.Item label="Email">
-                    <Input value={employeeProfile.reference.email} />
+                  <Form.Item
+                    label="phone"
+                    name="referencePhone"
+                    initialValue={employeeProfile.referencePhone}
+                  >
+                    <Input style={{ textTransform: "capitalize" }} />
                   </Form.Item>
                 </Col>
                 <Col span={12}>
-                  <Form.Item label="Relationship">
-                    <Input
-                      style={{ textTransform: "capitalize" }}
-                      value={employeeProfile.reference.relationship}
-                    />
+                  <Form.Item
+                    label="Relationship"
+                    name="referenceRelationship"
+                    initialValue={employeeProfile.referenceRelationship}
+                  >
+                    <Input style={{ textTransform: "capitalize" }} />
                   </Form.Item>
                 </Col>
               </Row>
             </Form.Item>
 
-            {employeeProfile.emergencyContact.map((entry, index) => (
-              <Form.Item label="Emergency Contact">
+            <Form.Item label="Emergency Contact">
               <Row gutter={0} style={{ height: 35, visibility: "hidden" }} />
-                <Row gutter={20}>
-                  <Col span={12}>
-                    <Form.Item label="First Name">
-                      <Input
-                        style={{ textTransform: "capitalize" }}
-                        value={entry.firstName}
-                      />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item label="Last Name">
-                      <Input
-                        style={{ textTransform: "capitalize" }}
-                        value={entry.lastName}
-                      />
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Row gutter={16}>
-                  <Col span={12}>
-                    <Form.Item label="Middle Name">
-                      <Input
-                        style={{ textTransform: "capitalize" }}
-                        value={entry.middleName}
-                      />
-                    </Form.Item>
-                  </Col>
-                </Row>
-                <Row gutter={16}>
-                  <Col span={12}>
-                    <Form.Item label="Email">
-                      <Input value={entry.email} />
-                    </Form.Item>
-                  </Col>
-                  <Col span={12}>
-                    <Form.Item label="Relationship">
-                      <Input value={entry.relationship} />
-                    </Form.Item>
-                  </Col>
-                </Row>
-              </Form.Item>
-            ))}
+              <Row gutter={20}>
+                <Col span={12}>
+                  <Form.Item
+                    label="First Name"
+                    name="emergencyFirstName"
+                    initialValue={employeeProfile.emergencyFirstName}
+                  >
+                    <Input />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    label="Last Name"
+                    name="emergencyLastName"
+                    initialValue={employeeProfile.emergencyLastName}
+                  >
+                    <Input style={{ textTransform: "capitalize" }} />
+                  </Form.Item>
+                </Col>
+              </Row>
+              <Row gutter={20}>
+                <Col span={12}>
+                  <Form.Item
+                    label="phone"
+                    name="emergencyPhone"
+                    initialValue={employeeProfile.emergencyPhone}
+                  >
+                    <Input style={{ textTransform: "capitalize" }} />
+                  </Form.Item>
+                </Col>
+                <Col span={12}>
+                  <Form.Item
+                    label="Relationship"
+                    name="emergencyRelationship"
+                    initialValue={employeeProfile.emergencyRelationship}
+                  >
+                    <Input style={{ textTransform: "capitalize" }} />
+                  </Form.Item>
+                </Col>
+              </Row>
+            </Form.Item>
 
             <Form.Item label="Documents">
               <span
@@ -242,7 +249,10 @@ const ProfileForm = ({ employeeProfile }) => {
                 {documents && documents.fileName}
               </span>
             </Form.Item>
+  
+     
           </Form>
+
         </div>
       </>
     )

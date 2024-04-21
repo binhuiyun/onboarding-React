@@ -1,7 +1,10 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import { Form, Input, Button, Upload, Radio, Cascader } from "antd";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Form, Input, Button, Upload, Select, DatePicker } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
+import { createProfileThunk } from "../../thunks/profile-thunk";
+const { Option } = Select;
+
 
 const normFile = (e) => {
   if (Array.isArray(e)) {
@@ -10,47 +13,37 @@ const normFile = (e) => {
   return e?.fileList;
 };
 const Onboarding = () => {
+  const {user }= useSelector((state) => state.user);
   const [form] = Form.useForm();
+  const [citizenship, setCitizenship] = useState("");
+  const [visaType, setVisaType] = useState("");
+  const [dob, setDob] = useState("");
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const dispatch = useDispatch();
 
   const onFinish = (values) => {
     console.log("Received values from form: ", values);
+    const profile = {...values, dob, userId: user.id};
+    dispatch(createProfileThunk(profile) );
+
   };
-  const { user } = useSelector((state) => state.user);
-  //     const [profile, setProfile] = useState({
-  //     user: user.id,
-  //     firstName: "",
-  //      astName: "",
-  //      middleName: "",
-  //     preferredName: "" ,
-  //       aptNumber: "",
-  //       streetName: "",
-  //       city: "",
-  //       state: "",
-  //       zip: "",
-  //     cellPhoneNumber: "",
-  //     workPhoneNumber: "" ,
-  //     email: "", // Assuming email is pre-filled and cannot be edited
-  //     ssn: "",
-  //     dateOfBirth: "",
-  //     gender: "",
 
-  //       citizenship: "",
-  //       citizenType: "",
-  //       workAuthorizationType: "",
-  //       startDate: "",
-  //       endDate: "",
+  const onChange = (date, dateString) => {
+    console.log("current user", user.id);
+    console.log(date, dateString);
+    setDob(dateString);
+  };
 
-  //     reference: {
-  //       firstName: "",
-  //       lastName: "",
-  //       middleName: "",
-  //       phone: "",
-  //       email: "",
-  //       relationship: "",
-  //     },
-  //     emergencyContact: [],
-  //     //onboardingStatus: "",
-  //   });
+
+
+
+  const handleSelect = (value) => {
+   setCitizenship(value);
+  }
+  const handleVisaType = (value) => {
+    setVisaType(value);
+  }
 
   return (
     <div className="max-w-md mx-auto mt-8">
@@ -78,8 +71,8 @@ const Onboarding = () => {
         <Form.Item label="preferred Name" name="preferredName">
           <Input />
         </Form.Item>
-        <Form.Item label="Email" name="email">
-          <Input />
+        <Form.Item label="Email" name="email" initialValue={user.email}>
+          <Input disabled={true}/>
         </Form.Item>
 
         <Form.Item
@@ -87,7 +80,7 @@ const Onboarding = () => {
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
-          <Upload action="/upload.do" listType="picture-card">
+          <Upload action={`http://localhost:4000/api/personalInformation/create/profilePicture/${user.id}`} listType="picture-card">
             <button
               style={{
                 border: 0,
@@ -113,7 +106,7 @@ const Onboarding = () => {
           rules={[
             { required: true, message: "Please input your street address!" },
           ]}
-          style={{ display: "inline-block", width: "calc(70% - 8px)" }}
+          style={{ display: "inline-block", width: "calc(75% - 8px)" }}
         >
           <Input placeholder="Street Address" />
         </Form.Item>
@@ -123,7 +116,7 @@ const Onboarding = () => {
           rules={[{ required: true, message: "Please input your apt!" }]}
           style={{
             display: "inline-block",
-            width: "calc(30% - 8px)",
+            width: "calc(25% - 8px)",
             margin: "0 8px",
           }}
         >
@@ -172,7 +165,7 @@ const Onboarding = () => {
         </Form.Item>
         <Form.Item
           label="Work Phone"
-          name="homePhone"
+          name="workPhone"
           style={{ display: "inline-block", width: "calc(50% - 8px)" }}
         >
           <Input placeholder="Work Phone" />
@@ -183,7 +176,7 @@ const Onboarding = () => {
           rules={[{ required: true, message: "Please input your ssn!" }]}
           style={{
             display: "inline-block",
-            width: "calc(50% - 8px)",
+            width: "calc(40% - 8px)",
             margin: "0 8px",
           }}
         >
@@ -193,73 +186,122 @@ const Onboarding = () => {
           label="Date of Birth"
           name="dob"
           rules={[{ required: true, message: "Please input your dob!" }]}
-          style={{ display: "inline-block", width: "calc(50% - 8px)" }}
+          style={{ display: "inline-block", width: "calc(60% - 8px)" }}
         >
-          <Input placeholder="Date of Birth" />
+          <DatePicker 
+          onChange={onChange}/>
         </Form.Item>
+
         <Form.Item
-          label="Gender"
-          name="gender"
-          rules={[{ required: true, message: "Please select" }]}
-        >
-          <Radio.Group>
-            <Radio value="male">Male</Radio>
-            <Radio value="femele">Female</Radio>
-            <Radio value="other">Other</Radio>
-          </Radio.Group>
-        </Form.Item>
-        <Form.Item
+        name="gender"
+        label="Gender"
+        rules={[
+          {
+            required: true,
+            message: 'Please select gender!',
+          },
+        ]}
+      >
+        <Select placeholder="select your gender"
+  >
+          <Option value="male">Male</Option>
+          <Option value="female">Female</Option>
+          <Option value="other">Other</Option>
+        </Select>
+      </Form.Item>
+
+        <Form.Item 
           label="Citizenship"
           name="citizenship"
           rules={[{ required: true, message: "Please select" }]}
+         
         >
-          <Cascader
-            options={[
-              {
-                value: "yes",
-                label: "Yes",
-                children: [
-                  {
-                    value: "citizen",
-                    label: "Citizen",
-                  },
-                  {
-                    value: "greenCard",
-                    label: "Green Card",
-                  },
-                ],
-              },
-              {
-                value: "no",
-                label: "No",
-                children: [
-                  {
-                    value: "h1b",
-                    label: "H1B",
-                  },
-                  {
-                    value: "l2",
-                    label: "L2",
-                  },
-                  {
-                    value: "f1",
-                    label: "F1",
-                  },
-                  {
-                    value: "h4",
-                    label: "H4",
-                  },
+          <Select onChange={handleSelect}
+          placeholder="Are you a US Citizen or permenent resident?" >
+            <Option value="yes">Yes</Option>
+            <Option value="no">No</Option>
+          </Select>
+             </Form.Item>
+        {citizenship === "yes" && (
+          <Form.Item
+          label="Citizen Type"
+          name="workAuthorizationTitle"
+          >
+            <Select placeholder="Select citizen type">
+              <Option value="citizen">Citizen</Option>
+              <Option value="permanent resident">Permanent Resident</Option>
+            </Select>
+          </Form.Item>
+        )
+        }
+        {citizenship === "no" && (
+          <>
+          <Form.Item
+          label="Visa Type"
+          name="workAuthorizationTitle"
+          rules={[{ required: true, message: "Please input visa type!" }]}
+          >
+            <Select placeholder="Select visa type"
+            onChange={handleVisaType}>
+              <Option value="H1B">H1B</Option>
+              <Option value="F1">F1(OPT/CPT)</Option>
+              <Option value="J1">H4</Option>
+              <Option value="L1">L1</Option>
+              <Option value="Other">Other</Option>
+            </Select>
 
-                  {
-                    value: "other",
-                    label: "Other",
-                  },
-                ],
-              },
-            ]}
-            placeholder="Are you a US Citizen or permenent resident?"
-          />
-        </Form.Item>
+          </Form.Item>
+          {visaType === "Other" && (
+          <Form.Item
+          name="workAuthorizationTitle"
+          >
+            <Input placeholder="Please specify" />
+            </Form.Item>
+          )}
+          {visaType === "F1" && (
+             <Form.Item
+             label="OPT Receipt"
+             getValueFromEvent={normFile}
+           >
+             <Upload action={`http://localhost:4000/api/personalInformation/create/profilePicture/${user.id}`} listType="picture-card">
+               <button
+                 style={{
+                   border: 0,
+                   background: "none",
+                 }}
+                 type="button"
+               >
+                 <PlusOutlined />
+                 <div
+                   style={{
+                     marginTop: 8,
+                   }}
+                 >
+                   Upload
+                 </div>
+               </button>
+             </Upload>
+           </Form.Item>
+           )}
+        <Form.Item
+          label = "Start Date"
+          name="startDate"
+          rules={[{ required: true, message: "Please input your start date!" }]}
+          style={{ display: "inline-block", width: "calc(50% - 8px)" }}>
+          <DatePicker onChange={(date, dateString)=> setStartDate(dateString)}/>
+          </Form.Item>
+            <Form.Item className="ml-4"
+            label = "End Date"
+            name = "endDate"
+            rules={[{ required: true, message: "Please input your end date!" }]}
+            style={{ display: "inline-block", width: "calc(50% - 8px)" }}>
+            <DatePicker onChange={(date, dateString)=> setEndDate(dateString)}/>
+            </Form.Item>
+            </>
+        )}
+
+        
+        
         <p>Reference</p>
         <Form.Item
           label="First Name"
@@ -292,7 +334,7 @@ const Onboarding = () => {
           <Input />
         </Form.Item>
         <Form.Item
-          label="relationship"
+          label="Relationship"
           name="referenceRelationship"
           rules={[{ required: true, message: "Please input relationship!" }]}
           style={{ display: "inline-block", width: "calc(50% - 8px)" }}
@@ -332,7 +374,7 @@ const Onboarding = () => {
           <Input />
         </Form.Item>
         <Form.Item
-          label="relationship"
+          label="Relationship"
           name="emergencyRelationship"
           rules={[{ required: true, message: "Please input relationship!" }]}
           style={{ display: "inline-block", width: "calc(50% - 8px)" }}

@@ -10,7 +10,7 @@ import {
   updateApplicationStatusThunk,
   fetchApplicationByIdThunk,
 } from "../../../../thunks/application-thunk";
-import Navbar from "../../../../components/Navbar";
+
 
 const ApplicationFeedback = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -67,16 +67,16 @@ const ApplicationFeedback = () => {
   }
   return (
     <>
-      <Navbar />
+    
       {contextHolder}
      
       {application && (
         <>
-          <div className="flex">
-            <ProfileForm employeeProfile={application} />
+    
+            <ProfileForm employeeProfile={application} disabled={true} />
             {application.onboardingStatus === "pending" && (
               <div className="flex flex-col space-y-5 w-full justify-center items-center">
-              <p className="text-xl">Feedback</p>
+              <p className="text-3xl text-geekblue">Feedback</p>
                 <TextArea
                   rows={4}
                   value={feedback}
@@ -96,10 +96,10 @@ const ApplicationFeedback = () => {
                 </div>
               </div>
             )}
-          </div>
+  
         </>
       )}
-      ;
+      
     </>
   );
 };

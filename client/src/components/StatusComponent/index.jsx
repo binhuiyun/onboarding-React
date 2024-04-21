@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Table } from "antd";
 import { getAppByStatus } from "../../services/application-service";
 import { Link } from "react-router-dom";
-import Navbar from "../Navbar";
+
 
 const columns = [
   {
@@ -39,14 +39,14 @@ const StatusComponent = ({ status }) => {
 
   return (
     <>
-    <Navbar />
+
     <div className="flex justify-center items-center text-3xl text-geekblue mx-20 mb-10 mt-10">
       {uppercaseStatus} Applications</div>
       <Table
         columns={columns}
         dataSource={applications.map((app) => ({
           key: app._id,
-          name: app.name.firstName,
+          name: app.firstName,
           email: app.email,
     
         }))}

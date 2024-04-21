@@ -2,14 +2,14 @@ const db = require("../models");
 const jwt = require("jsonwebtoken");
 
 exports.login = async function (req, res, next) {
-  console.log("signin:", req.body.username);
+  console.log("signin:", req.body.email);
   try {
     // finding a user
     const user = await db.User.findOne({
-      username: req.body.username,
+      email: req.body.email,
     });
 
-    const { id, username } = user;
+    const { id, email} = user;
 
     // checking if their password matches what was sent to the server
     const isMatch = await user.comparePassword(req.body.password);
@@ -19,13 +19,13 @@ exports.login = async function (req, res, next) {
       let token = jwt.sign(
         {
           id,
-          username,
+          email,
         },
         process.env.JWT_SECRET_KEY
       );
       return res.status(200).json({
         id,
-        username,
+        email,
         token,
       });
     } else {
@@ -57,18 +57,18 @@ exports.verifyToken = async function (req, res) {
 exports.register = async function (req, res, next) {
   try {
     let user = await db.User.create(req.body);
-    let { id, username } = user;
-    console.log("register", username);
+    let { id, email} = user;
+    console.log("register", email);
     let token = jwt.sign(
       {
         id,
-        username,
+        email,
       },
       process.env.JWT_SECRET_KEY
     );
     return res.status(200).json({
       id,
-      username,
+      email,
       token,
     });  
   }catch (err) {

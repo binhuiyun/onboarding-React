@@ -94,8 +94,8 @@ const EmployeeProfilePage = () => {
   }
 
   return (
-    <Layout className="w-screen h-screen overflow-auto">
-      <Header user={user} />
+
+  
       <Layout className="bg-white">
         <Sider
           trigger={triggerIcon}
@@ -212,7 +212,7 @@ const EmployeeProfilePage = () => {
             );
           })}
         </Content>
-      </Layout>
+
     </Layout>
   );
 };

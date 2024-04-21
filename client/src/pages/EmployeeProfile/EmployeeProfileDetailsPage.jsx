@@ -1,28 +1,24 @@
 import React, { useState, useEffect } from "react";
-import Header from "../layout/Header";
 import ProfileForm from "../../components/ProfileForm";
-import { useSearchParams, Link } from "react-router-dom";
-import { getEmployeeProfileByPID } from "../../redux/employeeProfileSlice";
-import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
+import { getProfileThunk } from "../../thunks/profile-thunk";
+
+import { useDispatch, useSelector } from "react-redux";
 
 const EmployeeProfileDetailsPage = () => {
   const dispatch = useDispatch();
-  const [searchParams] = useSearchParams();
-  const p_id = searchParams.get("p_id");
-  const [employeeProfile, setEmployeeProfile] = useState(null);
+  const {profile} = useSelector((state) => state.profile);
+  const {u_id} = useParams();
+  console.log("u_id", u_id);  
+
 
   useEffect(() => {
-    console.log(`Fetching ${p_id}'s profile...`);
-    dispatch(getEmployeeProfileByPID(p_id)).then((res) => {
-      console.log("Fetched employee profile: ", res.payload);
-      setEmployeeProfile(res.payload);
-    });
-  }, [searchParams]);
+    dispatch(getProfileThunk(u_id));
+  } , [u_id]);
 
   return (
     <>
-      <Header />
-      {employeeProfile && <ProfileForm employeeProfile={employeeProfile}/>}
+      {profile.userId == u_id && <ProfileForm employeeProfile={profile} disabled={true}  />}
     </>
   );
 };
