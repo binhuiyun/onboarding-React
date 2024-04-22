@@ -1,8 +1,9 @@
 import {createSlice} from "@reduxjs/toolkit";
-import { updateApplicationStatusThunk, fetchApplicationByIdThunk } from "../thunks/application-thunk";
+import { updateApplicationStatusThunk, fetchApplicationByIdThunk, fetchApplicationByStatusThunk } from "../thunks/application-thunk";
 
 const initialState = {
     application:{}, 
+    applications: [],
     status: "idle",
 };
 
@@ -21,6 +22,12 @@ const applicationSlice = createSlice({
         builder.addCase(fetchApplicationByIdThunk.pending, (state, action) => {
             state.status = "loading";
         });
+        builder.addCase(fetchApplicationByStatusThunk.fulfilled, (state, action) => {
+            state.applications = action.payload;
+            state.status = "succeeded";
+        }
+        );
+
     },
 });
 

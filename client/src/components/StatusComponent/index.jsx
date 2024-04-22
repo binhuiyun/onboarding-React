@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Table } from "antd";
-import { getAppByStatus } from "../../services/application-service";
+import { useDispatch, useSelector } from "react-redux";
+import { getAppByStatusThunk } from "../../thunks/profile-thunk";
 import { Link } from "react-router-dom";
 
 
@@ -27,30 +28,37 @@ const columns = [
   },
 ];
 const StatusComponent = ({ status }) => {
-  const [applications, setApplications] = useState([]);
+  const dispatch = useDispatch();
+  const  applications = useSelector((state) => state.profile.profiles);
   const uppercaseStatus = status.charAt(0).toUpperCase() + status.slice(1);
+  const loadingStatus = useSelector((state) => state.profile.status);
 
   useEffect(() => {
-    getAppByStatus(status).then((res) => {
-      console.log("res", res);
-      setApplications(res);
-    });
-  }, [status]);
+   dispatch(getAppByStatusThunk(status))
+  },
+
+  
+  []);
 
   return (
     <>
-
+    {loadingStatus==="success" &&(
+      <>
+      
     <div className="flex justify-center items-center text-3xl text-geekblue mx-20 mb-10 mt-10">
       {uppercaseStatus} Applications</div>
       <Table
         columns={columns}
         dataSource={applications.map((app) => ({
-          key: app._id,
+          key: app.userId,
           name: app.firstName,
           email: app.email,
     
         }))}
       />
+      </>
+    )}
+
     </>
   );
 };

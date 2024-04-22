@@ -9,14 +9,12 @@ import { selectForUser, fetchForUser } from "../../redux/visaSlice";
 
 const VisaPage = () => {
   const dispatch = useDispatch();
-  // let user = {
-  //   id: localStorage.getItem("userID"),
-  // };
+
   const { user } = useSelector((state) => state.user);
   const info = useSelector(selectForUser);
   console.log(info);
   useEffect(() => {
-    dispatch(fetchForUser(localStorage.getItem("userID")));
+    dispatch(fetchForUser(user.id));
   }, []);
 
   return (
@@ -26,7 +24,7 @@ const VisaPage = () => {
           <Header />
           <div className="flex grow justify-center items-center">
             <p className="text-geekblue text-6xl">
-              Oops! You're not OPT status{" "}
+              Oops! You're not OPT status
             </p>
           </div>
         </div>

@@ -6,23 +6,20 @@ import ProfileForm from "../../../../components/ProfileForm";
 import { updateCurrentUserThunk } from "../../../../thunks/auth-thunk";
 
 const { TextArea } = Input;
-import {
-  updateApplicationStatusThunk,
-  fetchApplicationByIdThunk,
-} from "../../../../thunks/application-thunk";
-
+import { updateProfileThunk, getProfileThunk } from "../../../../thunks/profile-thunk";
 
 const ApplicationFeedback = () => {
   const [messageApi, contextHolder] = message.useMessage();
-  const { application } = useSelector((state) => state.application);
-  const status = useSelector((state) => state.application.status);
+  const application = useSelector((state) => state.profile.profile);
+  const status = useSelector((state) => state.profile.status);
   const dispatch = useDispatch();
   const { id } = useParams();
   const [feedback, setFeedback] = useState("");
-  const u_id = localStorage.getItem("userID");
+
 
   useEffect(() => {
-    dispatch(fetchApplicationByIdThunk(id));
+    dispatch(getProfileThunk(id));
+    console.log("id",   id)
   }, [id]);
 
   const handleApprove = () => {
@@ -32,28 +29,21 @@ const ApplicationFeedback = () => {
       content: "Application approved",
       duration: 2,
     });
+    const updatedProfile = { ...application, onboardingStatus: "approved" };
+    dispatch(updateProfileThunk(updatedProfile));
+    
     dispatch(
-      updateApplicationStatusThunk({
-        id,
-        payload: { onboardingStatus: "approved" },
-      })
-    );
-    dispatch(
-      updateCurrentUserThunk({
-        id: u_id,
-        data: {
-          onboardingStatus: "approved",
-        },
-      })
+      updateCurrentUserThunk(
+         id,   
+         {onboardingStatus: "approved" },
+      )
     );
   };
 
   const handleReject = () => {
+    const updatedProfile = { ...application, onboardingStatus: "rejected" };
     dispatch(
-      updateApplicationStatusThunk({
-        id,
-        payload: { onboardingStatus: "rejected", feedback },
-      })
+      updateProfileThunk(updatedProfile)
     );
     messageApi.open({
       type: "warning",
@@ -70,7 +60,7 @@ const ApplicationFeedback = () => {
     
       {contextHolder}
      
-      {application && (
+      {application.userId == id && (
         <>
     
             <ProfileForm employeeProfile={application} disabled={true} />

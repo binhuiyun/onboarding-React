@@ -10,13 +10,24 @@ const EmployeeProfile = () => {
     const dispatch = useDispatch();
     //sortedEmployees
     const allEmployees = useSelector(state => state.profile.profiles);
+    const [searchInput, setSearchInput] = useState("");
+    const [filteredEmployees, setFilteredEmployees] = useState([]);
     const status = useSelector(state => state.profile.status);
-    const { user } = useSelector((state) => state.user);
-    console.log("allEmployees", user.id);
+    console.log("allEmployees", allEmployees);
+
     useEffect(() => {
-        dispatch(getAllProfileThunk());
+        const  filteredList = allEmployees.filter((employee) => {
+          const {firstName, lastName, preferredName} = employee;
+          const searchString = `${firstName} ${lastName} ${preferredName}`.toLowerCase();
+          return searchString.includes(searchInput.toLowerCase());
+        });
+        setFilteredEmployees(filteredList);
     }
-    , []);
+    , [searchInput, allEmployees]);
+
+    useEffect(() => {
+      dispatch(getAllProfileThunk());
+    }, []);
 
     const columns = [
         {
@@ -54,7 +65,8 @@ const EmployeeProfile = () => {
     <div>
       <h1>Employee Profile</h1>
       <Search placeholder="Search by name"
-       onSearch={value => console.log(value)} 
+       value = {searchInput}
+       onChange={(e) => setSearchInput(e.target.value)}
        enterButton="Search" 
        style={{
         width: 500,
@@ -62,7 +74,7 @@ const EmployeeProfile = () => {
      
       {status === "success" && (
          <Table  columns={columns} 
-      dataSource={allEmployees.map((employee) => {
+      dataSource={filteredEmployees.map((employee) => {
         return {
             key: employee.userId,
             name: `${employee.firstName} ${employee.lastName}`,

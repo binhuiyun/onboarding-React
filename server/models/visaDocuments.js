@@ -65,5 +65,5 @@ const visaSchema = new Schema({
   },
 });
 
-const visaModel = mongoose.model("visaModel", visaSchema);
-module.exports = { visaModel };
+module.exports = mongoose.model("visaModel", visaSchema);
+

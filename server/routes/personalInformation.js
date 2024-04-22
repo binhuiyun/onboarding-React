@@ -11,10 +11,13 @@ const {
   uploadProfilePicture,
   createProfilePictureBuffer,
   deleteEmploymentbyVisaTitle,
-  deleteEmergencyContactByIndex
+  deleteEmergencyContactByIndex,
+  getAppByStatus,
 } = require("../handlers/personalInformation");
 
+router.get('/status/:status', getAppByStatus)
 router.get("/:id", getPersonalInformation);
+
 router.get("/", getAllProfile);
 router.put("/:id", updatePersonalInformation);
 router.post("/:id", createPersonalInformation);

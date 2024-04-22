@@ -12,8 +12,6 @@ const tokenHistoryRouter = require("./routes/tokenHistory");
 const visaRouter = require("./routes/visa");
 const personalInformationRouter = require("./routes/personalInformation");
 const userRouter = require("./routes/user");
-const applicationRouter = require("./routes/application");
-const employeeProfileRouter = require("./routes/employeeProfile");
 const folderRouter = require("./routes/folder");
 const bodyParser = require("body-parser");
 const path = require("path");
@@ -38,8 +36,6 @@ app.use("/api/tokenHistory", loginRequired, tokenHistoryRouter);
 app.use("/api/personalInformation", personalInformationRouter);
 app.use("/api/visa", visaRouter);
 app.use("/api/user", userRouter);
-app.use("/api/application", applicationRouter);
-app.use("/api/employeeProfile", employeeProfileRouter);
 app.use("/api/folder", folderRouter);
 app.use(errorHandler);
 

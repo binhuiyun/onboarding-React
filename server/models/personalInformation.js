@@ -59,8 +59,7 @@ const personalInformationSchema = new Schema({
   workAuthorizationTitle: String,
   startDate: String,
   endDate: String,
-  startDate: String,
-  endDate: String,
+
 
   referenceFirstName: { type: String, required: true },
   referenceLastName: { type: String, required: true },

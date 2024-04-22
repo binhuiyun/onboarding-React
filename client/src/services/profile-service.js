@@ -30,3 +30,10 @@ export const getAllProfile = async () => {
   });
 };
 
+export const getAppByStatus = async (status) => {
+  return await apiCall({
+      url : `api/personalInformation/status/${status}`,
+      method: 'get'
+
+  });
+}

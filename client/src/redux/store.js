@@ -3,7 +3,6 @@ import userReducer from "./userSlice";
 import profileReducer from "./profileSlice";
 import tokenHistoryReducer from "./tokenHistorySlice";
 import errorReducer from "./errorSlice";
-import applicationReducer from "./applicationSlice";
 import visaReducer from "./visaSlice";
 
 export default configureStore({
@@ -12,7 +11,6 @@ export default configureStore({
     profile: profileReducer,
     tokenHistory: tokenHistoryReducer,
     error: errorReducer,
-    application: applicationReducer,
     visa: visaReducer,
   },
   devTools: true,

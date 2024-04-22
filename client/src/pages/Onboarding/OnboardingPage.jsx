@@ -42,7 +42,6 @@ const OnboardingPage = () => {
   const fileInputRef = useRef(null);
   const { user } = useSelector((state) => state.user);
   const [onboardingStatus, setOnboardingStatus] = useState(null);
-  // const {application} = useSelector((state) => state.application);
   const [optReceipt, setOptReceipt] = useState();
   const u_id = localStorage.getItem("userID");
   const [newEmergencyContact, setNewEmergencyContact] = useState({
