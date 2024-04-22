@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Table } from "antd";
 import { fetchTokenHistoryThunk } from "../../../thunks/token-thunk";
-import Navbar from "../../../components/Navbar";
 
 
 const columns = [

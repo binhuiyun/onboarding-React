@@ -13,6 +13,7 @@ const visaRouter = require("./routes/visa");
 const personalInformationRouter = require("./routes/personalInformation");
 const userRouter = require("./routes/user");
 const folderRouter = require("./routes/folder");
+const documentRouter = require("./routes/document");
 const bodyParser = require("body-parser");
 const path = require("path");
 const PORT = 4000;
@@ -37,6 +38,7 @@ app.use("/api/personalInformation", personalInformationRouter);
 app.use("/api/visa", visaRouter);
 app.use("/api/user", userRouter);
 app.use("/api/folder", folderRouter);
+app.use("/api/document", documentRouter);
 app.use(errorHandler);
 
 app.use((req, res, next) => {

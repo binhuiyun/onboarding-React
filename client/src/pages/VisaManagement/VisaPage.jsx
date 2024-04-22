@@ -3,8 +3,6 @@ import React, { useState, useEffect } from "react";
 import FileUploader from "../../components/FileUploader";
 import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
-import Header from "../layout/Header";
-import Footer from "../layout/Footer";
 import { selectForUser, fetchForUser } from "../../redux/visaSlice";
 
 const VisaPage = () => {
@@ -21,7 +19,7 @@ const VisaPage = () => {
     <>
       {!info && (
         <div className="flex flex-col h-screen">
-          <Header />
+      
           <div className="flex grow justify-center items-center">
             <p className="text-geekblue text-6xl">
               Oops! You're not OPT status
@@ -32,7 +30,7 @@ const VisaPage = () => {
       {/* TODO: change to real name */}
       {info && (
         <>
-          <Header />
+        
           <div className="text-4xl text-slate-400 mx-20 my-5">{`Hi, ${user.username}`}</div>
           <div className="text-3xl text-geekblue mx-20 mb-10">
             Visa Management System

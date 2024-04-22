@@ -4,7 +4,6 @@ import axios from "axios";
 import { Space, Table, Tag, Input, Pagination } from "antd";
 import ReviewAction from "../../components/ReviewAction";
 import SendNotification from "../../components/SendNotification";
-import Header from "../layout/Header";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchForHr, selectForHr } from "../../redux/visaSlice";
 
@@ -250,7 +249,7 @@ const VisaHrPage = () => {
   };
   return (
     <>
-      <Header />
+   
       <div className="mx-10 ">
         <p className="text-3xl text-geekblue my-10">Visa Status Management</p>
         <div className="">

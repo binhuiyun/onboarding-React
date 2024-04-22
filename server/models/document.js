@@ -6,24 +6,30 @@ const documentSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'User',
     },
-    fileName: {
-        type: String,
-        required: true,
-    },
-    fileDoc:{
-        type: Buffer,
-        required: true,
-    },
-    status: {
-        type: String,
-        required: true,
-        default: "Not submitted",
-    },
-    feedback: {
-        type: String,
-        required: true,
-        default: "",
-    },
+    documents: [{
+        fileName: {
+            type:String,
+            required: true,
+         
+        },
+        fileType: {
+            type: String,
+            enum: ['optReceipt', 'i20', 'optEAD', 'i983', 'profilePic'],
+        },
+        fileDoc:{
+            type: Buffer,
+            required: true,
+        },
+        status: {
+            type: String,
+            default: "Not submitted",
+        },
+        feedback: {
+            type: String,
+            default: "",
+        },
+    }]
+   
 });
 
 module.exports = mongoose.model('Document', documentSchema);

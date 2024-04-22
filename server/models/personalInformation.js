@@ -75,6 +75,12 @@ const personalInformationSchema = new Schema({
 
   emergencyRelationship: { type: String, required: true },
 
+  uploadedDocuments: [{
+    type: Buffer,
+    fileName: String,
+
+  }],
+
   onboardingStatus: {
     type: String,
     default: "pending",

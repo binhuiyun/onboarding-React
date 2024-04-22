@@ -1,4 +1,4 @@
-const { visaModel } = require("../models/visaDocuments");
+const visaModel = require("../models/visaDocuments");
 const PersonalInformation = require("../models/personalInformation");
 const sendmail = require("sendmail")({
   smtpPort: 465,

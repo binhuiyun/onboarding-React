@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Form, Input, Button, Upload, Select, DatePicker } from "antd";
+import { Form, Input, Button, Upload, Select, DatePicker, List } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { createProfileThunk } from "../../thunks/profile-thunk";
 const { Option } = Select;
 
 
 const normFile = (e) => {
+  console.log("Upload event:", e);
   if (Array.isArray(e)) {
     return e;
   }
@@ -21,6 +22,7 @@ const Onboarding = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const dispatch = useDispatch();
+  const [uploadedfiles, setUploadedfiles] = useState([]);
 
   const onFinish = (values) => {
     console.log("Received values from form: ", values);
@@ -35,8 +37,12 @@ const Onboarding = () => {
     setDob(dateString);
   };
 
-
-
+  const handleFileUpoad = (info) => {
+    console.log("info", info.file);
+    if (info.file.status === "done") {
+      setUploadedfiles([...uploadedfiles, info.file.name]);
+    }
+  };
 
   const handleSelect = (value) => {
    setCitizenship(value);
@@ -80,7 +86,9 @@ const Onboarding = () => {
           valuePropName="fileList"
           getValueFromEvent={normFile}
         >
-          <Upload action={`http://localhost:4000/api/personalInformation/create/profilePicture/${user.id}`} listType="picture-card">
+          <Upload action={`http://localhost:4000/api/personalInformation/create/profilePicture/${user.id}`}
+           listType="picture-card"
+           onChange={handleFileUpoad}>
             <button
               style={{
                 border: 0,
@@ -262,8 +270,11 @@ const Onboarding = () => {
              <Form.Item
              label="OPT Receipt"
              getValueFromEvent={normFile}
+             
            >
-             <Upload action={`http://localhost:4000/api/personalInformation/create/profilePicture/${user.id}`} listType="picture-card">
+             <Upload action={`http://localhost:4000/api/document/${user.id}/optReceipt`} 
+             listType="picture-card"
+             onChange={handleFileUpoad}>
                <button
                  style={{
                    border: 0,
@@ -381,8 +392,22 @@ const Onboarding = () => {
         >
           <Input />
         </Form.Item>
-        <Form.Item>
-          <Button type="primary" htmlType="submit">
+
+        {uploadedfiles.length > 0 && (
+          <List
+            header={<div>Summary of Uploaded Documents</div>}
+            bordered
+            dataSource={uploadedfiles}
+            renderItem={(item) => (
+              <List.Item>
+                <div>{item}</div>
+              </List.Item>
+            )}
+          />
+        )}
+
+        <Form.Item className="mt-4">
+          <Button size="large"  htmlType="submit">
             Submit
           </Button>
         </Form.Item>

@@ -1,30 +1,45 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Form, Input } from "antd";
+import { Row, Col, Form, Input, Table, Space} from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { getDocumentThunk } from "../thunks/document-thunk";
 
 const { TextArea } = Input;
 
 const ProfileForm = ({ employeeProfile, disabled, form, onFinish}) => {
-  const [documents, setDocuments] = useState([]);
+  const { document } = useSelector((state) => state.document);
+  const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   axios
-  //     .get(`http://localhost:4000/api/visa/${employeeProfile.userId}`)
-  //     .then((res) => {
-  //       setDocuments(res.data.optReceipt);
-  //       console.log("Documents:", res.data);
-  //     });
-  // }, []);
+  useEffect(() => {
+    dispatch(getDocumentThunk(employeeProfile.userId));
+    console.log("Employee Profile fetching docs");
+  }, [employeeProfile.userId]);
 
-  const handleDocumentClick = (e) => {
-    console.log("Document Clicked");
-    console.log(documents);
-    const blob = new Blob([new Uint8Array(documents.fileDoc.data)], {
+  const handlePreview = (record) => {
+    console.log("Previewing", record);
+    const blob = new Blob([new Uint8Array(record.fileDoc.data)], {
       type: "application/pdf",
     });
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
   };
 
+
+  const columns = [
+    {
+      title: "File Name",
+      dataIndex: "fileName",
+      key: "fileName",
+    },
+    {
+      title: "Action",
+      key: "action",
+      render: (_, record) => (
+        <Space size="large">
+          <a onClick={() => handlePreview(record)}>Preview</a>
+        </Space>
+      ),
+    },
+  ];
 
   return (
     employeeProfile && (
@@ -240,18 +255,15 @@ const ProfileForm = ({ employeeProfile, disabled, form, onFinish}) => {
                 </Col>
               </Row>
             </Form.Item>
-
-            <Form.Item label="Documents">
-              <span
-                className="cursor-pointer hover:text-blue-500 transition duration-300"
-                onClick={handleDocumentClick}
-              >
-                {documents && documents.fileName}
-              </span>
-            </Form.Item>
   
      
           </Form>
+        <p>Documents</p>
+          <Table
+            columns={columns}
+            dataSource={document.documents}
+            pagination={false}
+          />
 
         </div>
       </>
