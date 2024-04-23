@@ -1,7 +1,6 @@
 const Document = require('../models/document');
 const PersonalInformation = require('../models/personalInformation');
 
-
 const getDocumentsByUserId = async (req, res) => {
   const u_id = req.params.id;
   try{

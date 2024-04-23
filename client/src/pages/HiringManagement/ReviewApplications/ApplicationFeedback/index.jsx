@@ -65,13 +65,11 @@ const ApplicationFeedback = () => {
     
             <ProfileForm employeeProfile={application} disabled={true} />
             {application.onboardingStatus === "pending" && (
-              <div className="flex flex-col space-y-5 w-full justify-center items-center">
-              <p className="text-3xl text-geekblue">Feedback</p>
-                <TextArea
-                  rows={4}
+              <div className="flex flex-col space-y-1 justify-center items-center">
+              <p className="text-2xl text-geekblue mt-2">Feedback</p>
+                <TextArea size="small"
                   value={feedback}
                   onChange={(e) => setFeedback(e.target.value)}
-                  className="w-full overflow-auto"
                 />
                 <div className="flex flex-row space-x-5">
                   

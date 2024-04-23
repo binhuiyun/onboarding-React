@@ -37,3 +37,10 @@ export const getAppByStatus = async (status) => {
 
   });
 }
+
+export const getProfileByOpt = async () => {
+  return await apiCall({
+    url: `api/personalInformation/opt`,
+    method: "get"
+  });
+}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Form, Input, Button, Upload, Select, DatePicker, List } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
@@ -19,24 +19,30 @@ const Onboarding = () => {
   const [citizenship, setCitizenship] = useState("");
   const [visaType, setVisaType] = useState("");
   const [dob, setDob] = useState("");
-  const [startDate, setStartDate] = useState("");
-  const [endDate, setEndDate] = useState("");
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const dispatch = useDispatch();
   const [uploadedfiles, setUploadedfiles] = useState([]);
 
-  const onFinish = (values) => {
-    console.log("Received values from form: ", values);
-    const profile = {...values, dob, userId: user.id};
-    dispatch(createProfileThunk(profile) );
-
-  };
-
   const onChange = (date, dateString) => {
     console.log("current user", user.id);
-    console.log(date, dateString);
+    console.log(dateString, new Date(dateString).getTime());
     setDob(dateString);
+
   };
 
+  const getRemainingDays = (startDate, endDate) => {
+    if (startDate && endDate) {
+       const remaining = Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+      
+       return remaining;
+    }
+    return 0;
+  };
+
+
+ 
+ 
   const handleFileUpoad = (info) => {
     console.log("info", info.file);
     if (info.file.status === "done") {
@@ -50,6 +56,13 @@ const Onboarding = () => {
   const handleVisaType = (value) => {
     setVisaType(value);
   }
+  const onFinish = (values) => {
+    console.log("Received values from form: ", values);
+    const profile = {...values, dob, userId: user.id,
+      remaining: getRemainingDays(startDate, endDate)};
+    dispatch(createProfileThunk(profile) );
+
+  };
 
   return (
     <div className="max-w-md mx-auto mt-8">
@@ -299,14 +312,14 @@ const Onboarding = () => {
           name="startDate"
           rules={[{ required: true, message: "Please input your start date!" }]}
           style={{ display: "inline-block", width: "calc(50% - 8px)" }}>
-          <DatePicker onChange={(date, dateString)=> setStartDate(dateString)}/>
+          <DatePicker onChange={(date, dateString)=> setStartDate(new Date(dateString))}/>
           </Form.Item>
             <Form.Item className="ml-4"
             label = "End Date"
             name = "endDate"
             rules={[{ required: true, message: "Please input your end date!" }]}
             style={{ display: "inline-block", width: "calc(50% - 8px)" }}>
-            <DatePicker onChange={(date, dateString)=> setEndDate(dateString)}/>
+            <DatePicker onChange={(date, dateString)=> setEndDate(new Date(dateString))}/>
             </Form.Item>
             </>
         )}

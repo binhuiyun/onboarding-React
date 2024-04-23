@@ -1,15 +1,14 @@
-//TODO: Approve/reject need to notify user
 import React, { useEffect, useState } from "react";
-import axios from "axios";
 import { Space, Table, Tag, Input, Pagination } from "antd";
 import ReviewAction from "../../components/ReviewAction";
 import SendNotification from "../../components/SendNotification";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchForHr, selectForHr } from "../../redux/visaSlice";
-
-// api : router.get("/hr", getHrSideData);
+import { getProfileByOptThunk } from "../../thunks/profile-thunk";
 
 const VisaHrPage = () => {
+  const dispatch = useDispatch();
+  const {profiles} = useSelector((state) => state.profile);
   // Table for IN PROGRESS
   const [searchText, setSearchText] = useState("");
   const pagination = {
@@ -105,12 +104,12 @@ const VisaHrPage = () => {
       dataIndex: "Work_Authorization",
       key: "Work_Authorization",
       width: "40%",
-      render: (_, { Work_Authorization }) => (
+      render: (_, { profile }) => (
         <>
-          <Tag color="geekblue">{`Title : ${Work_Authorization.title}`}</Tag>
-          <Tag color="geekblue">{`Start Date : ${Work_Authorization.start_date}`}</Tag>
-          <Tag color="geekblue">{`End Date : ${Work_Authorization.end_date}`}</Tag>
-          <Tag color="geekblue">{`Remaining : ${Work_Authorization.remaining} days`}</Tag>
+          <Tag color="geekblue">{`Title : ${profile.workAuthorizationTitle}`}</Tag>
+          <Tag color="geekblue">{`Start Date : ${profile.startDate}`}</Tag>
+          <Tag color="geekblue">{`End Date : ${profile.endDate}`}</Tag>
+          <Tag color="geekblue">{`Remaining : ${profile.remaining} days`}</Tag>
         </>
       ),
     },
@@ -160,41 +159,27 @@ const VisaHrPage = () => {
   ];
   const info = useSelector(selectForHr);
   const [filter, setFilter] = useState("IN PROGRESS");
-  const dispatch = useDispatch();
+
   useEffect(() => {
-    dispatch(fetchForHr());
+    dispatch(getProfileByOptThunk());
   }, []);
 
-  console.log(info);
+ 
   const infoInProgress = info
     .filter((user) => user.Work_Authorization.title === "F1(CPT/OPT)")
     .filter((user) => user.docStatus === "IN PROGRESS");
-  const dataSourceAll = info.map(
-    (
-      {
-        name,
-        Work_Authorization,
-        Next_Step,
-        Documentation,
-        preferredName,
-        middleName,
-      },
-      index
-    ) => {
-      let allName = {
-        name: name,
-        preferredName: preferredName,
-        middleName: middleName,
-      };
-      return {
-        key: index + 1,
-        allName,
-        Work_Authorization,
-        Next_Step,
-        Documentation,
-      };
-    }
-  );
+
+  const allOpt = profiles.map((profile) => {
+    console.log(profile.firstName);
+    return {
+      key: profile.userId,
+      allName: `${profile.firstName} ${profile.lastName}`,
+      Work_Authorization: profile.workAuthorizationTitle,
+      Next_Step: "Send Notification",
+      Documentation: ""
+    };
+  });
+ 
   const dataSourceInProgress = infoInProgress.map(
     (
       {
@@ -252,7 +237,7 @@ const VisaHrPage = () => {
    
       <div className="mx-10 ">
         <p className="text-3xl text-geekblue my-10">Visa Status Management</p>
-        <div className="">
+        <div>
           <Input.Search
             type="text"
             placeholder="  Search Employee  "
@@ -263,7 +248,7 @@ const VisaHrPage = () => {
             onChange={(e) => setSearchText(e.target.value)}
           />
         </div>
-        <div className="">
+        <div>
           <select
             name="filter"
             id="filter"
@@ -285,7 +270,7 @@ const VisaHrPage = () => {
           ) : (
             <Table
               columns={columns2}
-              dataSource={dataSourceAll}
+              dataSource={allOpt}
               className="w-[90%]"
               pagination={pagination}
             />

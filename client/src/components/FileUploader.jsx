@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { createPortal } from "react-dom";
-import { Popover } from "antd";
+import { Popover, Upload, message} from "antd";
+import { useSelector } from "react-redux";
 import {
   ExclamationCircleIcon,
   CheckCircleIcon,
@@ -10,26 +10,32 @@ import {
   FolderArrowDownIcon,
   FolderPlusIcon,
 } from "@heroicons/react/24/outline";
-import { useSelector } from "react-redux";
-import PopUp from "./PopUp";
+
 const FileUploader = ({ title, fileType, status, feedback, next, prev }) => {
-  const [isPopUp, setIsPopUp] = useState(false);
-  const handleUpload = (e) => {
-    e.preventDefault();
-    setIsPopUp(!isPopUp);
-  };
+  const user = useSelector((state) => state.user.user);
+
+  const props = {
+    name: "file",
+    action: `http://localhost:4000/api/document/${user.id}/${fileType}`,
+    headers: {
+      authorization: "authorization-text",
+    },
+    onChange(info) {
+      if (info.file.status !== "uploading") {
+        console.log(info.file, info.fileList);
+      }
+      if (info.file.status === "done") {
+        message.success(`${info.file.name} file uploaded successfully`);
+      } else if (info.file.status === "error") {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+  }
+
 
   return (
     <>
-      {isPopUp &&
-        createPortal(
-          <PopUp
-            handleUpload={handleUpload}
-            fileType={fileType}
-            setIsPopUp={setIsPopUp}
-          />,
-          document.body
-        )}
+    
       <div className="w-[60%] py-4 px-4 shadow-md my-4 flex rounded-lg hover:scale-[101%]">
         {status === "pending" && (
           <ClockIcon className="h-8 w-8 text-yellow-500" />
@@ -43,27 +49,13 @@ const FileUploader = ({ title, fileType, status, feedback, next, prev }) => {
         <div className="px-1 text-xl my-auto">{title}</div>
         <div className="text-gray-500 text-sm grow my-auto text-center">
           {/* TODO: add required message */}
-          {fileType === "optReceipt" &&
+          {
             status === "pending" &&
-            "Waiting for HR to approve your OPT Receipt"}
-          {fileType === "optReceipt" &&
+            `Waiting for HR to approve your ${title}`}
+          { 
             status === "approved" &&
-            "Please upload a copy of your OPT EAD"}
-          {fileType === "optEAD" &&
-            status === "pending" &&
-            "Waiting for HR to approve your OPT EAD"}
-          {fileType === "optEAD" &&
-            status === "approved" &&
-            "Please download and fill out the I-983 form"}
-          {fileType === "I983" &&
-            status === "pending" &&
-            "Waiting for HR to approve and sign your I-983"}
-          {fileType === "I983" &&
-            status === "approved" &&
-            "Please send the I-983 along with all necessary documents to your school and upload the new I-20"}
-          {fileType === "I20" &&
-            status === "pending" &&
-            "Waiting for HR to approve your I-20"}
+            `Please upload a copy of your ${next}`}
+          
           {fileType === "I20" &&
             status === "approved" &&
             "All documents have been approved"}
@@ -79,12 +71,12 @@ const FileUploader = ({ title, fileType, status, feedback, next, prev }) => {
             </Popover>
           )}
           {prev === "approved" && (
-            <Popover content="Upload File">
+            <Upload {...props} showUploadList={false}>
               <FolderPlusIcon
                 className="h-8 w-8 text-geekblue"
-                onClick={handleUpload}
               />
-            </Popover>
+            </Upload>
+         
           )}
         </div>
       </div>
