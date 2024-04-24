@@ -19,28 +19,27 @@ const Onboarding = () => {
   const [citizenship, setCitizenship] = useState("");
   const [visaType, setVisaType] = useState("");
   const [dob, setDob] = useState("");
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+  const [startDate, setStartDate] = useState("");
+  const [endDate, setEndDate] = useState("");
   const dispatch = useDispatch();
   const [uploadedfiles, setUploadedfiles] = useState([]);
 
   const onChange = (date, dateString) => {
     console.log("current user", user.id);
-    console.log(dateString, new Date(dateString).getTime());
+    console.log(dateString);
     setDob(dateString);
 
   };
 
-  const getRemainingDays = (startDate, endDate) => {
-    if (startDate && endDate) {
-       const remaining = Math.round((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+  const getRemainingDays = (endDate) => {
+    if (endDate) {
+       
+       const remaining = Math.round((Date.now() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24));
       
        return remaining;
     }
     return 0;
   };
-
-
  
  
   const handleFileUpoad = (info) => {
@@ -59,7 +58,7 @@ const Onboarding = () => {
   const onFinish = (values) => {
     console.log("Received values from form: ", values);
     const profile = {...values, dob, userId: user.id,
-      remaining: getRemainingDays(startDate, endDate)};
+      remaining: getRemainingDays(endDate)};
     dispatch(createProfileThunk(profile) );
 
   };
@@ -100,7 +99,6 @@ const Onboarding = () => {
           getValueFromEvent={normFile}
         >
           <Upload action={`http://localhost:4000/api/personalInformation/create/profilePicture/${user.id}`}
-           listType="picture-card"
            onChange={handleFileUpoad}>
             <button
               style={{
@@ -285,8 +283,7 @@ const Onboarding = () => {
              getValueFromEvent={normFile}
              
            >
-             <Upload action={`http://localhost:4000/api/document/${user.id}/optReceipt`} 
-             listType="picture-card"
+             <Upload action={`http://localhost:4000/api/personalInformation/${user.id}/optReceipt`} 
              onChange={handleFileUpoad}>
                <button
                  style={{
@@ -312,20 +309,17 @@ const Onboarding = () => {
           name="startDate"
           rules={[{ required: true, message: "Please input your start date!" }]}
           style={{ display: "inline-block", width: "calc(50% - 8px)" }}>
-          <DatePicker onChange={(date, dateString)=> setStartDate(new Date(dateString))}/>
+          <DatePicker onChange={(date, dateString)=> setStartDate(dateString)}/>
           </Form.Item>
             <Form.Item className="ml-4"
             label = "End Date"
             name = "endDate"
             rules={[{ required: true, message: "Please input your end date!" }]}
             style={{ display: "inline-block", width: "calc(50% - 8px)" }}>
-            <DatePicker onChange={(date, dateString)=> setEndDate(new Date(dateString))}/>
+            <DatePicker onChange={(date, dateString)=> setEndDate(dateString)}/>
             </Form.Item>
             </>
         )}
-
-        
-        
         <p>Reference</p>
         <Form.Item
           label="First Name"

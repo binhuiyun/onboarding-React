@@ -1,16 +1,16 @@
 import React, { useEffect } from "react";
-import { Row, Col, Form, Input, Table, Space} from "antd";
+import { Row, Col, Form, Input, Table} from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { getDocumentThunk } from "../thunks/document-thunk";
+import { getDocByUserIdThunk } from "../thunks/profile-thunk";
 
 const { TextArea } = Input;
 
 const ProfileForm = ({ employeeProfile, disabled, form, onFinish}) => {
-  const { document } = useSelector((state) => state.document);
+  const { docs } = useSelector((state) => state.profile);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getDocumentThunk(employeeProfile.userId));
+    dispatch(getDocByUserIdThunk(employeeProfile.userId));
     console.log("Employee Profile fetching docs");
   }, [employeeProfile.userId]);
 
@@ -34,9 +34,9 @@ const ProfileForm = ({ employeeProfile, disabled, form, onFinish}) => {
       title: "Action",
       key: "action",
       render: (_, record) => (
-        <Space size="large">
+     
           <a onClick={() => handlePreview(record)}>Preview</a>
-        </Space>
+    
       ),
     },
   ];
@@ -261,7 +261,7 @@ const ProfileForm = ({ employeeProfile, disabled, form, onFinish}) => {
         <p>Documents</p>
           <Table
             columns={columns}
-            dataSource={document.documents}
+            dataSource={docs}
             pagination={false}
           />
 

@@ -11,6 +11,7 @@ import { updateProfileThunk, getProfileThunk } from "../../../../thunks/profile-
 const ApplicationFeedback = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const application = useSelector((state) => state.profile.profile);
+  const {user} = useSelector((state) => state.user);
   const status = useSelector((state) => state.profile.status);
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -32,13 +33,9 @@ const ApplicationFeedback = () => {
     const updatedProfile = { ...application, onboardingStatus: "approved" };
     dispatch(updateProfileThunk(updatedProfile));
     
-    dispatch(
-      updateCurrentUserThunk(
-         id,   
-         {onboardingStatus: "approved" },
-      )
-    );
-  };
+    const updatedUser = { ...user, onboardingStatus: "approved" };
+    dispatch(updateCurrentUserThunk(updatedUser))};
+    
 
   const handleReject = () => {
     const updatedProfile = { ...application, onboardingStatus: "rejected" };

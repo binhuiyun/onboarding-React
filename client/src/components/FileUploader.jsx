@@ -16,7 +16,7 @@ const FileUploader = ({ title, fileType, status, feedback, next, prev }) => {
 
   const props = {
     name: "file",
-    action: `http://localhost:4000/api/document/${user.id}/${fileType}`,
+    action: `http://localhost:4000/api/personalInformation/documents/${user.id}/${fileType}`,
     headers: {
       authorization: "authorization-text",
     },

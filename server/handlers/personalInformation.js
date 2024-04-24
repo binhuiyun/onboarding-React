@@ -1,4 +1,5 @@
 const PersonalInformation = require("../models/personalInformation");
+const Doc = require("../models/doc");
 
 const createPersonalInformation = async (req, res) => {
   const u_id = req.params.id;
@@ -113,6 +114,39 @@ const getProfileByOpt = async (req, res) => {
   }
 };
 
+const addToDocument = async (req, res) => {
+  const u_id = req.params.id;
+  const fileType = req.params.fileType;
+  try{
+    let profile = await PersonalInformation.findOne({ userId: u_id }); 
+    const { originalname, buffer } = req.file;
+    const doc = await Doc.create(
+    {
+      fileName: originalname,
+      fileType: fileType,
+      fileDoc: buffer,
+      status: "pending",
+    });
+    profile.uploadedDocuments.push(doc);
+    await profile.save();
+    res.status(201).json(doc);
+  }catch(err){
+    console.log(err);
+    res.status(500).json({ message: "Server Error" });
+  }
+}
+
+const getDocByUserId = async (req, res) => {
+  const u_id = req.params.id;
+  try{
+    const profile = await PersonalInformation.findOne({ userId: u_id }).populate("uploadedDocuments").exec();  
+    res.status(200).json(profile.uploadedDocuments);
+    
+  }catch(err){
+    res.status(500).json({ message: "Server Error" });
+  }
+}
+
 module.exports = {
   createPersonalInformation,
   getPersonalInformation,
@@ -122,4 +156,6 @@ module.exports = {
   createProfilePictureBuffer,
   getAppByStatus,
   getProfileByOpt,
+  addToDocument,
+  getDocByUserId,
 };

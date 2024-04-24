@@ -1,11 +1,20 @@
-import { getDocument } from "../services/document-servise";
+import { getAllDocument, updateDocument } from "../services/document-servise";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-export const getDocumentThunk = createAsyncThunk(
-  "document/getDocument",
-  async (userId) => {
-    const document = await getDocument(userId);
-    console.log("fetching document", document);
+
+export const getAllDocumentThunk = createAsyncThunk(
+  "document/getAllDocument",
+  async () => {
+    const document = await getAllDocument();
+    console.log("fetching all document", document);
+    return document;
+  }
+);
+
+export const updateDocumentThunk = createAsyncThunk(
+  "document/updateDocument",
+  async (data) => {
+    const document = await updateDocument(data);
     return document;
   }
 );

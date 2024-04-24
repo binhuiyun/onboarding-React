@@ -12,12 +12,13 @@ const {
   createProfilePictureBuffer,
   getAppByStatus,
   getProfileByOpt,
+  addToDocument,
+  getDocByUserId,
 } = require("../handlers/personalInformation");
 router.get("/opt", getProfileByOpt);
 router.get('/status/:status', getAppByStatus);
 router.get("/:id", getPersonalInformation);
-
-
+router.get("/documents/:id", getDocByUserId);
 
 router.get("/", getAllProfile);
 router.put("/:id", updatePersonalInformation);
@@ -32,5 +33,6 @@ router.post(
   upload.single("file"),
   createProfilePictureBuffer
 );
+router.post("/:id/:fileType", upload.single("file"), addToDocument);
 
 module.exports = router;

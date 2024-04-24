@@ -5,35 +5,33 @@ import SendNotification from "../../components/SendNotification";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchForHr, selectForHr } from "../../redux/visaSlice";
 import { getProfileByOptThunk } from "../../thunks/profile-thunk";
+import { getAllDocumentThunk } from "../../thunks/document-thunk";
 
 const VisaHrPage = () => {
+
   const dispatch = useDispatch();
   const {profiles} = useSelector((state) => state.profile);
+  const {allDocument} = useSelector((state) => state.document);
   // Table for IN PROGRESS
   const [searchText, setSearchText] = useState("");
   const pagination = {
     pageSize: 5,
   };
+
+  const handlePreview = (record) => {
+    console.log("Previewing", record);
+    const blob = new Blob([new Uint8Array(record.fileDoc.data)], {
+      type: "application/pdf",
+    });
+    const url = URL.createObjectURL(blob);
+    window.open(url, "_blank");
+  };
+
   const columns1 = [
     {
       title: "Name",
       dataIndex: "allName",
       key: "allName",
-      filteredValue: [searchText],
-      render: (_, { allName }) => <p>{allName.name}</p>,
-      onFilter: (value, record) => {
-        return (
-          String(record.allName.name)
-            .toLowerCase()
-            .includes(value.toLowerCase()) ||
-          String(record.allName.preferredName)
-            .toLowerCase()
-            .includes(value.toLowerCase()) ||
-          String(record.allName.middleName)
-            .toLowerCase()
-            .includes(value.toLowerCase())
-        );
-      },
     },
     {
       title: "Work Authorization",
@@ -83,35 +81,19 @@ const VisaHrPage = () => {
       title: "Name",
       dataIndex: "allName",
       key: "allName",
-      filteredValue: [searchText],
-      render: (_, { allName }) => <p>{allName.name}</p>,
-      onFilter: (value, record) => {
-        return (
-          String(record.allName.name)
-            .toLowerCase()
-            .includes(value.toLowerCase()) ||
-          String(record.allName.preferredName)
-            .toLowerCase()
-            .includes(value.toLowerCase()) ||
-          String(record.allName.middleName)
-            .toLowerCase()
-            .includes(value.toLowerCase())
-        );
-      },
     },
     {
       title: "Work Authorization",
       dataIndex: "Work_Authorization",
       key: "Work_Authorization",
-      width: "40%",
-      render: (_, { profile }) => (
-        <>
-          <Tag color="geekblue">{`Title : ${profile.workAuthorizationTitle}`}</Tag>
-          <Tag color="geekblue">{`Start Date : ${profile.startDate}`}</Tag>
-          <Tag color="geekblue">{`End Date : ${profile.endDate}`}</Tag>
-          <Tag color="geekblue">{`Remaining : ${profile.remaining} days`}</Tag>
-        </>
-      ),
+      // render: (_, { profile }) => (
+      //   <>
+      //     <Tag color="geekblue">{`Title : ${profile.workAuthorizationTitle}`}</Tag>
+      //     <Tag color="geekblue">{`Start Date : ${profile.startDate}`}</Tag>
+      //     <Tag color="geekblue">{`End Date : ${profile.endDate}`}</Tag>
+      //     <Tag color="geekblue">{`Remaining : ${profile.remaining} days`}</Tag>
+      //   </>
+      // ),
     },
     {
       title: "Next Step",
@@ -119,43 +101,41 @@ const VisaHrPage = () => {
       key: "Next_Step",
     },
     {
-      title: "Documentation",
-      dataIndex: "Documentation",
-      key: "Documentation",
-
-      render: (_, { Documentation }) => (
-        <>
-          {Documentation && Documentation.optReceipt.fileDoc && (
-            <ReviewAction
-              file={Documentation.optReceipt}
-              fileTitle="OPT Receipt"
-              filter={filter}
-            />
-          )}
-          {Documentation && Documentation.optEAD.fileDoc && (
-            <ReviewAction
-              file={Documentation.optEAD}
-              fileTitle="OPT EAD"
-              filter={filter}
-            />
-          )}
-          {Documentation && Documentation.I983.fileDoc && (
-            <ReviewAction
-              file={Documentation.I983}
-              fileTitle="I-983"
-              filter={filter}
-            />
-          )}
-          {Documentation && Documentation.I20.fileDoc && (
-            <ReviewAction
-              file={Documentation.I20}
-              fileTitle="I-20"
-              filter={filter}
-            />
-          )}
-        </>
-      ),
+      title: "OPT Receipt",
+      dataIndex: "optReceipt",
+      key: "optReceipt",
+      render: (_, record) => (
+        console.log("record", record.optReceipt),
+        <a onClick={ ()=> handlePreview(record.optReceipt)}>{record.optReceipt.fileName}</a>
+      )
     },
+    {
+      title: "OPT EAD",
+      key: "optEAD",
+      dataIndex: "optEAD",
+      render: (_, record) => (
+        <a onClick={ ()=> handlePreview(record.optEad)}>{record.optEAD?.fileName}</a>
+      )
+
+    },
+
+    {
+      title: "I-983",
+      key: "i983",
+      dataIndex: "i983",
+      render: (_, record) => (
+        <a onClick={ ()=> handlePreview(record.i983)}>{record.i983?.fileName}</a>
+      )
+    },
+    {
+      title: "I-20",
+      key: "i20",
+      dataIndex: "i20",
+      render: (_, record) => (
+        <a onClick={ ()=> handlePreview(record.i20)}>{record.i20?.fileName}</a>
+      )
+
+    }
   ];
   const info = useSelector(selectForHr);
   const [filter, setFilter] = useState("IN PROGRESS");
@@ -164,22 +144,53 @@ const VisaHrPage = () => {
     dispatch(getProfileByOptThunk());
   }, []);
 
- 
+  useEffect(() => {
+    dispatch(getAllDocumentThunk());
+  }, []);
+
   const infoInProgress = info
     .filter((user) => user.Work_Authorization.title === "F1(CPT/OPT)")
     .filter((user) => user.docStatus === "IN PROGRESS");
 
+
+
+  const filterByStatus = (profile) => {
+    const intersection = allDocument.filter((doc) => profile.uploadedDocuments.includes(doc._id));
+    const found = intersection.find((doc) => doc.status === "pending")
+    if (found) {
+      return "Waiting for HR approval";
+    }
+    else{
+      return "Send Notification";
+    }
+  }
+
+  
+  const filterByFileType = (profile, fileType) => {
+    const intersection = allDocument.filter((doc) => profile.uploadedDocuments.includes(doc._id));
+    return intersection.filter((doc) => doc.fileType === fileType)[0];
+  }
+ 
+
+  
   const allOpt = profiles.map((profile) => {
     console.log(profile.firstName);
     return {
       key: profile.userId,
       allName: `${profile.firstName} ${profile.lastName}`,
       Work_Authorization: profile.workAuthorizationTitle,
-      Next_Step: "Send Notification",
-      Documentation: ""
-    };
-  });
+      Next_Step: filterByStatus(profile),
+      optReceipt: filterByFileType(profile, "optReceipt"),
+      optEad: filterByFileType(profile, "optEAD"),
+      i983: filterByFileType(profile, "i983"),
+      i20: filterByFileType(profile, "i20"),
+    
  
+   
+  
+    };
+  }
+  );
   const dataSourceInProgress = infoInProgress.map(
     (
       {
@@ -233,8 +244,7 @@ const VisaHrPage = () => {
     setFilter(e.target.value);
   };
   return (
-    <>
-   
+    <>  
       <div className="mx-10 ">
         <p className="text-3xl text-geekblue my-10">Visa Status Management</p>
         <div>

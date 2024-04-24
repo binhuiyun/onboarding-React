@@ -57,8 +57,8 @@ const personalInformationSchema = new Schema({
   gender: { type: String, required: true },
   citizenship: { type: String, required: true },
   workAuthorizationTitle: String,
-  startDate: Date,
-  endDate: Date,
+  startDate: String,
+  endDate: String,
   remaining: Number,
 
 
@@ -77,8 +77,8 @@ const personalInformationSchema = new Schema({
   emergencyRelationship: { type: String, required: true },
 
   uploadedDocuments: [{
-    type: Buffer,
-    fileName: String,
+    type: Schema.Types.ObjectId,
+    ref: "Doc",
 
   }],
 

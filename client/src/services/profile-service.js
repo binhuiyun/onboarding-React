@@ -44,3 +44,10 @@ export const getProfileByOpt = async () => {
     method: "get"
   });
 }
+
+export const getDocByUserId = async (userId) => {
+  return await apiCall({
+    url: `api/personalInformation/documents/${userId}`,
+    method: "get"
+  });
+}

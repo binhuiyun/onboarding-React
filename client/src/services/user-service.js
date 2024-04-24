@@ -1,21 +1,16 @@
-import axios from 'axios';
-const USER_API = 'http://localhost:4000/api/user';
+import apiCall from "./api";
+
 
 export const fetchUserById = async (id) => {
-    try{
-        const res = await axios.get(`${USER_API}/${id}`);
-        return res.data;
-    }catch(err){
-        return err.response.data;
-    }
+    return await apiCall({
+        url: `/api/user/${id}`,
+        method: 'get'
+    });
 }
-
-export const updateCurrentUser = async (id, data) => {
-    try{
-        const res = await axios.put(`${USER_API}/${id}`, data);
-        console.log("update current user service", res.data.onboardingStatus);
-        return res.data;
-    }catch(err){
-        return err.response.data;
-    }
+export const updateCurrentUser = async (data) => {
+    return await apiCall({
+        url: `/api/user/${data.id}`,
+        method: 'put',
+        data
+    });
 }

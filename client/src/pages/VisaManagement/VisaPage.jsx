@@ -1,17 +1,14 @@
-//TODO: upload pdf should change icon immediately
 import React, { useState, useEffect } from "react";
 import FileUploader from "../../components/FileUploader";
-import { getProfileThunk } from "../../thunks/profile-thunk";
-import { getDocumentThunk } from "../../thunks/document-thunk";
+import { getProfileThunk, getDocByUserIdThunk } from "../../thunks/profile-thunk";
 import { useSelector, useDispatch } from "react-redux";
 import { selectForUser, fetchForUser } from "../../redux/visaSlice";
-
 
 const VisaPage = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.user);
   const { profile} = useSelector((state) => state.profile);
-  const { document } = useSelector((state) => state.document);
+  const { docs } = useSelector((state) => state.profile);
   console.log("visa ", user);
   const info = useSelector(selectForUser);
   const isOpt = profile.workAuthorizationTitle === "F1";
@@ -22,7 +19,7 @@ const VisaPage = () => {
   }, [user.id]);
 
   useEffect(() => {
-    dispatch(getDocumentThunk(user.id));
+    dispatch(getDocByUserIdThunk(user.id));
 
   }, [user.id]);
   
@@ -60,8 +57,8 @@ const VisaPage = () => {
             <FileUploader
               title="OPT EAD"
               fileType="optEAD"
-              status={document?.documents.filter((doc)=> doc.fileType === "optEAD").status}
-              feedback={document?.documents.filter((doc)=> doc.fileType === "optEAD").feedback}
+              status={docs?.filter((doc)=> doc.fileType === "optEAD").status}
+              feedback={docs?.filter((doc)=> doc.fileType === "optEAD").feedback}
               next="I-983"
               prev={profile.onboardingStatus}
             />
@@ -69,19 +66,19 @@ const VisaPage = () => {
             <FileUploader
               title="I-983"
               fileType="i983"
-              status={document?.documents.filter((doc)=> doc.fileType === "i983").status}
-              feedback={document?.documents.filter((doc)=> doc.fileType === "i983").feedback}
+              status={docs?.filter((doc)=> doc.fileType === "i983").status}
+              feedback={docs?.filter((doc)=> doc.fileType === "i983").feedback}
               next="I-20"
-              prev={document?.documents.filter((doc)=> doc.fileType === "optEAD").status}
+              prev={docs?.filter((doc)=> doc.fileType === "optEAD").status}
             />
 
             <FileUploader
               title="I-20"
               fileType="i20"
-              status={document?.documents.filter((doc)=> doc.fileType === "i20").status}
-              feedback={document?.documents.filter((doc)=> doc.fileType === "i20").feedback}
+              status={docs?.filter((doc)=> doc.fileType === "i20").status}
+              feedback={docs?.filter((doc)=> doc.fileType === "i20").feedback}
               next=""
-              prev={document?.documents.filter((doc)=> doc.fileType === "i983").status}
+              prev={docs?.filter((doc)=> doc.fileType === "i983").status}
             />
           </div>
         </>

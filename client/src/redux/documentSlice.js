@@ -1,9 +1,10 @@
 import {createSlice} from "@reduxjs/toolkit";
-import {getDocumentThunk} from "../thunks/document-thunk";
+import { getAllDocumentThunk, updateDocumentThunk} from "../thunks/document-thunk";
 
 const initialState = {
     document:{},
     status: "idle",
+    allDocument: [],
 };
 
 const documentSlice = createSlice({
@@ -11,10 +12,18 @@ const documentSlice = createSlice({
     initialState,
     
     extraReducers: (builder) => {
-        builder.addCase(getDocumentThunk.fulfilled, (state, action) => {
-            state.document = action.payload[0];
+        builder.addCase(getAllDocumentThunk.fulfilled, (state, action) => {
+            state.allDocument = action.payload;
             state.status = "success";
-        });
+        }
+        );
+        builder.addCase(updateDocumentThunk.fulfilled, (state, action) => {
+            state.document = action.payload;
+            state.status = "success";
+        }
+        );
+        
+
     },
 });
 
