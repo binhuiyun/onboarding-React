@@ -107,7 +107,7 @@ const getAppByStatus = async (req, res) => {
 const getProfileByOpt = async (req, res) => {
   
   try {
-    const profile = await PersonalInformation.find({ workAuthorizationTitle: "F1" });
+    const profile = await PersonalInformation.find({ workAuthorizationTitle: "F1" }).populate("uploadedDocuments").exec();
     res.status(200).json(profile);
   } catch (err) {
     res.status(500).json({ message: "Server Error" });

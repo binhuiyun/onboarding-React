@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import FileUploader from "../../components/FileUploader";
 import { getProfileThunk, getDocByUserIdThunk } from "../../thunks/profile-thunk";
 import { useSelector, useDispatch } from "react-redux";
-import { selectForUser, fetchForUser } from "../../redux/visaSlice";
 
 const VisaPage = () => {
   const dispatch = useDispatch();
@@ -10,9 +9,7 @@ const VisaPage = () => {
   const { profile} = useSelector((state) => state.profile);
   const { docs } = useSelector((state) => state.profile);
   console.log("visa ", user);
-  const info = useSelector(selectForUser);
   const isOpt = profile.workAuthorizationTitle === "F1";
-  console.log(info);
 
   useEffect(() => {
     dispatch(getProfileThunk(user.id));

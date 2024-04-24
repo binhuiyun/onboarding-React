@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Space, Table, Tag, Input, Pagination } from "antd";
-import ReviewAction from "../../components/ReviewAction";
 import SendNotification from "../../components/SendNotification";
 import { useDispatch, useSelector } from "react-redux";
 import { getProfileByOptThunk, getInProgressProfileThunk } from "../../thunks/profile-thunk";
-import { getAllDocumentThunk } from "../../thunks/document-thunk";
+
 
 const VisaHrPage = () => {
 
   const dispatch = useDispatch();
   const {profiles} = useSelector((state) => state.profile);
-  const {allDocument} = useSelector((state) => state.document);
   // Table for IN PROGRESS
   const [searchText, setSearchText] = useState("");
   const pagination = {
@@ -26,55 +24,6 @@ const VisaHrPage = () => {
     window.open(url, "_blank");
   };
 
-  const columns1 = [
-    {
-      title: "Name",
-      dataIndex: "allName",
-      key: "allName",
-    },
-    {
-      title: "Work Authorization",
-      dataIndex: "Work_Authorization",
-      key: "Work Authorization",
-      width: "40%",
-      render: (_, { Work_Authorization }) => (
-        <>
-          <Tag color="geekblue">{`Title : ${Work_Authorization.title}`}</Tag>
-          <Tag color="geekblue">{`Start Date : ${Work_Authorization.start_date}`}</Tag>
-          <Tag color="geekblue">{`End Date : ${Work_Authorization.end_date}`}</Tag>
-          <Tag color="geekblue">{`Remaining : ${Work_Authorization.remaining} days`}</Tag>
-        </>
-      ),
-    },
-    {
-      title: "Next Step",
-      dataIndex: "Next_Step",
-      key: "Next_Step",
-    },
-    {
-      title: "Action",
-      dataIndex: "action",
-      key: "newAction",
-      render: (_, { newAction }) => (
-        <>
-          {newAction.message === "need review" ? (
-            <ReviewAction
-              file={newAction.fileToDeal}
-              fileTitle={newAction.fileToDealName}
-              filter={filter}
-              id={newAction.id}
-              fileType={newAction.fileType}
-            />
-          ) : (
-            <SendNotification
-              email={newAction.email}
-              notification={newAction.notification}
-            />
-          )}
-        </>
-      ),
-    },
-  ];
   const columns2 = [
     {
       title: "Name",
@@ -85,14 +34,14 @@ const VisaHrPage = () => {
       title: "Work Authorization",
       dataIndex: "Work_Authorization",
       key: "Work_Authorization",
-      // render: (_, { profile }) => (
-      //   <>
-      //     <Tag color="geekblue">{`Title : ${profile.workAuthorizationTitle}`}</Tag>
-      //     <Tag color="geekblue">{`Start Date : ${profile.startDate}`}</Tag>
-      //     <Tag color="geekblue">{`End Date : ${profile.endDate}`}</Tag>
-      //     <Tag color="geekblue">{`Remaining : ${profile.remaining} days`}</Tag>
-      //   </>
-      // ),
+      render: (_, record) => (
+        <>
+          <Tag color="geekblue">{`Title : ${record.Work_Authorization.workAuthorizationTitle}`}</Tag>
+          <Tag color="geekblue">{`Start Date : ${record.Work_Authorization.startDate}`}</Tag>
+          <Tag color="geekblue">{`End Date : ${record.Work_Authorization.endDate}`}</Tag>
+          <Tag color="geekblue">{`Remaining : ${record.Work_Authorization.remaining} days`}</Tag>
+        </>
+      ),
     },
     {
       title: "Next Step",
@@ -104,7 +53,7 @@ const VisaHrPage = () => {
       dataIndex: "optReceipt",
       key: "optReceipt",
       render: (_, record) => (
-        console.log("record", record.optReceipt),
+        console.log("record", record),
         <a onClick={ ()=> handlePreview(record.optReceipt)}>{record.optReceipt.fileName}</a>
       )
     },
@@ -141,16 +90,11 @@ const VisaHrPage = () => {
 
   useEffect(() => {
     dispatch(getProfileByOptThunk());
-    dispatch(getInProgressProfileThunk());
-  }, []);
-
-  useEffect(() => {
-    dispatch(getAllDocumentThunk());
+  //  dispatch(getInProgressProfileThunk());
   }, []);
 
   const filterByStatus = (profile) => {
-    const intersection = allDocument.filter((doc) => profile.uploadedDocuments.includes(doc._id));
-    const found = intersection.find((doc) => doc.status === "pending" && doc.fileType!=="optReceipt") || profile.onboardingStatus === "pending";
+    const found = profile.uploadedDocuments.find((doc) => doc.status === "pending" && doc.fileType!=="optReceipt") || profile.onboardingStatus === "pending";
     if (found) {
       return "Waiting for HR approval";
     }
@@ -160,8 +104,7 @@ const VisaHrPage = () => {
   }
 
   const filterByFileType = (profile, fileType) => {
-    const intersection = allDocument.filter((doc) => profile.uploadedDocuments.includes(doc._id));
-    return intersection.filter((doc) => doc.fileType === fileType)[0];
+    return profile.uploadedDocuments.filter((doc) => doc.fileType === fileType)[0];
   }
   
   const allOpt = profiles.map((profile) => {
@@ -169,10 +112,10 @@ const VisaHrPage = () => {
     return {
       key: profile.userId,
       allName: `${profile.firstName} ${profile.lastName}`,
-      Work_Authorization: profile.workAuthorizationTitle,
+      Work_Authorization: profile,
       Next_Step: filterByStatus(profile),
       optReceipt: filterByFileType(profile, "optReceipt"),
-      optEad: filterByFileType(profile, "optEAD"),
+      optEAD: filterByFileType(profile, "optEAD"),
       i983: filterByFileType(profile, "i983"),
       i20: filterByFileType(profile, "i20"),
   
@@ -212,8 +155,8 @@ const VisaHrPage = () => {
         <div className=" flex items-center justify-center">
           {filter === "IN PROGRESS" ? (
             <Table
-              columns={columns1}
-              dataSource={optInProgress}
+              columns={columns2}
+              dataSource={allOpt}
               className="w-[90%]"
               pagination={pagination}
             />
