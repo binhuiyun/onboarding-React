@@ -14,11 +14,14 @@ const {
   getProfileByOpt,
   addToDocument,
   getDocByUserId,
+  getInProgressProfile,
 } = require("../handlers/personalInformation");
 router.get("/opt", getProfileByOpt);
 router.get('/status/:status', getAppByStatus);
+router.get("/inProgress", getInProgressProfile);
 router.get("/:id", getPersonalInformation);
 router.get("/documents/:id", getDocByUserId);
+
 
 router.get("/", getAllProfile);
 router.put("/:id", updatePersonalInformation);

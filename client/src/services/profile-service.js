@@ -51,3 +51,10 @@ export const getDocByUserId = async (userId) => {
     method: "get"
   });
 }
+
+export const getInProgressProfile = async () => {
+  return await apiCall({
+    url: `api/personalInformation/inProgress`,
+    method: "get"
+  });
+}

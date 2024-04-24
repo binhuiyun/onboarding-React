@@ -1,6 +1,6 @@
 import {createSlice} from "@reduxjs/toolkit";
 import {createProfileThunk, getProfileThunk, updateProfileThunk, getAllProfileThunk, getAppByStatusThunk,
-    getProfileByOptThunk, getDocByUserIdThunk
+    getProfileByOptThunk, getDocByUserIdThunk, getInProgressProfileThunk
 } from "../thunks/profile-thunk";
 
 const initialState = {
@@ -44,6 +44,11 @@ const profileSlice = createSlice({
         );
         builder.addCase(getDocByUserIdThunk.fulfilled, (state, action) => {
             state.docs = action.payload;
+            state.status = "success";
+        }
+        );
+        builder.addCase(getInProgressProfileThunk.fulfilled, (state, action) => {
+            state.profiles = action.payload;
             state.status = "success";
         }
         );

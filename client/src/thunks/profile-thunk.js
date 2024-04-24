@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { createProfile, getProfile, updateProfile, getAllProfile, 
-  getAppByStatus, getProfileByOpt, getDocByUserId
+  getAppByStatus, getProfileByOpt, getDocByUserId, getInProgressProfile
  } from "../services/profile-service";
 
 export const createProfileThunk = createAsyncThunk(
@@ -56,5 +56,13 @@ export const getDocByUserIdThunk = createAsyncThunk(
   async (userId) => {
     const docs = await getDocByUserId(userId);
     return docs;
+  }
+);
+
+export const getInProgressProfileThunk = createAsyncThunk(
+  "profile/getInProgressProfile",
+  async () => {
+    const profiles = await getInProgressProfile();
+    return profiles;
   }
 );

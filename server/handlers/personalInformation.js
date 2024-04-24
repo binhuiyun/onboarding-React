@@ -147,6 +147,24 @@ const getDocByUserId = async (req, res) => {
   }
 }
 
+const getInProgressProfile = async (req, res) => {
+  try {
+    const doc = await Doc.find({
+      $nor:[
+        { $and : [
+          {status: "approved"},
+          {fileType: "i20"}
+        ]}
+      ]
+    });
+    const docIds = doc.map((doc) => doc._id);
+    const profile = await PersonalInformation.find({ uploadedDocuments: { $in: docIds } }).populate("uploadedDocuments").exec();
+    res.status(200).json(profile);
+  } catch (err) {
+    res.status(500).json({ message: "Server Error" });
+  }
+
+  }
 module.exports = {
   createPersonalInformation,
   getPersonalInformation,
@@ -158,4 +176,5 @@ module.exports = {
   getProfileByOpt,
   addToDocument,
   getDocByUserId,
+  getInProgressProfile,
 };

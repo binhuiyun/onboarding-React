@@ -3,8 +3,7 @@ import { Space, Table, Tag, Input, Pagination } from "antd";
 import ReviewAction from "../../components/ReviewAction";
 import SendNotification from "../../components/SendNotification";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchForHr, selectForHr } from "../../redux/visaSlice";
-import { getProfileByOptThunk } from "../../thunks/profile-thunk";
+import { getProfileByOptThunk, getInProgressProfileThunk } from "../../thunks/profile-thunk";
 import { getAllDocumentThunk } from "../../thunks/document-thunk";
 
 const VisaHrPage = () => {
@@ -137,26 +136,21 @@ const VisaHrPage = () => {
 
     }
   ];
-  const info = useSelector(selectForHr);
+
   const [filter, setFilter] = useState("IN PROGRESS");
 
   useEffect(() => {
     dispatch(getProfileByOptThunk());
+    dispatch(getInProgressProfileThunk());
   }, []);
 
   useEffect(() => {
     dispatch(getAllDocumentThunk());
   }, []);
 
-  const infoInProgress = info
-    .filter((user) => user.Work_Authorization.title === "F1(CPT/OPT)")
-    .filter((user) => user.docStatus === "IN PROGRESS");
-
-
-
   const filterByStatus = (profile) => {
     const intersection = allDocument.filter((doc) => profile.uploadedDocuments.includes(doc._id));
-    const found = intersection.find((doc) => doc.status === "pending")
+    const found = intersection.find((doc) => doc.status === "pending" && doc.fileType!=="optReceipt") || profile.onboardingStatus === "pending";
     if (found) {
       return "Waiting for HR approval";
     }
@@ -165,13 +159,10 @@ const VisaHrPage = () => {
     }
   }
 
-  
   const filterByFileType = (profile, fileType) => {
     const intersection = allDocument.filter((doc) => profile.uploadedDocuments.includes(doc._id));
     return intersection.filter((doc) => doc.fileType === fileType)[0];
   }
- 
-
   
   const allOpt = profiles.map((profile) => {
     console.log(profile.firstName);
@@ -184,62 +175,11 @@ const VisaHrPage = () => {
       optEad: filterByFileType(profile, "optEAD"),
       i983: filterByFileType(profile, "i983"),
       i20: filterByFileType(profile, "i20"),
-    
- 
-   
   
     };
   }
   );
-  const dataSourceInProgress = infoInProgress.map(
-    (
-      {
-        id,
-        name,
-        Work_Authorization,
-        Next_Step,
-        action,
-        fileToDeal,
-        Documentation,
-        fileToDealName,
-        preferredName,
-        middleName,
-        email,
-      },
-      index
-    ) => {
-      let newAction = {};
-      let allName = {
-        name: name,
-        preferredName: preferredName,
-        middleName: middleName,
-      };
-      if (action === "need review") {
-        newAction = {
-          message: "need review",
-          id: id,
-          fileType: fileToDeal,
-          fileToDeal: Documentation[fileToDeal],
-          fileToDealName: fileToDealName,
-        };
-      } else if (action === "send notification") {
-        newAction = {
-          message: "send notification",
-          id: id,
-          notification: Next_Step,
-          email: email,
-        };
-      }
-      return {
-        key: index + 1,
-        allName,
-        Work_Authorization,
-        Next_Step,
-        newAction,
-      };
-    }
-  );
-
+  
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
   };
@@ -273,7 +213,7 @@ const VisaHrPage = () => {
           {filter === "IN PROGRESS" ? (
             <Table
               columns={columns1}
-              dataSource={dataSourceInProgress}
+              dataSource={optInProgress}
               className="w-[90%]"
               pagination={pagination}
             />
