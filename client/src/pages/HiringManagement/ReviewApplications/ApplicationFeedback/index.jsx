@@ -4,9 +4,8 @@ import { useParams } from "react-router-dom";
 import { Button, Input, Spin, message} from "antd";
 import ProfileForm from "../../../../components/ProfileForm";
 import { updateCurrentUserThunk } from "../../../../thunks/auth-thunk";
-
-const { TextArea } = Input;
 import { updateProfileThunk, getProfileThunk } from "../../../../thunks/profile-thunk";
+const { TextArea } = Input;
 
 const ApplicationFeedback = () => {
   const [messageApi, contextHolder] = message.useMessage();
@@ -16,11 +15,14 @@ const ApplicationFeedback = () => {
   const dispatch = useDispatch();
   const { id } = useParams();
   const [feedback, setFeedback] = useState("");
+  //const docs = application.uploadedDocuments;
+  //const doc = docs.find((doc) => doc.fileType === "optReceipt");
 
 
   useEffect(() => {
     dispatch(getProfileThunk(id));
-    console.log("id",   id)
+   // console.log("application feedback", docId);
+
   }, [id]);
 
   const handleApprove = () => {
@@ -30,18 +32,19 @@ const ApplicationFeedback = () => {
       content: "Application approved",
       duration: 2,
     });
-    const updatedProfile = { ...application, onboardingStatus: "approved" };
+
+  const updatedProfile = { ...application, onboardingStatus: "approved" };
     dispatch(updateProfileThunk(updatedProfile));
     
-    const updatedUser = { ...user, onboardingStatus: "approved" };
+  const updatedUser = { ...user, onboardingStatus: "approved" };
     dispatch(updateCurrentUserThunk(updatedUser))};
-    
-
+  
   const handleReject = () => {
     const updatedProfile = { ...application, onboardingStatus: "rejected" };
     dispatch(
       updateProfileThunk(updatedProfile)
     );
+ 
     messageApi.open({
       type: "warning",
       content: "Application rejected",
@@ -68,14 +71,11 @@ const ApplicationFeedback = () => {
                   value={feedback}
                   onChange={(e) => setFeedback(e.target.value)}
                 />
-                <div className="flex flex-row space-x-5">
-                  
+                <div className="flex flex-row space-x-5">                  
                   <Button type="primary" 
                   style={{ backgroundColor: '#4CAF50', borderColor: '#4CAF50' }}
                   onClick={handleApprove}>Approve</Button>
                   <Button type= "primary" danger="true"
-              
-
                   onClick={handleReject}>Reject</Button>
 
                 </div>

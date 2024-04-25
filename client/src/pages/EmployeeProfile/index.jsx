@@ -5,7 +5,6 @@ import { Input, Table} from 'antd';
 import { Link } from 'react-router-dom';
 const { Search } = Input;
 
-
 const EmployeeProfile = () => {
     const dispatch = useDispatch();
     //sortedEmployees

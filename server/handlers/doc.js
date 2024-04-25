@@ -1,6 +1,5 @@
 const Doc = require('../models/doc');
 
-
 const updateDocument = async (req, res) => {
     try{
         const doc = await Doc.findById(req.params.id);

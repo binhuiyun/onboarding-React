@@ -125,7 +125,7 @@ const addToDocument = async (req, res) => {
       fileName: originalname,
       fileType: fileType,
       fileDoc: buffer,
-      status: "pending",
+      status: fileType === "optReceipt" || fileType === "profilePic" ? "approved" : "pending",
     });
     profile.uploadedDocuments.push(doc);
     await profile.save();
@@ -138,16 +138,11 @@ const addToDocument = async (req, res) => {
 
 const getInProgressProfile = async (req, res) => {
   try {
-    const doc = await Doc.find({
-      $nor:[
-        { $and : [
-          {status: "approved"},
-          {fileType: "i20"}
-        ]}
-      ]
-    });
+    const doc = await Doc.find({status: {$ne: "approved"}});
+    
     const docIds = doc.map((doc) => doc._id);
     const profile = await PersonalInformation.find({ uploadedDocuments: { $in: docIds } }).populate("uploadedDocuments").exec();
+    console.log("in progress profile", profile.length);
     res.status(200).json(profile);
   } catch (err) {
     res.status(500).json({ message: "Server Error" });

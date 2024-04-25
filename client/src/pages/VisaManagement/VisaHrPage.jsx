@@ -1,15 +1,37 @@
 import React, { useEffect, useState } from "react";
 import { Space, Table, Tag, Input, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { getProfileByOptThunk, getInProgressProfileThunk } from "../../thunks/profile-thunk";
-import { updateDocumentThunk} from "../../thunks/document-thunk";
+import {
+  getProfileByOptThunk,
+  getInProgressProfileThunk,
+} from "../../thunks/profile-thunk";
+import { updateDocumentThunk } from "../../thunks/document-thunk";
 import RejectFeedback from "../../components/RejectFeedback";
 
 const VisaHrPage = () => {
   const dispatch = useDispatch();
-  const {profiles} = useSelector((state) => state.profile);
+  const { profiles } = useSelector((state) => state.profile);
+  const [filteredEmployees, setFilteredEmployees] = useState([]);
   const [searchText, setSearchText] = useState("");
 
+  const [filter, setFilter] = useState("IN PROGRESS");
+
+  useEffect(() => {
+    if (filter === "IN PROGRESS") {
+      dispatch(getInProgressProfileThunk());
+    } else {
+      dispatch(getProfileByOptThunk());
+    }
+  }, [filter]);
+
+  useEffect(() => {
+    const filteredList = profiles.filter((employee) => {
+      const { firstName, lastName, preferredName } = employee;
+      const searchString = `${firstName} ${lastName} ${preferredName}`.toLowerCase();
+      return searchString.includes(searchText.toLowerCase());
+    });
+    setFilteredEmployees(filteredList);
+  }, [searchText, profiles]);
 
   const handlePreview = (record) => {
     console.log("Previewing", record);
@@ -19,22 +41,25 @@ const VisaHrPage = () => {
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
   };
-  
+
   const handleApprove = (doc) => {
     console.log("Approving");
     message.open({
       type: "success",
       content: "File approved",
       duration: 2,
-  });
-   const updatedDoc= {...doc, status: "approved"};
-   dispatch(updateDocumentThunk(updatedDoc));
-
+    });
+    const updatedDoc = { ...doc, status: "approved" };
+    dispatch(updateDocumentThunk(updatedDoc));
   };
 
   const toBeApproved = (profile) => {
-    return profile.uploadedDocuments.find((doc) => doc.status === "pending" && doc.fileType!=="optReceipt") || profile.onboardingStatus === "pending";
-  }
+    return (
+      profile.uploadedDocuments.find(
+        (doc) => doc.status === "pending" && doc.fileType !== "optReceipt"
+      ) || profile.onboardingStatus === "pending"
+    );
+  };
   const column1 = [
     {
       title: "Name",
@@ -61,31 +86,28 @@ const VisaHrPage = () => {
     },
 
     {
-      title : "Action",
+      title: "Action",
       dataIndex: "Action",
       key: "Action",
       render: (_, record) => (
-      //  console.log("record in action", toBeApproved(record.Action))
+        //  console.log("record in action", toBeApproved(record.Action))
         <>
-      
-        {record.Next_Step === "Waiting for HR approval" ? (
-          <Space size="middle">
-            <a onClick ={()=> handlePreview(toBeApproved(record.Action))}>{toBeApproved(record.Action).fileName}</a>
-            <a onClick={() => handleApprove(toBeApproved(record.Action))}>Approve</a>
-            <RejectFeedback doc={toBeApproved(record.Action)}/>
+          {record.Next_Step === "Waiting for HR approval" ? (
+            <Space size="middle">
+              <a onClick={() => handlePreview(toBeApproved(record.Action))}>
+                {toBeApproved(record.Action).fileName}
+              </a>
+              <a onClick={() => handleApprove(toBeApproved(record.Action))} className="text-green-500">
+                Approve
+              </a>
+              <RejectFeedback doc={toBeApproved(record.Action)} />
             </Space>
-        ) : 
-          <p>Send Email</p>
-          }
-        
-        
+          ) : (
+            <p>Send Email</p>
+          )}
         </>
-      )
-
-
-     }
-
-
+      ),
+    },
   ];
   const column2 = [
     {
@@ -117,17 +139,22 @@ const VisaHrPage = () => {
       key: "optReceipt",
       render: (_, record) => (
         console.log("record", record),
-        <a onClick={ ()=> handlePreview(record.optReceipt)}>{record.optReceipt.fileName}</a>
-      )
+        (
+          <a onClick={() => handlePreview(record.optReceipt)}>
+            {record.optReceipt.fileName}
+          </a>
+        )
+      ),
     },
     {
       title: "OPT EAD",
       key: "optEAD",
       dataIndex: "optEAD",
       render: (_, record) => (
-        <a onClick={ ()=> handlePreview(record.optEad)}>{record.optEAD?.fileName}</a>
-      )
-
+        <a onClick={() => handlePreview(record.optEad)}>
+          {record.optEAD?.fileName}
+        </a>
+      ),
     },
 
     {
@@ -135,48 +162,39 @@ const VisaHrPage = () => {
       key: "i983",
       dataIndex: "i983",
       render: (_, record) => (
-        <a onClick={ ()=> handlePreview(record.i983)}>{record.i983?.fileName}</a>
-      )
+        <a onClick={() => handlePreview(record.i983)}>
+          {record.i983?.fileName}
+        </a>
+      ),
     },
     {
       title: "I-20",
       key: "i20",
       dataIndex: "i20",
       render: (_, record) => (
-        <a onClick={ ()=> handlePreview(record.i20)}>{record.i20?.fileName}</a>
-      )
-
-    }
+        <a onClick={() => handlePreview(record.i20)}>{record.i20?.fileName}</a>
+      ),
+    },
   ];
-
-  const [filter, setFilter] = useState("IN PROGRESS");
-
-  useEffect(() => {
-    if (filter === "IN PROGRESS") {
-      dispatch(getInProgressProfileThunk());
-    }
-    else {
-    dispatch(getProfileByOptThunk());
-    }
-  }, []);
 
  
 
   const filterByStatus = (profile) => {
-    const found = profile.uploadedDocuments.find((doc) => doc.status === "pending" && doc.fileType!=="optReceipt") || profile.onboardingStatus === "pending";
+    const found = toBeApproved(profile);
     if (found) {
       return "Waiting for HR approval";
-    }
-    else{
+    } else {
       return "Send Notification";
     }
-  }
+  };
 
   const filterByFileType = (profile, fileType) => {
-    return profile.uploadedDocuments.filter((doc) => doc.fileType === fileType)[0];
-  }
-  
-  const allOpt = profiles.map((profile) => {
+    return profile.uploadedDocuments.filter(
+      (doc) => doc.fileType === fileType
+    )[0];
+  };
+
+  const allOpt = filteredEmployees.map((profile) => {
     console.log(profile.firstName);
     return {
       key: profile.userId,
@@ -187,25 +205,23 @@ const VisaHrPage = () => {
       optEAD: filterByFileType(profile, "optEAD"),
       i983: filterByFileType(profile, "i983"),
       i20: filterByFileType(profile, "i20"),
-  
     };
-  }
-  );
-  const optInprogress = profiles.map((profile) => {
+  });
+  const optInprogress = filteredEmployees.map((profile) => {
     return {
       key: profile.userId,
       allName: `${profile.firstName} ${profile.lastName}`,
       Work_Authorization: profile,
       Next_Step: filterByStatus(profile),
-      Action: profile
-    }
+      Action: profile,
+    };
   });
-  
+
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
   };
   return (
-    <>  
+    <>
       <div className="mx-10 ">
         <p className="text-3xl text-geekblue my-10">Visa Status Management</p>
         <div>
