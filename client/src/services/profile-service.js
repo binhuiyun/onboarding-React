@@ -45,13 +45,6 @@ export const getProfileByOpt = async () => {
   });
 }
 
-export const getDocByUserId = async (userId) => {
-  return await apiCall({
-    url: `api/personalInformation/documents/${userId}`,
-    method: "get"
-  });
-}
-
 export const getInProgressProfile = async () => {
   return await apiCall({
     url: `api/personalInformation/inProgress`,

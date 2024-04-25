@@ -13,10 +13,11 @@ import {
 
 const FileUploader = ({ title, fileType, status, feedback, next, prev }) => {
   const user = useSelector((state) => state.user.user);
+  console.log("file uploader", status, fileType, prev);
 
   const props = {
     name: "file",
-    action: `http://localhost:4000/api/personalInformation/documents/${user.id}/${fileType}`,
+    action: `http://localhost:4000/api/personalInformation/upload/${user.id}/${fileType}`,
     headers: {
       authorization: "authorization-text",
     },
@@ -41,7 +42,7 @@ const FileUploader = ({ title, fileType, status, feedback, next, prev }) => {
           <ClockIcon className="h-8 w-8 text-yellow-500" />
         )}
         {status === "approved" && (
-          <CheckCircleIcon className="h-8 w-8 text-geekblue" />
+          <CheckCircleIcon className="h-8 w-8 text-green-500" />
         )}
         {status === "rejected" && (
           <ExclamationCircleIcon className="h-8 w-8 text-red-500" />
@@ -53,10 +54,10 @@ const FileUploader = ({ title, fileType, status, feedback, next, prev }) => {
             status === "pending" &&
             `Waiting for HR to approve your ${title}`}
           { 
-            status === "approved" &&
+            status === "approved" && fileType !== "i20" &&
             `Please upload a copy of your ${next}`}
           
-          {fileType === "I20" &&
+          {fileType === "i20" &&
             status === "approved" &&
             "All documents have been approved"}
 

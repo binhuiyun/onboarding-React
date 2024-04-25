@@ -1,16 +1,17 @@
 import React, { useEffect } from "react";
 import { Row, Col, Form, Input, Table} from "antd";
 import { useDispatch, useSelector } from "react-redux";
-import { getDocByUserIdThunk } from "../thunks/profile-thunk";
+import { getProfileThunk } from "../thunks/profile-thunk";
 
 const { TextArea } = Input;
 
 const ProfileForm = ({ employeeProfile, disabled, form, onFinish}) => {
-  const { docs } = useSelector((state) => state.profile);
+  const { profile } = useSelector((state) => state.profile);
+  const docs = profile.uploadedDocuments;
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(getDocByUserIdThunk(employeeProfile.userId));
+    dispatch(getProfileThunk(employeeProfile.userId));
     console.log("Employee Profile fetching docs");
   }, [employeeProfile.userId]);
 

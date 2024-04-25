@@ -1,5 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
-import { updateDocumentThunk} from "../thunks/document-thunk";
+import { updateDocumentThunk, deleteDocumentThunk} from "../thunks/document-thunk";
 
 const initialState = {
     document:{},
@@ -18,7 +18,11 @@ const documentSlice = createSlice({
             state.status = "success";
         }
         );
-        
+        builder.addCase(deleteDocumentThunk.fulfilled, (state, action) => {
+            state.document = {};
+            state.status = "success";
+        }
+        );  
 
     },
 });

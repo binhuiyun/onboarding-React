@@ -1,19 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Space, Table, Tag, Input, Pagination } from "antd";
-import SendNotification from "../../components/SendNotification";
+import { Space, Table, Tag, Input, message } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { getProfileByOptThunk, getInProgressProfileThunk } from "../../thunks/profile-thunk";
-
+import { updateDocumentThunk} from "../../thunks/document-thunk";
+import RejectFeedback from "../../components/RejectFeedback";
 
 const VisaHrPage = () => {
-
   const dispatch = useDispatch();
   const {profiles} = useSelector((state) => state.profile);
-  // Table for IN PROGRESS
   const [searchText, setSearchText] = useState("");
-  const pagination = {
-    pageSize: 5,
-  };
+
 
   const handlePreview = (record) => {
     console.log("Previewing", record);
@@ -23,8 +19,75 @@ const VisaHrPage = () => {
     const url = URL.createObjectURL(blob);
     window.open(url, "_blank");
   };
+  
+  const handleApprove = (doc) => {
+    console.log("Approving");
+    message.open({
+      type: "success",
+      content: "File approved",
+      duration: 2,
+  });
+   const updatedDoc= {...doc, status: "approved"};
+   dispatch(updateDocumentThunk(updatedDoc));
 
-  const columns2 = [
+  };
+
+  const toBeApproved = (profile) => {
+    return profile.uploadedDocuments.find((doc) => doc.status === "pending" && doc.fileType!=="optReceipt") || profile.onboardingStatus === "pending";
+  }
+  const column1 = [
+    {
+      title: "Name",
+      dataIndex: "allName",
+      key: "allName",
+    },
+    {
+      title: "Work Authorization",
+      dataIndex: "Work_Authorization",
+      key: "Work_Authorization",
+      render: (_, record) => (
+        <>
+          <Tag color="geekblue">{`Title : ${record.Work_Authorization.workAuthorizationTitle}`}</Tag>
+          <Tag color="geekblue">{`Start Date : ${record.Work_Authorization.startDate}`}</Tag>
+          <Tag color="geekblue">{`End Date : ${record.Work_Authorization.endDate}`}</Tag>
+          <Tag color="geekblue">{`Remaining : ${record.Work_Authorization.remaining} days`}</Tag>
+        </>
+      ),
+    },
+    {
+      title: "Next Step",
+      dataIndex: "Next_Step",
+      key: "Next_Step",
+    },
+
+    {
+      title : "Action",
+      dataIndex: "Action",
+      key: "Action",
+      render: (_, record) => (
+      //  console.log("record in action", toBeApproved(record.Action))
+        <>
+      
+        {record.Next_Step === "Waiting for HR approval" ? (
+          <Space size="middle">
+            <a onClick ={()=> handlePreview(toBeApproved(record.Action))}>{toBeApproved(record.Action).fileName}</a>
+            <a onClick={() => handleApprove(toBeApproved(record.Action))}>Approve</a>
+            <RejectFeedback doc={toBeApproved(record.Action)}/>
+            </Space>
+        ) : 
+          <p>Send Email</p>
+          }
+        
+        
+        </>
+      )
+
+
+     }
+
+
+  ];
+  const column2 = [
     {
       title: "Name",
       dataIndex: "allName",
@@ -89,9 +152,15 @@ const VisaHrPage = () => {
   const [filter, setFilter] = useState("IN PROGRESS");
 
   useEffect(() => {
+    if (filter === "IN PROGRESS") {
+      dispatch(getInProgressProfileThunk());
+    }
+    else {
     dispatch(getProfileByOptThunk());
-  //  dispatch(getInProgressProfileThunk());
+    }
   }, []);
+
+ 
 
   const filterByStatus = (profile) => {
     const found = profile.uploadedDocuments.find((doc) => doc.status === "pending" && doc.fileType!=="optReceipt") || profile.onboardingStatus === "pending";
@@ -122,6 +191,15 @@ const VisaHrPage = () => {
     };
   }
   );
+  const optInprogress = profiles.map((profile) => {
+    return {
+      key: profile.userId,
+      allName: `${profile.firstName} ${profile.lastName}`,
+      Work_Authorization: profile,
+      Next_Step: filterByStatus(profile),
+      Action: profile
+    }
+  });
   
   const handleFilterChange = (e) => {
     setFilter(e.target.value);
@@ -155,17 +233,17 @@ const VisaHrPage = () => {
         <div className=" flex items-center justify-center">
           {filter === "IN PROGRESS" ? (
             <Table
-              columns={columns2}
-              dataSource={allOpt}
+              columns={column1}
+              dataSource={optInprogress}
               className="w-[90%]"
-              pagination={pagination}
+              pagination={false}
             />
           ) : (
             <Table
-              columns={columns2}
+              columns={column2}
               dataSource={allOpt}
               className="w-[90%]"
-              pagination={pagination}
+              pagination={false}
             />
           )}
         </div>

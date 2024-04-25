@@ -34,6 +34,7 @@ app.use(express.json());
 app.use("/api/auth", authRouter);
 app.use("/api/tokenHistory", loginRequired, tokenHistoryRouter);
 app.use("/api/personalInformation", personalInformationRouter);
+
 app.use("/api/user", userRouter);
 app.use("/api/folder", folderRouter);
 app.use("/api/document", documentRouter);

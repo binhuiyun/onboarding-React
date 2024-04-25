@@ -7,3 +7,10 @@ export const updateDocument = async (data) => {
     data
   });
 }
+
+export const deleteDocument = async (id) => {
+  return await apiCall({
+    url: `api/document/${id}`,
+    method: "delete"
+  });
+}

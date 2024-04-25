@@ -26,7 +26,7 @@ const getPersonalInformation = async (req, res) => {
   try {
     const personalInformation = await PersonalInformation.findOne({
       userId: u_id,
-    });
+    }).populate("uploadedDocuments").exec();
     if (!personalInformation) {
       res.status(404).json({ message: "Personal Information not found" });
     } else res.status(200).json(personalInformation);
@@ -136,17 +136,6 @@ const addToDocument = async (req, res) => {
   }
 }
 
-const getDocByUserId = async (req, res) => {
-  const u_id = req.params.id;
-  try{
-    const profile = await PersonalInformation.findOne({ userId: u_id }).populate("uploadedDocuments").exec();  
-    res.status(200).json(profile.uploadedDocuments);
-    
-  }catch(err){
-    res.status(500).json({ message: "Server Error" });
-  }
-}
-
 const getInProgressProfile = async (req, res) => {
   try {
     const doc = await Doc.find({
@@ -175,6 +164,5 @@ module.exports = {
   getAppByStatus,
   getProfileByOpt,
   addToDocument,
-  getDocByUserId,
   getInProgressProfile,
 };

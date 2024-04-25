@@ -1,4 +1,4 @@
-import {updateDocument } from "../services/document-servise";
+import {updateDocument, deleteDocument } from "../services/document-servise";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 
@@ -7,5 +7,13 @@ export const updateDocumentThunk = createAsyncThunk(
   async (data) => {
     const document = await updateDocument(data);
     return document;
+  }
+);
+
+export const deleteDocumentThunk = createAsyncThunk(
+  "document/deleteDocument",
+  async (id) => {
+    await deleteDocument(id);
+    return id;
   }
 );

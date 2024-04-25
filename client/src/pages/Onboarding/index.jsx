@@ -283,7 +283,7 @@ const Onboarding = () => {
              getValueFromEvent={normFile}
              
            >
-             <Upload action={`http://localhost:4000/api/personalInformation/${user.id}/optReceipt`} 
+             <Upload action={`http://localhost:4000/api/personalInformation/upload/${user.id}/optReceipt`} 
              onChange={handleFileUpoad}>
                <button
                  style={{
