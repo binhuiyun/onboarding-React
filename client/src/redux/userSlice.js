@@ -21,6 +21,7 @@ const currentUserSlice = createSlice({
       state.status = "idle";
       localStorage.removeItem("token");
       localStorage.removeItem("userID");
+      localStorage.removeItem("isHR");
     },
   },
   extraReducers: (builder) => {
@@ -43,6 +44,7 @@ const currentUserSlice = createSlice({
     });
   
     builder.addCase(fetchUserByIdThunk.fulfilled, (state, action) => {
+      console.log("fetch user by id", action.payload);
       state.user = action.payload;
       state.status = "success";
     });
@@ -50,6 +52,7 @@ const currentUserSlice = createSlice({
       state.status = "pending";
     });
     builder.addCase(updateCurrentUserThunk.fulfilled, (state, action) => {
+      console.log("update current user", action.payload);
       state.user = action.payload;
       state.status = "success";
     });
@@ -58,5 +61,4 @@ const currentUserSlice = createSlice({
 });
 
 export const { setCurrentUser, logOutUser } = currentUserSlice.actions;
-export const selectUser = (state) => state.currentUser.user;
 export default currentUserSlice.reducer;

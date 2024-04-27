@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Form, Input, Button, Popconfirm, message } from "antd";
+import { Form, Input, Button, Popconfirm, message, Modal } from "antd";
 import {
   getProfileThunk,
   updateProfileThunk,
@@ -16,11 +16,17 @@ const PersonalInformation = () => {
   const { profile } = useSelector((state) => state.profile);
   const status = useSelector((state) => state.profile.status);
   const [form] = Form.useForm();
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     dispatch(getProfileThunk(uid));
   }, [uid]);
 
+  useEffect(() => {
+    if (profile.onboardingStatus === "pending") {
+      setShowModal(true);
+    }
+  }, [profile.onboardingStatus]);
   console.log("profilestatus", status);
   const toggleEdit = () => {
     setEdit(!edit);
@@ -39,9 +45,24 @@ const PersonalInformation = () => {
     
     message.error("Click on No");
   };
+  const handleCancel = () => {
+    setShowModal(false);
+  }
 
   return (
     <>
+      <Modal
+        open={showModal}
+        onCancel={handleCancel}
+        footer={[]}
+      >
+        <hr style={{ margin: "8px 0" }} />
+        <p className="text-lg">
+          Please wait for HR to review your application.
+        </p>
+      </Modal>
+    
+    
       {status === "success" && (
         <>
           <ProfileForm employeeProfile={profile} disabled={!edit} form={form}
@@ -65,7 +86,8 @@ const PersonalInformation = () => {
               </Popconfirm>
             </>
           ) : (
-            <Button  htmlType="submit" className="ml-4" onClick={toggleEdit}>
+            <Button  htmlType="submit" className="ml-4" onClick={toggleEdit}
+            disabled={profile.onboardingStatus==="pending"}>
               Edit
             </Button>
           )}

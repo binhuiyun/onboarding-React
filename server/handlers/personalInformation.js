@@ -116,9 +116,13 @@ const getProfileByOpt = async (req, res) => {
 
 const addToDocument = async (req, res) => {
   const u_id = req.params.id;
+  console.log("add to document", u_id);
   const fileType = req.params.fileType;
   try{
     let profile = await PersonalInformation.findOne({ userId: u_id }); 
+    if (!profile) {
+      profile = await PersonalInformation.create({ userId: u_id });
+    }
     const { originalname, buffer } = req.file;
     const doc = await Doc.create(
     {

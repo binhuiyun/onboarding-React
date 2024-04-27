@@ -3,6 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { Form, Input, Button, Upload, Select, DatePicker, List, Modal, Space } from "antd";
 import { PlusOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { createProfileThunk } from "../../thunks/profile-thunk";
+import { updateCurrentUserThunk } from "../../thunks/auth-thunk";
+import { updateTokenStatusThunk } from "../../thunks/token-thunk";
+import { useNavigate } from "react-router-dom";
+import { getProfileThunk } from "../../thunks/profile-thunk";
 const { Option } = Select;
 
 
@@ -15,8 +19,10 @@ const normFile = (e) => {
 };
 const Onboarding = () => {
   const {user }= useSelector((state) => state.user);
+  const {profile} = useSelector((state) => state.profile);
   const [form] = Form.useForm();
   const [citizenship, setCitizenship] = useState("");
+
   const [visaType, setVisaType] = useState("");
   const [dob, setDob] = useState("");
   const [startDate, setStartDate] = useState("");
@@ -24,27 +30,28 @@ const Onboarding = () => {
   const dispatch = useDispatch();
   const [uploadedfiles, setUploadedfiles] = useState([]);
   const [showModal, setShowModal] = useState(false);
-
+  const navigate = useNavigate();
+  
   useEffect(() => {
+    dispatch(getProfileThunk(user._id));
     if (user.onboardingStatus === "rejected") {
       setShowModal(true);
     }
+    else if (user.onboardingStatus === "pending") {
+      navigate("/personal-information");    
+    }
   }, [user.onboardingStatus]);
 
-
-  
   const onChange = (date, dateString) => {
-    console.log("current user", user.id);
+    console.log("current user", user);
     console.log(dateString);
     setDob(dateString);
 
   };
 
   const getRemainingDays = (endDate) => {
-    if (endDate) {
-       
-       const remaining = Math.round((Date.now() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24));
-      
+    if (endDate) {     
+       const remaining = Math.round((Date.now() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24));   
        return remaining;
     }
     return 0;
@@ -66,9 +73,12 @@ const Onboarding = () => {
   }
   const onFinish = (values) => {
     console.log("Received values from form: ", values);
-    const profile = {...values, dob, userId: user.id,
+    const profile = {...values, dob, userId: user._id,
       remaining: getRemainingDays(endDate)};
     dispatch(createProfileThunk(profile) );
+    const updatedUser = { ...user, onboardingStatus: "pending" };
+    dispatch(updateCurrentUserThunk(updatedUser));
+    dispatch(updateTokenStatusThunk(user._id));
 
   };
   const handleCancel = () => {
@@ -82,6 +92,7 @@ const Onboarding = () => {
       <Space>
         <ExclamationCircleOutlined style={{ color: "orange" }} />
         Sorry, your application has been rejected
+        {profile.HRfeedback}
       </Space>
     }
     open={showModal}
@@ -91,7 +102,7 @@ const Onboarding = () => {
     <hr style={{ margin: "8px 0" }} />
     <p className="text-lg">Please review and update your information.</p>
   </Modal>
-  
+
     <div className="max-w-md mx-auto mt-8">
       <Form style={{ maxWidth: 600 }}
       form = {form}
@@ -311,7 +322,7 @@ const Onboarding = () => {
              getValueFromEvent={normFile}
              
            >
-             <Upload action={`http://localhost:4000/api/personalInformation/upload/${user.id}/optReceipt`} 
+             <Upload action={`http://localhost:4000/api/personalInformation/upload/${user._id}/optReceipt`} 
              onChange={handleFileUpoad}>
                <button
                  style={{

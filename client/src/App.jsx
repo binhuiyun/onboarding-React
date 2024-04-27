@@ -17,8 +17,9 @@ import EmployeeProfileDetailsPage from "./pages/EmployeeProfile/EmployeeProfileD
 import ApplicationFeedback from "./pages/HiringManagement/ReviewApplications/ApplicationFeedback";
 import AuthLayout from "./components/Layout/AuthLayout";
 import Layout from "./components/Layout";
-import BacicLayout from "./components/Layout/BacisLayout";
-import { useSelector } from "react-redux";
+import { fetchUserByIdThunk } from "./thunks/auth-thunk";
+import { useSelector, useDispatch } from "react-redux";
+import { useEffect } from "react";
 
 const ApplicationStatusRouter = () => {
   return (
@@ -42,13 +43,14 @@ const ApplicationStatus = () => {
 
 
 function App() {
-  const user = useSelector((state) => state.user);
+
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={user.email === "hr@gmail.com" ? <Layout /> : <BacicLayout />}>
+    
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/" element={ <Layout /> }>
           <Route element = {<AuthLayout/>}>
           <Route path="/hiring-management" element={<HiringManagement />} />
           <Route

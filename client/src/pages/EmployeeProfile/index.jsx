@@ -71,7 +71,7 @@ const EmployeeProfile = () => {
       }}/>
      
       {status === "success" && (
-         <Table  columns={columns} className='mt-4'
+         <Table  columns={columns} className='mt-10'
       dataSource={filteredEmployees.map((employee) => {
         return {
             key: employee.userId,

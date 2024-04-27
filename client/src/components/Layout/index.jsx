@@ -9,14 +9,11 @@ import { useDispatch } from 'react-redux';
 export default function MainLayout() {
  // const isMobile = useMediaQuery('(max-width: 450px)');
  const dispatch = useDispatch();
+ const isHR = localStorage.getItem("isHR");
 
-  const items = useMemo(
+  const hrItems = useMemo(
     () => [
-      {
-        key: '1',
-        label: 'Home',
-        link: '/',    
-      },
+     
       {
         key: '2',
         label: 
@@ -47,16 +44,43 @@ export default function MainLayout() {
     []
   );
 
+  const items = useMemo(
+    () => [
+      {
+        key: '1',
+        label: 
+        <Link to = 'http://localhost:5173/personal-information'>Personal Information</Link>,
+  
+      },
+      {
+        key: '2',
+        label: <Link to ='http://localhost:5173/visa'> Visa Status Management</Link>, 
+      },
+    
+      {
+        key: '3',
+        label: 'Logout',
+        onClick: () => {
+          console.log("Logout Clicked");
+          dispatch(logOutUser());
+        },
+      
+      },
+    ],
+    []
+  );
   return (
       <Layout>
         <Layout.Header >
         <Menu mode = "horizontal" 
         theme="dark"
-        items= {items}
+        items= {isHR ? hrItems : items}
         style={{display: 'flex', justifyContent: 'space-between'}}
         />
         </Layout.Header>  
         <Layout.Content style={{padding: '0 48px'}}>
+
+          {isHR && (
           
         <Breadcrumb style={{ margin: '16px 0' }}
           items={[
@@ -93,6 +117,7 @@ export default function MainLayout() {
         ]}
       
       />
+          )}
           <Outlet />
         </Layout.Content>
     

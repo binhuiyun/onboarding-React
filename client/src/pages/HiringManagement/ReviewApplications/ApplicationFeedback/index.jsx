@@ -3,14 +3,14 @@ import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Button, Input, Spin, message} from "antd";
 import ProfileForm from "../../../../components/ProfileForm";
-import { updateCurrentUserThunk } from "../../../../thunks/auth-thunk";
+import { fetchUserByIdThunk, updateCurrentUserThunk } from "../../../../thunks/auth-thunk";
 import { updateProfileThunk, getProfileThunk } from "../../../../thunks/profile-thunk";
 const { TextArea } = Input;
 
 const ApplicationFeedback = () => {
   const [messageApi, contextHolder] = message.useMessage();
   const application = useSelector((state) => state.profile.profile);
-  const {user} = useSelector((state) => state.user);
+  const user = useSelector((state) => state.user.user);
   const status = useSelector((state) => state.profile.status);
   const dispatch = useDispatch();
   const { id } = useParams();
@@ -21,12 +21,14 @@ const ApplicationFeedback = () => {
 
   useEffect(() => {
     dispatch(getProfileThunk(id));
+    dispatch(fetchUserByIdThunk(id));
+
    // console.log("application feedback", docId);
 
   }, [id]);
 
   const handleApprove = () => {
-    console.log(id);
+    console.log("approve", user);
     messageApi.open({
       type: "success",
       content: "Application approved",
@@ -37,14 +39,18 @@ const ApplicationFeedback = () => {
     dispatch(updateProfileThunk(updatedProfile));
     
   const updatedUser = { ...user, onboardingStatus: "approved" };
-    dispatch(updateCurrentUserThunk(updatedUser))};
+    dispatch(updateCurrentUserThunk(updatedUser))
+  };
   
   const handleReject = () => {
-    const updatedProfile = { ...application, onboardingStatus: "rejected" };
+    console.log("reject", user)
+    const updatedProfile = { ...application, onboardingStatus: "rejected", HRfeedback: feedback };
     dispatch(
       updateProfileThunk(updatedProfile)
     );
- 
+    const updatedUser = { ...user, onboardingStatus: "rejected" };
+    dispatch(updateCurrentUserThunk(updatedUser));
+  
     messageApi.open({
       type: "warning",
       content: "Application rejected",

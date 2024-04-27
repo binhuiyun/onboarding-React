@@ -30,18 +30,20 @@ export default function LogIn() {
 
   useEffect(() => { 
       dispatch(fetchUserByIdThunk(uid));
-      console.log("use effect",user, user.onboardingStatus)
+      console.log("use effect",user, user._id)
+      setTimeout(() => {  
       if (isAuthenticated){
         if (user.email === "hr@gmail.com"){
           navigate("/hiring-management");
         }
-        else if (user.onboardingStatus !== "approved") {
-          navigate("/onboarding");
-        }
-        else {
+        else if (user.onboardingStatus === "approved") {
           navigate("/personal-information");
         }
+        else {
+          navigate("/onboarding");
+        }
     }
+  }, 1000);
   }, [uid, user.onboardingStatus, isAuthenticated]);
 
 

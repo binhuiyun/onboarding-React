@@ -10,7 +10,11 @@ export const loginThunk = createAsyncThunk(
       const user = await login(data);
       localStorage.setItem("userID", user.id);
       localStorage.setItem("token", user.token);
-      console.log("login thunk", user.token);
+      if (user.email === "hr@gmail.com"){
+        localStorage.setItem("isHR", true);
+      }
+    
+      console.log("login thunk", user.email);
       thunkAPI.dispatch(removeError());
       return user;
     } catch (error) {
