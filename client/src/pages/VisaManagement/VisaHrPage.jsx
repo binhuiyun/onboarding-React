@@ -251,14 +251,12 @@ const VisaHrPage = () => {
             <Table
               columns={column1}
               dataSource={optInprogress}
-              className="w-[90%]"
               pagination={false}
             />
           ) : (
             <Table
               columns={column2}
-              dataSource={allOpt}
-              className="w-[90%]"
+              dataSource={allOpt}      
               pagination={false}
             />
           )}

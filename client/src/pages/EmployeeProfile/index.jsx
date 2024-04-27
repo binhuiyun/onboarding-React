@@ -62,17 +62,16 @@ const EmployeeProfile = () => {
 
   return (
     <div>
-      <h1>Employee Profile</h1>
+    
       <Search placeholder="Search by name"
        value = {searchInput}
        onChange={(e) => setSearchInput(e.target.value)}
-       enterButton="Search" 
        style={{
         width: 500,
       }}/>
      
       {status === "success" && (
-         <Table  columns={columns} 
+         <Table  columns={columns} className='mt-4'
       dataSource={filteredEmployees.map((employee) => {
         return {
             key: employee.userId,

@@ -51,7 +51,7 @@ export default function AuthForm({
             htmlType="submit"
             className="w-full my-2 bg-blue-500 text-white"
             size="large"
-            loading={status === "pending"}
+          //  loading={status === "pending"}
   
           >
             {buttonText}

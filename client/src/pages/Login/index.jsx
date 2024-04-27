@@ -9,6 +9,9 @@ export default function LogIn() {
   const navigate = useNavigate();
   const { message } = useSelector((state) => state.error);
   const { user } = useSelector((state) => state.user);
+  const uid = localStorage.getItem("userID");
+  const {status} = useSelector((state) => state.user);
+  const {isAuthenticated} = useSelector((state) => state.user);
 
   const fields = [
     {
@@ -25,36 +28,35 @@ export default function LogIn() {
     },
   ];
 
-  useEffect(() => {
-    if (user) {
-      dispatch(fetchUserByIdThunk(user.id));
+  useEffect(() => { 
+      dispatch(fetchUserByIdThunk(uid));
+      console.log("use effect",user, user.onboardingStatus)
+      if (isAuthenticated){
+        if (user.email === "hr@gmail.com"){
+          navigate("/hiring-management");
+        }
+        else if (user.onboardingStatus !== "approved") {
+          navigate("/onboarding");
+        }
+        else {
+          navigate("/personal-information");
+        }
     }
-  }, []);
-  console.log("user onboarding", user);
+  }, [uid, user.onboardingStatus, isAuthenticated]);
 
-  // TODO: check onboarding==approved:PERSONAL INFORMATION PAGE
-  // else REDIRECT TO ONBOARDING PAGE
-  // const onSubmit = (data) => {
-  //   dispatch(loginThunk(data)).then((res) => {
-  //     if (res.payload.token) {
-  //       if (res.payload.username === "hr") {
-  //         navigate("/hiring-management");
-  //       } else {
-  //         if (user.onboardingStatus === "approved") {
-  //           navigate("/personal-information");
-  //         } else {
-  //           navigate("/onboarding");
-  //         }
-  //       }
-  //     }
-  //   });
-  // };
+
   const onSubmit = (data) => {
-    dispatch(loginThunk(data)).then(() => {
-      console.log("login++++++++++++", message);
-      
-    });
-  }
+    dispatch(loginThunk(data));
+
+      // console.log("user onboarding", user.onboardingStatus);
+      // if (user.onboardingStatus === "approved") { 
+      //   navigate("/personal-information");
+      // }
+
+    };
+  
+
+  
   return (
     <div className="flex flex-col h-screen">
       <AuthForm

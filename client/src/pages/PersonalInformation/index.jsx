@@ -9,7 +9,8 @@ import {
 import ProfileForm from "../../components/ProfileForm";
 
 const PersonalInformation = () => {
-  const { id } = useParams();
+  const {user} = useSelector((state) => state.user);
+  const uid = localStorage.getItem("userID");
   const dispatch = useDispatch();
   const [edit, setEdit] = useState(false);
   const { profile } = useSelector((state) => state.profile);
@@ -17,8 +18,8 @@ const PersonalInformation = () => {
   const [form] = Form.useForm();
 
   useEffect(() => {
-    dispatch(getProfileThunk(id));
-  }, [id]);
+    dispatch(getProfileThunk(uid));
+  }, [uid]);
 
   console.log("profilestatus", status);
   const toggleEdit = () => {

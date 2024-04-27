@@ -57,10 +57,11 @@ export default function MainLayout() {
         />
         </Layout.Header>  
         <Layout.Content style={{padding: '0 48px'}}>
+          
         <Breadcrumb style={{ margin: '16px 0' }}
           items={[
           {
-            title: <Link to="/token"> Token History </Link>,
+            title: <Link to="/hiring-management/token"> Token History </Link>,
           },
        
           {

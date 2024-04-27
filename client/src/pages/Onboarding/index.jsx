@@ -1,7 +1,7 @@
 import React, { useEffect, useState} from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Form, Input, Button, Upload, Select, DatePicker, List } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { Form, Input, Button, Upload, Select, DatePicker, List, Modal, Space } from "antd";
+import { PlusOutlined, ExclamationCircleOutlined } from "@ant-design/icons";
 import { createProfileThunk } from "../../thunks/profile-thunk";
 const { Option } = Select;
 
@@ -23,7 +23,16 @@ const Onboarding = () => {
   const [endDate, setEndDate] = useState("");
   const dispatch = useDispatch();
   const [uploadedfiles, setUploadedfiles] = useState([]);
+  const [showModal, setShowModal] = useState(false);
 
+  useEffect(() => {
+    if (user.onboardingStatus === "rejected") {
+      setShowModal(true);
+    }
+  }, [user.onboardingStatus]);
+
+
+  
   const onChange = (date, dateString) => {
     console.log("current user", user.id);
     console.log(dateString);
@@ -62,8 +71,27 @@ const Onboarding = () => {
     dispatch(createProfileThunk(profile) );
 
   };
+  const handleCancel = () => {
+    setShowModal(false);
+  };
 
   return (
+    <>
+    <Modal
+    title={
+      <Space>
+        <ExclamationCircleOutlined style={{ color: "orange" }} />
+        Sorry, your application has been rejected
+      </Space>
+    }
+    open={showModal}
+    onCancel={handleCancel}
+    footer={[]}
+  >
+    <hr style={{ margin: "8px 0" }} />
+    <p className="text-lg">Please review and update your information.</p>
+  </Modal>
+  
     <div className="max-w-md mx-auto mt-8">
       <Form style={{ maxWidth: 600 }}
       form = {form}
@@ -420,6 +448,7 @@ const Onboarding = () => {
         </Form.Item>
       </Form>
     </div>
+    </>
   );
 };
 
